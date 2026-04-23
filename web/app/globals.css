@@ -1,0 +1,36 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --resume-accent: #2563eb;
+  --resume-font-sans: "Inter", "PingFang SC", "Microsoft YaHei", sans-serif;
+  --resume-font-serif: "Source Serif Pro", "Source Han Serif SC", serif;
+  --resume-density: 1;
+  --resume-font-scale: 1;
+}
+
+html, body { height: 100%; }
+body { background: #f3f4f6; color: #111827; font-family: var(--resume-font-sans); }
+
+/* A4 paper preview — 794 x 1123 px at 96dpi */
+.paper {
+  width: 794px;
+  min-height: 1123px;
+  background: white;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+  font-size: calc(14px * var(--resume-font-scale));
+  line-height: 1.55;
+  color: #111827;
+}
+.paper.density-compact { --pad: 32px; --gap: 10px; }
+.paper.density-comfy   { --pad: 44px; --gap: 14px; }
+.paper.density-spacious{ --pad: 56px; --gap: 20px; }
+
+@media print {
+  @page { size: A4; margin: 0; }
+  html, body { background: white; }
+  .no-print { display: none !important; }
+  .paper { box-shadow: none; width: 100%; min-height: auto; }
+  .print-area, .print-area * { visibility: visible; }
+}

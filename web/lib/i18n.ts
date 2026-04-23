@@ -1,0 +1,84 @@
+import type { UILang } from "./store";
+
+export const T = {
+  zh: {
+    appTitle: "简历聚合 & 编辑器",
+    appSub: "聚合 500+ GitHub 模板 · 在线编辑 · 一键切换主题 · 导出 PDF",
+    tabs: { editor: "编辑", gallery: "模板画廊", settings: "样式" },
+    sections: {
+      basics: "基本信息", work: "工作经历", education: "教育背景",
+      projects: "项目经历", skills: "技能", awards: "荣誉", languages: "语言",
+    },
+    fields: {
+      name: "姓名", label: "职位/头衔", email: "邮箱", phone: "电话",
+      location: "城市", website: "个人网站", summary: "个人简介",
+      company: "公司", position: "职位", startDate: "开始", endDate: "结束",
+      institution: "学校", area: "专业", studyType: "学历", score: "成绩/排名",
+      courses: "主修课程", highlights: "要点（每行一条）",
+      projectName: "项目名", description: "描述", url: "链接", keywords: "关键词（逗号分隔）",
+      skillName: "技能类别", level: "熟练度",
+      awardTitle: "标题", date: "日期", awarder: "颁发方",
+      language: "语言", fluency: "水平",
+    },
+    actions: {
+      add: "添加", remove: "删除", loadSample: "加载示例", reset: "清空", print: "导出 PDF",
+      importJson: "导入 JSON", exportJson: "导出 JSON",
+    },
+    theme: {
+      accent: "主色", fontSans: "无衬线字体", fontSerif: "衬线字体",
+      density: "信息密度", fontScale: "字号",
+      density_compact: "紧凑", density_comfy: "舒适", density_spacious: "宽松",
+    },
+    gallery: {
+      title: "GitHub 简历模板画廊",
+      sub: "爬取自 GitHub 的开源简历模板，点击跳转查看",
+      filterStack: "技术栈", filterLang: "语言", all: "全部", zh: "中文", en: "英文", mixed: "中英混合",
+      stars: "星标", view: "查看",
+    },
+    templates: {
+      modern: "现代", classic: "经典", minimal: "极简",
+      "cn-formal": "中式正统", "cn-creative": "中式创意", "en-academic": "学术",
+    },
+  },
+  en: {
+    appTitle: "Resume Hub & Editor",
+    appSub: "500+ GitHub templates · live editor · theme switcher · PDF export",
+    tabs: { editor: "Editor", gallery: "Gallery", settings: "Style" },
+    sections: {
+      basics: "Basics", work: "Work", education: "Education",
+      projects: "Projects", skills: "Skills", awards: "Awards", languages: "Languages",
+    },
+    fields: {
+      name: "Name", label: "Headline", email: "Email", phone: "Phone",
+      location: "Location", website: "Website", summary: "Summary",
+      company: "Company", position: "Position", startDate: "Start", endDate: "End",
+      institution: "Institution", area: "Field", studyType: "Degree", score: "GPA / Rank",
+      courses: "Courses", highlights: "Highlights (one per line)",
+      projectName: "Project", description: "Description", url: "URL", keywords: "Keywords (comma)",
+      skillName: "Category", level: "Level",
+      awardTitle: "Title", date: "Date", awarder: "Awarder",
+      language: "Language", fluency: "Fluency",
+    },
+    actions: {
+      add: "Add", remove: "Remove", loadSample: "Load sample", reset: "Reset", print: "Export PDF",
+      importJson: "Import JSON", exportJson: "Export JSON",
+    },
+    theme: {
+      accent: "Accent", fontSans: "Sans font", fontSerif: "Serif font",
+      density: "Density", fontScale: "Font scale",
+      density_compact: "Compact", density_comfy: "Comfy", density_spacious: "Spacious",
+    },
+    gallery: {
+      title: "GitHub Resume Template Gallery",
+      sub: "Open-source templates scraped from GitHub — click through to view",
+      filterStack: "Stack", filterLang: "Lang", all: "All", zh: "Chinese", en: "English", mixed: "Mixed",
+      stars: "stars", view: "Open",
+    },
+    templates: {
+      modern: "Modern", classic: "Classic", minimal: "Minimal",
+      "cn-formal": "CN Formal", "cn-creative": "CN Creative", "en-academic": "Academic",
+    },
+  },
+} as const;
+
+export const t = (lang: UILang) => T[lang];
