@@ -3,6 +3,8 @@ import { useEffect, useMemo, useState } from "react";
 import { useStore } from "@/lib/store";
 import { t } from "@/lib/i18n";
 import templatesData from "@/data/templates.json";
+import { jsonResumeToResume, looksLikeJsonResume } from "@/lib/jsonresume";
+import { toast } from "@/lib/toast";
 
 // Rewrite relative URLs inside README to point at raw.githubusercontent /
 // github.com so inline images and links keep working when we render the README
@@ -86,11 +88,34 @@ function Thumbnail({ row }: { row: Row }) {
   );
 }
 
-function PreviewModal({ row, onClose, L }: { row: Row; onClose: () => void; L: any }) {
+function PreviewModal({ row, onClose, L, onImport }: {
+  row: Row; onClose: () => void; L: any; onImport: (doc: any) => void;
+}) {
   const [tab, setTab] = useState<"demo" | "readme">(row.homepage ? "demo" : "readme");
   const [readme, setReadme] = useState<string | null>(null);
   const [readmeBranch, setReadmeBranch] = useState<string>(row.default_branch || "main");
   const [readmeErr, setReadmeErr] = useState(false);
+  // `null` = still probing, `false` = none found, object = parsed resume.json
+  const [jsonResume, setJsonResume] = useState<any | null | false>(null);
+
+  useEffect(() => {
+    // Probe for a JSON Resume document at the repo root, in common branches.
+    let cancelled = false;
+    const branches = Array.from(new Set([row.default_branch || "main", "main", "master"]));
+    (async () => {
+      for (const b of branches) {
+        try {
+          const r = await fetch(`https://raw.githubusercontent.com/${row.full_name}/${b}/resume.json`);
+          if (!r.ok) continue;
+          const doc = await r.json();
+          if (cancelled) return;
+          if (looksLikeJsonResume(doc)) { setJsonResume(doc); return; }
+        } catch { /* try next */ }
+      }
+      if (!cancelled) setJsonResume(false);
+    })();
+    return () => { cancelled = true; };
+  }, [row]);
 
   useEffect(() => {
     if (tab !== "readme" || readme !== null || readmeErr) return;
@@ -132,7 +157,16 @@ function PreviewModal({ row, onClose, L }: { row: Row; onClose: () => void; L: a
             <div className="font-semibold truncate">{row.full_name}</div>
             <div className="text-xs text-gray-500 truncate">{row.description || "—"}</div>
           </div>
-          <div className="flex items-center gap-2 shrink-0 ml-4">
+          <div className="flex items-center gap-2 shrink-0 ml-4 flex-wrap justify-end">
+            {jsonResume && jsonResume !== false && (
+              <button
+                type="button"
+                title={L.gallery.importJsonResumeHint}
+                onClick={() => onImport(jsonResume)}
+                className="text-xs px-3 py-1.5 rounded bg-blue-600 text-white hover:bg-blue-700">
+                ↓ {L.gallery.importJsonResume}
+              </button>
+            )}
             <a href={row.html_url} target="_blank" rel="noreferrer"
               className="text-xs px-3 py-1.5 rounded border border-gray-300 hover:bg-gray-50">
               {L.gallery.openOnGithub}
@@ -190,7 +224,7 @@ function PreviewModal({ row, onClose, L }: { row: Row; onClose: () => void; L: a
 }
 
 export function Gallery() {
-  const { lang } = useStore();
+  const { lang, setResume } = useStore();
   const L = t(lang);
   const [stack, setStack] = useState("all");
   const [flang, setFLang] = useState("all");
@@ -313,7 +347,22 @@ export function Gallery() {
         </>
       )}
 
-      {preview && <PreviewModal row={preview} onClose={() => setPreview(null)} L={L} />}
+      {preview && (
+        <PreviewModal
+          row={preview}
+          onClose={() => setPreview(null)}
+          L={L}
+          onImport={(doc) => {
+            try {
+              setResume(jsonResumeToResume(doc));
+              toast.success(L.gallery.importJsonResumeSuccess);
+              setPreview(null);
+            } catch {
+              toast.error(L.gallery.importJsonResumeFail);
+            }
+          }}
+        />
+      )}
     </div>
   );
 }

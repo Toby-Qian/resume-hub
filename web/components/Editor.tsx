@@ -125,6 +125,43 @@ export function Editor() {
         )}
       </div>
 
+      {/* Shape + size — only relevant when the avatar is actually rendered */}
+      {resume.basics.showAvatar && resume.basics.avatar && (
+        <div className="border border-gray-200 rounded p-3 mb-3 bg-gray-50 space-y-2">
+          <div>
+            <div className="text-[0.7rem] text-gray-600 mb-1">{(L.fields as any).avatarShape}</div>
+            <div className="flex flex-wrap gap-1">
+              {([
+                ["circle", (L.fields as any).shapeCircle],
+                ["rounded", (L.fields as any).shapeRounded],
+                ["square", (L.fields as any).shapeSquare],
+                ["portrait", (L.fields as any).shapePortrait],
+              ] as const).map(([key, lbl]) => {
+                const active = (resume.basics.avatarShape || "circle") === key;
+                return (
+                  <button key={key} type="button"
+                    onClick={() => patchBasics("avatarShape", key)}
+                    className={`text-[0.7rem] px-2 py-1 rounded border ${active ? "bg-blue-600 text-white border-blue-600" : "bg-white border-gray-300 hover:bg-gray-100"}`}>
+                    {lbl}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+          <div>
+            <div className="text-[0.7rem] text-gray-600 mb-1">
+              {(L.fields as any).avatarSize}: {resume.basics.avatarSize ?? 88}px
+            </div>
+            <input
+              type="range" min={48} max={160} step={4}
+              value={resume.basics.avatarSize ?? 88}
+              onChange={(e) => patchBasics("avatarSize", Number(e.target.value))}
+              className="w-full accent-blue-600"
+            />
+          </div>
+        </div>
+      )}
+
       <SectionTitle onAdd={() => addItem("work")}>{L.sections.work}</SectionTitle>
       {resume.work.map((w) => (
         <Card key={w.id} onRemove={() => removeItem("work", w.id)}

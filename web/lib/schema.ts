@@ -11,6 +11,8 @@ export interface ResumeBasics {
   summary: string;
   avatar?: string;        // data URL or http(s)
   showAvatar?: boolean;   // toggle whether templates render the photo
+  avatarShape?: "circle" | "rounded" | "square" | "portrait"; // portrait = 3:4 passport
+  avatarSize?: number;    // width in px; height = width (portrait = width * 4/3)
 }
 
 export interface ResumeWork {

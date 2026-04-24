@@ -22,24 +22,37 @@ export function Avatar({
   style,
   className = "",
 }: {
-  basics: { avatar?: string; showAvatar?: boolean; name?: string };
+  basics: {
+    avatar?: string;
+    showAvatar?: boolean;
+    name?: string;
+    avatarShape?: "circle" | "rounded" | "square" | "portrait";
+    avatarSize?: number;
+  };
   size?: number;
   rounded?: "full" | "md" | "sm" | "none";
   style?: React.CSSProperties;
   className?: string;
 }) {
   if (!basics.showAvatar || !basics.avatar) return null;
-  const roundCls =
-    rounded === "full" ? "rounded-full" :
-    rounded === "md" ? "rounded-md" :
-    rounded === "sm" ? "rounded-sm" : "";
+  // User-set shape / size override the template's default preference.
+  const explicit = basics.avatarShape;
+  const w = basics.avatarSize ?? size;
+  const h = explicit === "portrait" ? Math.round((w * 4) / 3) : w;
+  const roundCls = explicit
+    ? (explicit === "circle" ? "rounded-full"
+        : explicit === "rounded" ? "rounded-lg"
+        : /* square | portrait */ "")
+    : (rounded === "full" ? "rounded-full"
+        : rounded === "md" ? "rounded-md"
+        : rounded === "sm" ? "rounded-sm" : "");
   return (
     /* eslint-disable-next-line @next/next/no-img-element */
     <img
       src={basics.avatar}
       alt={basics.name || "avatar"}
       className={`object-cover shrink-0 ${roundCls} ${className}`}
-      style={{ width: size, height: size, ...style }}
+      style={{ width: w, height: h, ...style }}
     />
   );
 }
