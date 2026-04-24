@@ -1,24 +1,24 @@
 "use client";
-import { TemplateProps, Section, range, itemCls, Avatar } from "./shared";
+import { TemplateProps, Section, range, itemCls, Avatar, E, Draggable } from "./shared";
 
 export default function Modern({ resume }: TemplateProps) {
   const b = resume.basics;
   return (
     <div style={{ padding: "var(--pad)" }}>
-      <header className="mb-6 flex items-start gap-5">
+      <Draggable name="header" as="header" className="mb-6 flex items-start gap-5">
         <div className="flex-1 min-w-0">
-          <h1 className="text-[2em] font-bold" style={{ color: "var(--resume-accent)" }}>{b.name}</h1>
-          <div className="text-[1.05em] text-gray-700 mt-1">{b.label}</div>
+          <h1 className="text-[2em] font-bold" style={{ color: "var(--resume-accent)" }}><E path="basics.name">{b.name}</E></h1>
+          <div className="text-[1.05em] text-gray-700 mt-1"><E path="basics.label">{b.label}</E></div>
           <div className="text-[0.85em] text-gray-600 mt-2 flex flex-wrap gap-x-4 gap-y-1">
-            {b.email && <span>✉ {b.email}</span>}
-            {b.phone && <span>☎ {b.phone}</span>}
-            {b.location && <span>📍 {b.location}</span>}
-            {b.website && <span>🔗 {b.website}</span>}
+            <span>✉ <E path="basics.email">{b.email}</E></span>
+            <span>☎ <E path="basics.phone">{b.phone}</E></span>
+            <span>📍 <E path="basics.location">{b.location}</E></span>
+            <span>🔗 <E path="basics.website">{b.website}</E></span>
           </div>
-          {b.summary && <p className="mt-3 text-[0.95em] text-gray-800">{b.summary}</p>}
+          <p className="mt-3 text-[0.95em] text-gray-800"><E path="basics.summary" multiline>{b.summary}</E></p>
         </div>
         <Avatar basics={b} size={96} />
-      </header>
+      </Draggable>
 
       {resume.work.length > 0 && (
         <Section title="Experience" accent>

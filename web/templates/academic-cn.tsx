@@ -1,5 +1,5 @@
 "use client";
-import { TemplateProps, range, itemCls, Avatar } from "./shared";
+import { TemplateProps, range, itemCls, Avatar, E, Draggable } from "./shared";
 
 /**
  * 中文学术简历 — 适配国内高校/研究所风格：姓名居右带证件照槽位、
@@ -16,20 +16,20 @@ export default function AcademicCN({ resume }: TemplateProps) {
   );
   return (
     <div style={{ padding: "var(--pad)" }}>
-      <header className="flex items-center gap-5 pb-4 mb-3 border-b-2 border-gray-700">
+      <Draggable name="header" as="header" className="flex items-center gap-5 pb-4 mb-3 border-b-2 border-gray-700">
         <div className="flex-1 min-w-0">
-          <h1 className="text-[2em] font-bold">{b.name}</h1>
-          <div className="text-[1em] text-gray-700 mt-1">{b.label}</div>
+          <h1 className="text-[2em] font-bold"><E path="basics.name">{b.name}</E></h1>
+          <div className="text-[1em] text-gray-700 mt-1"><E path="basics.label">{b.label}</E></div>
           <div className="grid grid-cols-2 gap-x-4 text-[0.85em] text-gray-700 mt-2">
-            {b.phone && <div>电话：{b.phone}</div>}
-            {b.email && <div>邮箱：{b.email}</div>}
-            {b.location && <div>城市：{b.location}</div>}
-            {b.website && <div className="break-all">主页：{b.website}</div>}
+            <div>电话：<E path="basics.phone">{b.phone}</E></div>
+            <div>邮箱：<E path="basics.email">{b.email}</E></div>
+            <div>城市：<E path="basics.location">{b.location}</E></div>
+            <div className="break-all">主页：<E path="basics.website">{b.website}</E></div>
           </div>
         </div>
         <Avatar basics={b} size={112} rounded="sm" />
-      </header>
-      {b.summary && <p className="text-[0.93em] text-gray-800 mb-2 indent-8">{b.summary}</p>}
+      </Draggable>
+      <Draggable name="summary"><p className="text-[0.93em] text-gray-800 mb-2 indent-8"><E path="basics.summary" multiline>{b.summary}</E></p></Draggable>
 
       {resume.education.length > 0 && (
         <><H>教育经历</H>

@@ -21,8 +21,9 @@ export function Preview() {
       >
         <Tpl resume={resume} />
       </div>
-      <div className="text-[0.7rem] text-gray-400 mt-2 mb-4 px-4 text-center max-w-[794px] no-print">
-        {L.preview.pageHint}
+      <div className="text-[0.7rem] text-gray-400 mt-2 mb-4 px-4 text-center max-w-[794px] no-print space-y-0.5">
+        <div>{(L.preview as any).editHint ?? "点击任意文字即可在预览中直接编辑；悬停文本区块左侧可拖动整段位置"}</div>
+        <div>{L.preview.pageHint}</div>
       </div>
     </div>
   );

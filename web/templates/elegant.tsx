@@ -1,5 +1,5 @@
 "use client";
-import { TemplateProps, range, itemCls, Avatar } from "./shared";
+import { TemplateProps, range, itemCls, Avatar, E, Draggable } from "./shared";
 
 /**
  * Two-column layout with a soft tinted sidebar. Feels lighter than
@@ -32,15 +32,17 @@ export default function Elegant({ resume }: TemplateProps) {
         {b.showAvatar && b.avatar && (
           <div className="mb-4"><Avatar basics={b} size={112} /></div>
         )}
-        <h1 className="text-[1.8em] font-bold leading-tight" style={{ color: "var(--resume-accent)" }}>{b.name}</h1>
-        <div className="text-[0.95em] text-gray-700 mt-1">{b.label}</div>
+        <Draggable name="header">
+          <h1 className="text-[1.8em] font-bold leading-tight" style={{ color: "var(--resume-accent)" }}><E path="basics.name">{b.name}</E></h1>
+          <div className="text-[0.95em] text-gray-700 mt-1"><E path="basics.label">{b.label}</E></div>
+        </Draggable>
 
         <SideH>Contact</SideH>
         <div className="text-[0.83em] text-gray-700 space-y-1">
-          {b.email && <div>✉ {b.email}</div>}
-          {b.phone && <div>☎ {b.phone}</div>}
-          {b.location && <div>📍 {b.location}</div>}
-          {b.website && <div className="break-all">🔗 {b.website}</div>}
+          <div>✉ <E path="basics.email">{b.email}</E></div>
+          <div>☎ <E path="basics.phone">{b.phone}</E></div>
+          <div>📍 <E path="basics.location">{b.location}</E></div>
+          <div className="break-all">🔗 <E path="basics.website">{b.website}</E></div>
         </div>
 
         {resume.skills.length > 0 && (
@@ -80,12 +82,10 @@ export default function Elegant({ resume }: TemplateProps) {
       </aside>
 
       <main style={{ padding: "var(--pad)" }}>
-        {b.summary && (
-          <>
-            <MainH>About</MainH>
-            <p className="text-[0.94em] text-gray-800 leading-relaxed">{b.summary}</p>
-          </>
-        )}
+        <Draggable name="summary">
+          <MainH>About</MainH>
+          <p className="text-[0.94em] text-gray-800 leading-relaxed"><E path="basics.summary" multiline>{b.summary}</E></p>
+        </Draggable>
 
         {resume.work.length > 0 && (
           <>

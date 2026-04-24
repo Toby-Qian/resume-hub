@@ -1,5 +1,5 @@
 "use client";
-import { TemplateProps, range, itemCls, Avatar } from "./shared";
+import { TemplateProps, range, itemCls, Avatar, E, Draggable } from "./shared";
 
 /**
  * Single-column, tight-leading, small-type resume — built for senior
@@ -16,17 +16,23 @@ export default function Compact({ resume }: TemplateProps) {
   );
   return (
     <div style={{ padding: "var(--pad)", lineHeight: 1.35 }}>
-      <header className="flex items-start gap-4 mb-2">
+      <Draggable name="header" as="header" className="flex items-start gap-4 mb-2">
         <div className="flex-1 min-w-0">
-          <h1 className="text-[1.9em] font-bold leading-tight">{b.name}</h1>
-          <div className="text-[0.9em] text-gray-700">{b.label}</div>
-          <div className="text-[0.78em] text-gray-600 mt-1">
-            {[b.email, b.phone, b.location, b.website].filter(Boolean).join(" · ")}
+          <h1 className="text-[1.9em] font-bold leading-tight"><E path="basics.name">{b.name}</E></h1>
+          <div className="text-[0.9em] text-gray-700"><E path="basics.label">{b.label}</E></div>
+          <div className="text-[0.78em] text-gray-600 mt-1 flex flex-wrap gap-x-2">
+            <E path="basics.email">{b.email}</E>
+            <span className="text-gray-400">·</span>
+            <E path="basics.phone">{b.phone}</E>
+            <span className="text-gray-400">·</span>
+            <E path="basics.location">{b.location}</E>
+            <span className="text-gray-400">·</span>
+            <E path="basics.website">{b.website}</E>
           </div>
         </div>
         <Avatar basics={b} size={72} />
-      </header>
-      {b.summary && <p className="text-[0.88em] text-gray-800 mb-1">{b.summary}</p>}
+      </Draggable>
+      <Draggable name="summary"><p className="text-[0.88em] text-gray-800 mb-1"><E path="basics.summary" multiline>{b.summary}</E></p></Draggable>
 
       {resume.work.length > 0 && (
         <>

@@ -61,6 +61,60 @@ body { background: #f3f4f6; color: #111827; font-family: var(--resume-font-sans)
    the user can still export PDF correctly (print uses A4 directly). */
 .pane-preview { overflow-x: auto; }
 
+/* ---------- Inline click-to-edit ---------------------------------------- */
+.editable-field {
+  outline: none;
+  border-radius: 3px;
+  transition: background-color 0.15s, box-shadow 0.15s;
+  cursor: text;
+}
+.editable-field:empty::before {
+  content: "点击编辑 / click to edit";
+  color: #9ca3af;
+  font-style: italic;
+}
+.editable-field:hover {
+  background-color: rgba(253, 224, 71, 0.18);
+  box-shadow: 0 0 0 2px rgba(253, 224, 71, 0.35);
+}
+.editable-field:focus {
+  background-color: rgba(254, 240, 138, 0.55);
+  box-shadow: 0 0 0 2px rgba(234, 179, 8, 0.65);
+}
+
+/* ---------- Draggable text blocks --------------------------------------- */
+.draggable-block { position: relative; }
+.drag-handle {
+  position: absolute;
+  top: -4px;
+  left: -22px;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  line-height: 1;
+  color: #6b7280;
+  background: rgba(255,255,255,0.92);
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  cursor: move;
+  opacity: 0;
+  transition: opacity 0.15s;
+  user-select: none;
+  padding: 0;
+}
+.draggable-block:hover > .drag-handle { opacity: 0.85; }
+.drag-handle:hover { opacity: 1 !important; background: #fef3c7; border-color: #f59e0b; }
+
+/* Print: no hover affordances, no handles. */
+@media print {
+  .editable-field { background: transparent !important; box-shadow: none !important; }
+  .editable-field:empty::before { content: ""; }
+  .drag-handle { display: none !important; }
+}
+
 /* ---------- Print -------------------------------------------------------- */
 @media print {
   @page { size: A4; margin: 0; }

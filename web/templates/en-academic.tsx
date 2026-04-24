@@ -1,5 +1,5 @@
 "use client";
-import { TemplateProps, range, itemCls, Avatar } from "./shared";
+import { TemplateProps, range, itemCls, Avatar, E, Draggable } from "./shared";
 
 export default function ENAcademic({ resume }: TemplateProps) {
   const b = resume.basics;
@@ -8,16 +8,22 @@ export default function ENAcademic({ resume }: TemplateProps) {
   );
   return (
     <div style={{ padding: "var(--pad)", fontFamily: "var(--resume-font-serif)" }}>
-      <header className="text-center mb-3">
+      <Draggable name="header" as="header" className="text-center mb-3">
         {b.showAvatar && b.avatar && (
           <div className="flex justify-center mb-2"><Avatar basics={b} size={88} rounded="full" /></div>
         )}
-        <h1 className="text-[2.2em] font-bold">{b.name}</h1>
-        <div className="text-[0.9em] text-gray-700 mt-1">
-          {[b.location, b.phone, b.email, b.website].filter(Boolean).join(" · ")}
+        <h1 className="text-[2.2em] font-bold"><E path="basics.name">{b.name}</E></h1>
+        <div className="text-[0.9em] text-gray-700 mt-1 flex flex-wrap justify-center gap-x-3">
+          <E path="basics.location">{b.location}</E>
+          <span className="text-gray-400">·</span>
+          <E path="basics.phone">{b.phone}</E>
+          <span className="text-gray-400">·</span>
+          <E path="basics.email">{b.email}</E>
+          <span className="text-gray-400">·</span>
+          <E path="basics.website">{b.website}</E>
         </div>
-      </header>
-      {b.summary && <p className="text-[0.95em] text-justify">{b.summary}</p>}
+      </Draggable>
+      <Draggable name="summary"><p className="text-[0.95em] text-justify"><E path="basics.summary" multiline>{b.summary}</E></p></Draggable>
 
       {resume.education.length > 0 && (
         <>

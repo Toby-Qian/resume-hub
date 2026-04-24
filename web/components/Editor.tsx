@@ -178,6 +178,20 @@ export function Editor() {
         </div>
       )}
 
+      {/* Reset any dragged text blocks (header / summary / contact …). Shows up
+          only when at least one offset is non-zero, so 99% of users never see it. */}
+      {resume.basics.blockOffsets && Object.values(resume.basics.blockOffsets).some((o: any) => (o?.x || 0) !== 0 || (o?.y || 0) !== 0) && (
+        <div className="border border-amber-200 bg-amber-50 rounded-md p-2 text-[0.72rem] text-amber-900 flex items-center justify-between">
+          <span>{(L.fields as any).blockOffsetsNotice ?? "文本区块有拖动位移"}</span>
+          <button
+            type="button"
+            onClick={() => patchBasics("blockOffsets", {} as any)}
+            className="px-2 py-0.5 rounded border border-amber-300 hover:bg-amber-100">
+            {(L.fields as any).blockOffsetsReset ?? "全部复位"}
+          </button>
+        </div>
+      )}
+
       <SectionTitle onAdd={() => addItem("work")}>{L.sections.work}</SectionTitle>
       {resume.work.map((w) => (
         <Card key={w.id} onRemove={() => removeItem("work", w.id)}

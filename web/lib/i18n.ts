@@ -16,6 +16,8 @@ export const T = {
       avatarShape: "形状", avatarSize: "尺寸",
       shapeCircle: "圆形", shapeRounded: "圆角方", shapeSquare: "正方形", shapePortrait: "证件照（3:4）",
       avatarPositionHint: "在预览中拖动头像即可调整位置", avatarReset: "重置位置",
+      blockOffsetsNotice: "文本区块有拖动位移",
+      blockOffsetsReset: "全部复位",
       company: "公司", position: "职位", startDate: "开始", endDate: "结束",
       institution: "学校", area: "专业", studyType: "学历", score: "成绩/排名",
       courses: "主修课程", highlights: "要点（每行一条）",
@@ -82,6 +84,7 @@ export const T = {
     },
     preview: {
       pageHint: "灰色分隔线为 A4 分页边界，打印/导出 PDF 时会自动换页",
+      editHint: "点击任意文字即可在预览中直接编辑 · 悬停文本区块左侧出现 ⋮⋮ 即可拖动整段",
     },
   },
   en: {
@@ -99,6 +102,8 @@ export const T = {
       avatarShape: "Shape", avatarSize: "Size",
       shapeCircle: "Circle", shapeRounded: "Rounded", shapeSquare: "Square", shapePortrait: "Portrait 3:4",
       avatarPositionHint: "Drag the photo in the preview to reposition", avatarReset: "Reset position",
+      blockOffsetsNotice: "Some text blocks have drag offsets",
+      blockOffsetsReset: "Reset all",
       company: "Company", position: "Position", startDate: "Start", endDate: "End",
       institution: "Institution", area: "Field", studyType: "Degree", score: "GPA / Rank",
       courses: "Courses", highlights: "Highlights (one per line)",
@@ -165,6 +170,7 @@ export const T = {
     },
     preview: {
       pageHint: "Grey lines mark A4 page boundaries — print / PDF export will split automatically",
+      editHint: "Click any text to edit it inline · hover a block for the ⋮⋮ handle to drag it",
     },
   },
 } as const;

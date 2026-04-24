@@ -1,23 +1,29 @@
 "use client";
-import { TemplateProps, Section, range, itemCls, Avatar } from "./shared";
+import { TemplateProps, Section, range, itemCls, Avatar, E, Draggable } from "./shared";
 
 export default function Classic({ resume }: TemplateProps) {
   const b = resume.basics;
   return (
     <div style={{ padding: "var(--pad)", fontFamily: "var(--resume-font-serif)" }}>
-      <header className="text-center mb-6 pb-4 border-b-2 border-gray-800">
+      <Draggable name="header" as="header" className="text-center mb-6 pb-4 border-b-2 border-gray-800">
         {b.showAvatar && b.avatar && (
           <div className="flex justify-center mb-3">
             <Avatar basics={b} size={90} rounded="full" />
           </div>
         )}
-        <h1 className="text-[2.2em] font-bold tracking-wider">{b.name}</h1>
-        <div className="text-[1em] italic text-gray-700 mt-1">{b.label}</div>
-        <div className="text-[0.85em] text-gray-600 mt-2">
-          {[b.email, b.phone, b.location, b.website].filter(Boolean).join(" · ")}
+        <h1 className="text-[2.2em] font-bold tracking-wider"><E path="basics.name">{b.name}</E></h1>
+        <div className="text-[1em] italic text-gray-700 mt-1"><E path="basics.label">{b.label}</E></div>
+        <div className="text-[0.85em] text-gray-600 mt-2 flex flex-wrap justify-center gap-x-3">
+          <E path="basics.email">{b.email}</E>
+          <span className="text-gray-400">·</span>
+          <E path="basics.phone">{b.phone}</E>
+          <span className="text-gray-400">·</span>
+          <E path="basics.location">{b.location}</E>
+          <span className="text-gray-400">·</span>
+          <E path="basics.website">{b.website}</E>
         </div>
-      </header>
-      {b.summary && <p className="mb-5 text-[0.95em] italic text-center">{b.summary}</p>}
+      </Draggable>
+      <Draggable name="summary"><p className="mb-5 text-[0.95em] italic text-center"><E path="basics.summary" multiline>{b.summary}</E></p></Draggable>
 
       {resume.education.length > 0 && (
         <Section title="Education">

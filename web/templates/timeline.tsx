@@ -1,5 +1,5 @@
 "use client";
-import { TemplateProps, range, itemCls, Avatar } from "./shared";
+import { TemplateProps, range, itemCls, Avatar, E, Draggable } from "./shared";
 
 /**
  * Vertical timeline: each work/project entry has a dot on the left with a
@@ -31,20 +31,20 @@ export default function Timeline({ resume }: TemplateProps) {
 
   return (
     <div style={{ padding: "var(--pad)" }}>
-      <header className="flex items-center gap-4 mb-5 pb-4 border-b border-gray-200">
+      <Draggable name="header" as="header" className="flex items-center gap-4 mb-5 pb-4 border-b border-gray-200">
         <Avatar basics={b} size={84} />
         <div className="min-w-0 flex-1">
-          <h1 className="text-[2em] font-bold" style={{ color: "var(--resume-accent)" }}>{b.name}</h1>
-          <div className="text-[1em] text-gray-700">{b.label}</div>
+          <h1 className="text-[2em] font-bold" style={{ color: "var(--resume-accent)" }}><E path="basics.name">{b.name}</E></h1>
+          <div className="text-[1em] text-gray-700"><E path="basics.label">{b.label}</E></div>
           <div className="text-[0.82em] text-gray-600 mt-1 flex flex-wrap gap-x-3 gap-y-0.5">
-            {b.email && <span>✉ {b.email}</span>}
-            {b.phone && <span>☎ {b.phone}</span>}
-            {b.location && <span>📍 {b.location}</span>}
-            {b.website && <span>🔗 {b.website}</span>}
+            <span>✉ <E path="basics.email">{b.email}</E></span>
+            <span>☎ <E path="basics.phone">{b.phone}</E></span>
+            <span>📍 <E path="basics.location">{b.location}</E></span>
+            <span>🔗 <E path="basics.website">{b.website}</E></span>
           </div>
         </div>
-      </header>
-      {b.summary && <p className="text-[0.93em] text-gray-800 mb-2">{b.summary}</p>}
+      </Draggable>
+      <Draggable name="summary"><p className="text-[0.93em] text-gray-800 mb-2"><E path="basics.summary" multiline>{b.summary}</E></p></Draggable>
 
       {resume.work.length > 0 && (
         <>

@@ -1,5 +1,5 @@
 "use client";
-import { TemplateProps, range, itemCls, Avatar } from "./shared";
+import { TemplateProps, range, itemCls, Avatar, E, Draggable } from "./shared";
 
 /**
  * Minimalist academic: no color, purely typographic hierarchy. Small-caps
@@ -16,22 +16,26 @@ export default function AcademicMinimal({ resume }: TemplateProps) {
   );
   return (
     <div style={{ padding: "var(--pad)", fontFamily: "var(--resume-font-serif)" }}>
-      <header className="mb-6 flex items-start gap-5">
+      <Draggable name="header" as="header" className="mb-6 flex items-start gap-5">
         <div className="flex-1 min-w-0">
-          <h1 className="text-[2.3em] font-light tracking-tight">{b.name}</h1>
-          <div className="text-[1em] text-gray-600 italic">{b.label}</div>
-          <div className="text-[0.8em] text-gray-600 mt-2">
-            {[b.email, b.phone, b.location, b.website].filter(Boolean).join(" · ")}
+          <h1 className="text-[2.3em] font-light tracking-tight"><E path="basics.name">{b.name}</E></h1>
+          <div className="text-[1em] text-gray-600 italic"><E path="basics.label">{b.label}</E></div>
+          <div className="text-[0.8em] text-gray-600 mt-2 flex flex-wrap gap-x-2">
+            <E path="basics.email">{b.email}</E>
+            <span className="text-gray-400">·</span>
+            <E path="basics.phone">{b.phone}</E>
+            <span className="text-gray-400">·</span>
+            <E path="basics.location">{b.location}</E>
+            <span className="text-gray-400">·</span>
+            <E path="basics.website">{b.website}</E>
           </div>
         </div>
         <Avatar basics={b} size={80} />
-      </header>
+      </Draggable>
 
-      {b.summary && (
-        <Row label="Profile">
-          <p className="italic">{b.summary}</p>
-        </Row>
-      )}
+      <Row label="Profile">
+        <Draggable name="summary"><p className="italic"><E path="basics.summary" multiline>{b.summary}</E></p></Draggable>
+      </Row>
 
       {resume.education.length > 0 && (
         <Row label="Education">

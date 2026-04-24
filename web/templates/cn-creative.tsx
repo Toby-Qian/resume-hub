@@ -1,5 +1,5 @@
 "use client";
-import { TemplateProps, range, itemCls, Avatar } from "./shared";
+import { TemplateProps, range, itemCls, Avatar, E, Draggable } from "./shared";
 
 export default function CNCreative({ resume }: TemplateProps) {
   const b = resume.basics;
@@ -9,14 +9,16 @@ export default function CNCreative({ resume }: TemplateProps) {
         {b.showAvatar && b.avatar && (
           <div className="mb-4"><Avatar basics={b} size={110} rounded="full" className="ring-2 ring-white/60" /></div>
         )}
-        <h1 className="text-[2em] font-bold leading-tight">{b.name}</h1>
-        <div className="text-[0.95em] opacity-90 mt-1">{b.label}</div>
+        <Draggable name="header">
+          <h1 className="text-[2em] font-bold leading-tight"><E path="basics.name">{b.name}</E></h1>
+          <div className="text-[0.95em] opacity-90 mt-1"><E path="basics.label">{b.label}</E></div>
+        </Draggable>
         <div className="h-px bg-white/40 my-4" />
         <div className="text-[0.85em] space-y-1 opacity-95">
-          {b.phone && <div>📱 {b.phone}</div>}
-          {b.email && <div>✉ {b.email}</div>}
-          {b.location && <div>📍 {b.location}</div>}
-          {b.website && <div>🔗 {b.website}</div>}
+          <div>📱 <E path="basics.phone">{b.phone}</E></div>
+          <div>✉ <E path="basics.email">{b.email}</E></div>
+          <div>📍 <E path="basics.location">{b.location}</E></div>
+          <div>🔗 <E path="basics.website">{b.website}</E></div>
         </div>
         {resume.skills.length > 0 && (
           <>
@@ -40,7 +42,7 @@ export default function CNCreative({ resume }: TemplateProps) {
       </aside>
 
       <main style={{ padding: "var(--pad)" }}>
-        {b.summary && <p className="text-[0.95em] mb-5 text-gray-800">{b.summary}</p>}
+        <Draggable name="summary"><p className="text-[0.95em] mb-5 text-gray-800"><E path="basics.summary" multiline>{b.summary}</E></p></Draggable>
 
         {resume.work.length > 0 && (
           <section className="resume-section mb-5">

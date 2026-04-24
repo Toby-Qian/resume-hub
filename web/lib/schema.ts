@@ -15,6 +15,10 @@ export interface ResumeBasics {
   avatarSize?: number;    // width in px; height = width (portrait = width * 4/3)
   avatarOffsetX?: number; // drag offset relative to template's natural slot (px)
   avatarOffsetY?: number;
+  // Free-drag offsets for non-avatar text blocks. Keyed by a template-defined
+  // slot name ("header", "summary", "contact", ...). Values are pixel offsets
+  // applied via CSS transform so flow is undisturbed.
+  blockOffsets?: Record<string, { x?: number; y?: number }>;
 }
 
 export interface ResumeWork {

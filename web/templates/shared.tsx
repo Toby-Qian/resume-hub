@@ -1,5 +1,5 @@
 "use client";
-import { useRef } from "react";
+import { useRef, useEffect } from "react";
 import type { Resume } from "@/lib/schema";
 import { useStore } from "@/lib/store";
 
@@ -134,5 +134,155 @@ export function Item({ children, breakBefore = false, className = "" }: { childr
     <div className={`resume-item ${breakBefore ? "page-break-before" : ""} ${className}`}>
       {children}
     </div>
+  );
+}
+
+// ---------- Inline click-to-edit ("E") ------------------------------------
+// Immutable set-by-path for dotted paths like "basics.name", "work.0.company",
+// "work.1.highlights.2". Numeric segments index into arrays.
+function setByPath(obj: any, path: string, value: any): any {
+  const parts = path.split(".");
+  const clone = (v: any) => (Array.isArray(v) ? v.slice() : { ...v });
+  const root = clone(obj);
+  let cur: any = root;
+  for (let i = 0; i < parts.length - 1; i++) {
+    const k = parts[i];
+    const next = cur[k] ?? (Number.isFinite(+parts[i + 1]) ? [] : {});
+    cur[k] = clone(next);
+    cur = cur[k];
+  }
+  cur[parts[parts.length - 1]] = value;
+  return root;
+}
+
+/**
+ * Click any `<E>` text in the preview to edit in place. On blur we commit the
+ * new value back to the zustand store via a dotted path. Enter commits, Shift
+ * Enter inserts a newline. Visual: dashed underline on hover, yellow focus ring.
+ *
+ * We intentionally set `contentEditable` imperatively via ref + effect so React
+ * never re-renders the DOM subtree while the user is typing (which would move
+ * the caret to the start on every keystroke).
+ */
+export function E({
+  path,
+  children,
+  as: Tag = "span",
+  className = "",
+  multiline = false,
+}: {
+  path: string;
+  children?: React.ReactNode;
+  as?: any;
+  className?: string;
+  multiline?: boolean;
+}) {
+  const ref = useRef<HTMLElement>(null);
+  const editing = useRef(false);
+  const text = typeof children === "string" ? children
+    : Array.isArray(children) ? children.filter(c => typeof c === "string").join("") : (children ?? "");
+  useEffect(() => {
+    if (!ref.current) return;
+    // Don't overwrite the DOM while the user is actively editing.
+    if (editing.current) return;
+    const desired = typeof text === "string" ? text : String(text ?? "");
+    if (ref.current.textContent !== desired) ref.current.textContent = desired;
+  }, [text]);
+  const commit = () => {
+    const node = ref.current;
+    if (!node) return;
+    const value = node.textContent ?? "";
+    const { resume, setResume } = useStore.getState();
+    setResume(setByPath(resume, path, value));
+  };
+  const onFocus = () => { editing.current = true; };
+  const onBlur = () => { editing.current = false; commit(); };
+  const onKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter" && !multiline && !e.shiftKey) {
+      e.preventDefault();
+      (e.currentTarget as HTMLElement).blur();
+    }
+    if (e.key === "Escape") {
+      editing.current = false;
+      if (ref.current) ref.current.textContent = typeof text === "string" ? text : String(text ?? "");
+      (e.currentTarget as HTMLElement).blur();
+    }
+  };
+  return (
+    <Tag
+      ref={ref as any}
+      contentEditable
+      suppressContentEditableWarning
+      spellCheck={false}
+      data-edit-path={path}
+      onFocus={onFocus}
+      onBlur={onBlur}
+      onKeyDown={onKeyDown}
+      className={`editable-field ${className}`}
+    />
+  );
+}
+
+// ---------- Draggable text block ------------------------------------------
+/**
+ * Wrap any block in `<Draggable name="header">...` to let the user drag it
+ * around. Offset is persisted under `basics.blockOffsets[name]`. A small
+ * handle (⋮⋮) appears on hover so text inside stays clickable/editable.
+ */
+export function Draggable({
+  name,
+  children,
+  className = "",
+  as: Tag = "div",
+}: {
+  name: string;
+  children: React.ReactNode;
+  className?: string;
+  as?: any;
+}) {
+  const dragging = useRef<{ sx: number; sy: number; ox: number; oy: number } | null>(null);
+  const basics = useStore((s) => s.resume.basics);
+  const off = (basics.blockOffsets && basics.blockOffsets[name]) || { x: 0, y: 0 };
+
+  const onMouseDown = (e: React.MouseEvent) => {
+    if (e.button !== 0) return;
+    e.preventDefault();
+    e.stopPropagation();
+    const st = useStore.getState();
+    const cur = (st.resume.basics.blockOffsets && st.resume.basics.blockOffsets[name]) || { x: 0, y: 0 };
+    dragging.current = { sx: e.clientX, sy: e.clientY, ox: cur.x || 0, oy: cur.y || 0 };
+    const onMove = (ev: MouseEvent) => {
+      if (!dragging.current) return;
+      const { resume, update } = useStore.getState();
+      const bo = { ...(resume.basics.blockOffsets || {}) };
+      bo[name] = {
+        x: Math.round(dragging.current.ox + (ev.clientX - dragging.current.sx)),
+        y: Math.round(dragging.current.oy + (ev.clientY - dragging.current.sy)),
+      };
+      update("basics", { ...resume.basics, blockOffsets: bo });
+    };
+    const onUp = () => {
+      dragging.current = null;
+      window.removeEventListener("mousemove", onMove);
+      window.removeEventListener("mouseup", onUp);
+    };
+    window.addEventListener("mousemove", onMove);
+    window.addEventListener("mouseup", onUp);
+  };
+
+  return (
+    <Tag
+      className={`draggable-block group relative ${className}`}
+      style={{ transform: `translate(${off.x || 0}px, ${off.y || 0}px)` }}
+    >
+      <button
+        type="button"
+        onMouseDown={onMouseDown}
+        title="拖动此区块 / drag this block"
+        className="drag-handle"
+        aria-label="drag block"
+      >⋮⋮</button>
+      {children}
+    </Tag>
   );
 }

@@ -1,5 +1,5 @@
 "use client";
-import { TemplateProps, range, itemCls, Avatar } from "./shared";
+import { TemplateProps, range, itemCls, Avatar, E, Draggable } from "./shared";
 
 /**
  * Publication-first CV. Projects are rendered as a numbered publication list
@@ -17,17 +17,23 @@ export default function AcademicPub({ resume }: TemplateProps) {
   );
   return (
     <div style={{ padding: "var(--pad)", fontFamily: "var(--resume-font-serif)" }}>
-      <header className="flex items-start gap-4 mb-3">
+      <Draggable name="header" as="header" className="flex items-start gap-4 mb-3">
         <div className="flex-1 min-w-0">
-          <h1 className="text-[2em] font-bold">{b.name}</h1>
-          <div className="text-[0.95em] italic text-gray-700">{b.label}</div>
-          <div className="text-[0.82em] text-gray-600 mt-1">
-            {[b.email, b.phone, b.website, b.location].filter(Boolean).join(" · ")}
+          <h1 className="text-[2em] font-bold"><E path="basics.name">{b.name}</E></h1>
+          <div className="text-[0.95em] italic text-gray-700"><E path="basics.label">{b.label}</E></div>
+          <div className="text-[0.82em] text-gray-600 mt-1 flex flex-wrap gap-x-3">
+            <E path="basics.email">{b.email}</E>
+            <span className="text-gray-400">·</span>
+            <E path="basics.phone">{b.phone}</E>
+            <span className="text-gray-400">·</span>
+            <E path="basics.website">{b.website}</E>
+            <span className="text-gray-400">·</span>
+            <E path="basics.location">{b.location}</E>
           </div>
-          {b.summary && <p className="text-[0.9em] mt-2 text-gray-800">{b.summary}</p>}
+          <Draggable name="summary"><p className="text-[0.9em] mt-2 text-gray-800"><E path="basics.summary" multiline>{b.summary}</E></p></Draggable>
         </div>
         <Avatar basics={b} size={88} />
-      </header>
+      </Draggable>
 
       <H>Publications</H>
       {resume.projects.length === 0 ? (

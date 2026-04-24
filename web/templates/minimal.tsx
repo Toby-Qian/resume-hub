@@ -1,5 +1,5 @@
 "use client";
-import { TemplateProps, range, itemCls, Avatar } from "./shared";
+import { TemplateProps, range, itemCls, Avatar, E, Draggable } from "./shared";
 
 export default function Minimal({ resume }: TemplateProps) {
   const b = resume.basics;
@@ -11,28 +11,26 @@ export default function Minimal({ resume }: TemplateProps) {
   );
   return (
     <div style={{ padding: "var(--pad)" }}>
-      <header className="mb-8 flex items-center gap-5">
+      <Draggable name="header" as="header" className="mb-8 flex items-center gap-5">
         <div className="flex-1 min-w-0">
-          <h1 className="text-[2.4em] font-light">{b.name}</h1>
-          <div className="text-[1em] text-gray-500 mt-1">{b.label}</div>
+          <h1 className="text-[2.4em] font-light"><E path="basics.name">{b.name}</E></h1>
+          <div className="text-[1em] text-gray-500 mt-1"><E path="basics.label">{b.label}</E></div>
         </div>
         <Avatar basics={b} size={80} rounded="sm" />
-      </header>
+      </Draggable>
 
       <Row title="Contact">
         <div className="text-[0.9em] text-gray-700 space-y-0.5">
-          {b.email && <div>{b.email}</div>}
-          {b.phone && <div>{b.phone}</div>}
-          {b.location && <div>{b.location}</div>}
-          {b.website && <div>{b.website}</div>}
+          <div><E path="basics.email">{b.email}</E></div>
+          <div><E path="basics.phone">{b.phone}</E></div>
+          <div><E path="basics.location">{b.location}</E></div>
+          <div><E path="basics.website">{b.website}</E></div>
         </div>
       </Row>
 
-      {b.summary && (
-        <Row title="About">
-          <p className="text-[0.95em]">{b.summary}</p>
-        </Row>
-      )}
+      <Row title="About">
+        <Draggable name="summary"><p className="text-[0.95em]"><E path="basics.summary" multiline>{b.summary}</E></p></Draggable>
+      </Row>
 
       {resume.work.length > 0 && (
         <Row title="Work">

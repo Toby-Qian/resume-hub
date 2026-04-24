@@ -1,5 +1,5 @@
 "use client";
-import { TemplateProps, range, itemCls, Avatar } from "./shared";
+import { TemplateProps, range, itemCls, Avatar, E, Draggable } from "./shared";
 
 /**
  * The quintessential CV: serif body, "Curriculum Vitae" banner, centered
@@ -18,17 +18,23 @@ export default function AcademicClassic({ resume }: TemplateProps) {
       <div className="text-center text-[0.8em] tracking-[0.3em] uppercase text-gray-600 mb-2">
         Curriculum Vitae
       </div>
-      <header className="text-center border-b-2 border-gray-700 pb-3 mb-4">
+      <Draggable name="header" as="header" className="text-center border-b-2 border-gray-700 pb-3 mb-4">
         {b.showAvatar && b.avatar && (
           <div className="flex justify-center mb-3"><Avatar basics={b} size={96} /></div>
         )}
-        <h1 className="text-[2.1em] font-bold">{b.name}</h1>
-        <div className="text-[0.95em] italic text-gray-700 mt-1">{b.label}</div>
-        <div className="text-[0.82em] text-gray-600 mt-2">
-          {[b.email, b.phone, b.location, b.website].filter(Boolean).join(" · ")}
+        <h1 className="text-[2.1em] font-bold"><E path="basics.name">{b.name}</E></h1>
+        <div className="text-[0.95em] italic text-gray-700 mt-1"><E path="basics.label">{b.label}</E></div>
+        <div className="text-[0.82em] text-gray-600 mt-2 flex flex-wrap justify-center gap-x-3">
+          <E path="basics.email">{b.email}</E>
+          <span className="text-gray-400">·</span>
+          <E path="basics.phone">{b.phone}</E>
+          <span className="text-gray-400">·</span>
+          <E path="basics.location">{b.location}</E>
+          <span className="text-gray-400">·</span>
+          <E path="basics.website">{b.website}</E>
         </div>
-      </header>
-      {b.summary && <p className="text-[0.92em] text-justify italic mb-3">{b.summary}</p>}
+      </Draggable>
+      <Draggable name="summary"><p className="text-[0.92em] text-justify italic mb-3"><E path="basics.summary" multiline>{b.summary}</E></p></Draggable>
 
       {resume.education.length > 0 && (
         <><H>Education</H>
