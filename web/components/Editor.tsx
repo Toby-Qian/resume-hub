@@ -3,6 +3,7 @@ import { useStore } from "@/lib/store";
 import { SectionKey, Resume } from "@/lib/schema";
 import { t } from "@/lib/i18n";
 import { Field } from "./Field";
+import { toast } from "@/lib/toast";
 
 export function Editor() {
   const { resume, update, addItem, removeItem, lang } = useStore();
@@ -106,7 +107,7 @@ export function Editor() {
             const f = e.target.files?.[0];
             if (!f) return;
             if (f.size > 800_000) {
-              alert(L.form.avatarTooLarge);
+              toast.error(L.form.avatarTooLarge);
               return;
             }
             const r = new FileReader();

@@ -4,9 +4,19 @@ import { useStore } from "@/lib/store";
 import { t } from "@/lib/i18n";
 import templatesData from "@/data/templates.json";
 
+// Rewrite relative URLs inside README to point at raw.githubusercontent /
+// github.com so inline images and links keep working when we render the README
+// out-of-context on our own domain.
+function resolveUrl(url: string, fullName: string, branch: string, kind: "img" | "link"): string {
+  if (/^(https?:|data:|mailto:|#)/i.test(url)) return url;
+  const clean = url.replace(/^\.?\/+/, "");
+  if (kind === "img") return `https://raw.githubusercontent.com/${fullName}/${branch}/${clean}`;
+  return `https://github.com/${fullName}/blob/${branch}/${clean}`;
+}
+
 // naive markdown-ish -> html: just enough to make a README readable inline
 // without pulling a markdown lib. Escapes HTML, then bolds/italics/code/links.
-function renderReadme(md: string): string {
+function renderReadme(md: string, fullName: string, branch: string): string {
   let s = md
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
@@ -18,8 +28,10 @@ function renderReadme(md: string): string {
   s = s.replace(/^# (.+)$/gm, '<h1 class="font-bold mt-3 text-lg">$1</h1>');
   s = s.replace(/\*\*([^*]+)\*\*/g, '<b>$1</b>');
   s = s.replace(/\*([^*\n]+)\*/g, '<i>$1</i>');
-  s = s.replace(/!\[([^\]]*)\]\(([^)]+)\)/g, '<img alt="$1" src="$2" class="max-w-full my-2 rounded" loading="lazy" />');
-  s = s.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noreferrer" class="text-blue-600 underline">$1</a>');
+  s = s.replace(/!\[([^\]]*)\]\(([^)]+)\)/g, (_m, alt, url) =>
+    `<img alt="${alt}" src="${resolveUrl(url, fullName, branch, "img")}" class="max-w-full my-2 rounded" loading="lazy" />`);
+  s = s.replace(/\[([^\]]+)\]\(([^)]+)\)/g, (_m, text, url) =>
+    `<a href="${resolveUrl(url, fullName, branch, "link")}" target="_blank" rel="noreferrer" class="text-blue-600 underline">${text}</a>`);
   s = s.replace(/\n{2,}/g, "</p><p class=\"my-2\">");
   return `<p class="my-2">${s}</p>`;
 }
@@ -77,12 +89,13 @@ function Thumbnail({ row }: { row: Row }) {
 function PreviewModal({ row, onClose, L }: { row: Row; onClose: () => void; L: any }) {
   const [tab, setTab] = useState<"demo" | "readme">(row.homepage ? "demo" : "readme");
   const [readme, setReadme] = useState<string | null>(null);
+  const [readmeBranch, setReadmeBranch] = useState<string>(row.default_branch || "main");
   const [readmeErr, setReadmeErr] = useState(false);
 
   useEffect(() => {
     if (tab !== "readme" || readme !== null || readmeErr) return;
     const tryFetch = async () => {
-      const branches = [row.default_branch || "main", "master", "main"];
+      const branches = Array.from(new Set([row.default_branch || "main", "main", "master"]));
       const names = ["README.md", "readme.md", "Readme.md", "README.MD"];
       for (const b of branches) {
         for (const n of names) {
@@ -91,6 +104,7 @@ function PreviewModal({ row, onClose, L }: { row: Row; onClose: () => void; L: a
             if (r.ok) {
               const text = await r.text();
               setReadme(text.slice(0, 20000));
+              setReadmeBranch(b);
               return;
             }
           } catch { /* try next */ }
@@ -110,8 +124,8 @@ function PreviewModal({ row, onClose, L }: { row: Row; onClose: () => void; L: a
   const overleaf = `https://www.overleaf.com/clsi/import/github?url=${encodeURIComponent(row.html_url)}`;
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-4" onClick={onClose}>
-      <div className="bg-white rounded-lg shadow-2xl w-full max-w-5xl max-h-[90vh] flex flex-col overflow-hidden"
+    <div className="fixed inset-0 z-50 bg-black/60 flex items-center justify-center sm:p-4" onClick={onClose}>
+      <div className="bg-white shadow-2xl w-full h-full sm:h-auto sm:rounded-lg sm:max-w-5xl sm:max-h-[90vh] flex flex-col overflow-hidden"
         onClick={(e) => e.stopPropagation()}>
         <header className="flex items-center justify-between px-4 py-3 border-b">
           <div className="min-w-0">
@@ -149,7 +163,16 @@ function PreviewModal({ row, onClose, L }: { row: Row; onClose: () => void; L: a
         </div>
         <div className="flex-1 overflow-auto">
           {tab === "demo" && row.homepage ? (
-            <iframe src={row.homepage} className="w-full h-full min-h-[60vh]" sandbox="allow-scripts allow-same-origin allow-popups" />
+            <div className="flex flex-col h-full min-h-[60vh]">
+              <div className="px-4 py-2 bg-amber-50 text-amber-900 text-xs border-b border-amber-200 flex items-center justify-between gap-2">
+                <span className="truncate">{row.homepage}</span>
+                <a href={row.homepage} target="_blank" rel="noreferrer" className="underline whitespace-nowrap">
+                  ↗ {L.gallery.openOnGithub.replace(/GitHub/i, "新标签页").replace(/Open on/i, "Open in")}
+                </a>
+              </div>
+              <iframe src={row.homepage} className="w-full flex-1 min-h-[55vh]"
+                sandbox="allow-scripts allow-same-origin allow-popups allow-forms" />
+            </div>
           ) : tab === "demo" ? (
             <div className="p-8 text-center text-sm text-gray-500">{L.gallery.previewNoPreview}</div>
           ) : readmeErr ? (
@@ -158,7 +181,7 @@ function PreviewModal({ row, onClose, L }: { row: Row; onClose: () => void; L: a
             <div className="p-8 text-center text-sm text-gray-500">{L.gallery.previewLoading}</div>
           ) : (
             <div className="p-6 prose prose-sm max-w-none text-[0.9em] leading-relaxed"
-              dangerouslySetInnerHTML={{ __html: renderReadme(readme) }} />
+              dangerouslySetInnerHTML={{ __html: renderReadme(readme, row.full_name, readmeBranch) }} />
           )}
         </div>
       </div>
