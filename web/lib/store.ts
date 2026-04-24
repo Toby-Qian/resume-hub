@@ -57,8 +57,8 @@ const blankItem = (s: SectionKey): any => {
 export const useStore = create<State>()(
   persist(
     (set, get) => ({
-      resume: sampleEN,
-      template: "modern",
+      resume: sampleZH,
+      template: "cn-formal",
       theme: defaultTheme,
       lang: "zh",
       setResume: (r) => set({ resume: r }),

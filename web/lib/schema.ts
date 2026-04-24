@@ -10,6 +10,7 @@ export interface ResumeBasics {
   website: string;
   summary: string;
   avatar?: string;        // data URL or http(s)
+  showAvatar?: boolean;   // toggle whether templates render the photo
 }
 
 export interface ResumeWork {

@@ -12,6 +12,7 @@ export const T = {
     fields: {
       name: "姓名", label: "职位/头衔", email: "邮箱", phone: "电话",
       location: "城市", website: "个人网站", summary: "个人简介",
+      avatar: "头像链接 / 或下方上传", showAvatar: "显示头像",
       company: "公司", position: "职位", startDate: "开始", endDate: "结束",
       institution: "学校", area: "专业", studyType: "学历", score: "成绩/排名",
       courses: "主修课程", highlights: "要点（每行一条）",
@@ -41,6 +42,13 @@ export const T = {
       showing: "已显示 {shown} / {total}",
       openInOverleaf: "在 Overleaf 打开",
       openOnGithub: "在 GitHub 打开",
+      preview: "预览",
+      previewTitle: "模板预览",
+      previewHomepage: "在线演示",
+      previewReadme: "说明文档",
+      previewLoading: "加载中…",
+      previewNoPreview: "该模板没有可内嵌的在线演示，请点击下方按钮在 GitHub 查看源码。",
+      close: "关闭",
     },
     templates: {
       modern: "现代", classic: "经典", minimal: "极简",
@@ -58,6 +66,7 @@ export const T = {
       invalidEmail: "邮箱格式不正确",
       breakBefore: "下一节换页",
       confirmReset: "确定要清空全部内容吗？",
+      avatarTooLarge: "图片过大（请小于 800KB），或改用 URL。",
     },
     preview: {
       pageHint: "灰色分隔线为 A4 分页边界，打印/导出 PDF 时会自动换页",
@@ -74,6 +83,7 @@ export const T = {
     fields: {
       name: "Name", label: "Headline", email: "Email", phone: "Phone",
       location: "Location", website: "Website", summary: "Summary",
+      avatar: "Photo URL / or upload below", showAvatar: "Show photo",
       company: "Company", position: "Position", startDate: "Start", endDate: "End",
       institution: "Institution", area: "Field", studyType: "Degree", score: "GPA / Rank",
       courses: "Courses", highlights: "Highlights (one per line)",
@@ -103,6 +113,13 @@ export const T = {
       showing: "Showing {shown} / {total}",
       openInOverleaf: "Open in Overleaf",
       openOnGithub: "Open on GitHub",
+      preview: "Preview",
+      previewTitle: "Template preview",
+      previewHomepage: "Live demo",
+      previewReadme: "README",
+      previewLoading: "Loading…",
+      previewNoPreview: "No embeddable demo for this template — open it on GitHub to view the source.",
+      close: "Close",
     },
     templates: {
       modern: "Modern", classic: "Classic", minimal: "Minimal",
@@ -120,6 +137,7 @@ export const T = {
       invalidEmail: "Invalid email format",
       breakBefore: "Start on new page",
       confirmReset: "Clear all content?",
+      avatarTooLarge: "Image too large (< 800KB), or use a URL instead.",
     },
     preview: {
       pageHint: "Grey lines mark A4 page boundaries — print / PDF export will split automatically",

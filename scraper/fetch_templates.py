@@ -43,6 +43,31 @@ QUERIES: list[tuple[str, str]] = [
 NEGATIVE_NAME = re.compile(r"interview|leetcode|tutorial|self-?learn|guide|awesome-(?!cv|resume)|system-?design|100-?days|book", re.I)
 POSITIVE_HINT = re.compile(r"resume|cv|简历", re.I)
 
+# Content policy: drop repos whose name/description touches politically sensitive
+# figures/events or NSFW content. The gallery is meant for resume templates only;
+# anything else is noise and can embarrass the hosted site.
+CONTENT_DENY = re.compile(
+    r"xi[-\s]?jinping|jinping|mao[-\s]?zedong|tiananmen|tibet|xinjiang|uyghur|"
+    r"falun|六四|天安门|习近平|毛泽东|法轮|共产|反共|台独|港独|"
+    r"porn|nsfw|xxx|sex|hentai|erotic|adult|nude|onlyfans|涉黄|色情",
+    re.I,
+)
+
+# Explicit full_name blacklist for repos that are not genuine resume templates.
+EXPLICIT_BLACKLIST = {
+    "cirosantilli/x86-bare-metal-examples",
+    "cirosantilli/china-dictatorship",
+    "cirosantilli/linux-kernel-module-cheat",
+}
+
+
+def is_blocked(repo: dict[str, Any]) -> bool:
+    if repo.get("full_name") in EXPLICIT_BLACKLIST:
+        return True
+    owner = (repo.get("owner") or {}).get("login", "") if isinstance(repo.get("owner"), dict) else repo.get("owner", "")
+    blob = f"{owner} {repo.get('name','')} {repo.get('description','') or ''} {' '.join(repo.get('topics') or [])}"
+    return bool(CONTENT_DENY.search(blob))
+
 PER_PAGE = 50
 MAX_PAGES = 2  # 100 repos per query is plenty
 
@@ -105,6 +130,8 @@ def fetch_query(q: str, hint: str) -> list[dict[str, Any]]:
             if NEGATIVE_NAME.search(blob):
                 continue
             if not POSITIVE_HINT.search(blob) and "resume" not in (it.get("topics") or []) and "cv" not in (it.get("topics") or []):
+                continue
+            if is_blocked(it):
                 continue
             out.append({
                 "full_name": it["full_name"],

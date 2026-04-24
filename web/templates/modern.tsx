@@ -1,20 +1,23 @@
 "use client";
-import { TemplateProps, Section, range, itemCls } from "./shared";
+import { TemplateProps, Section, range, itemCls, Avatar } from "./shared";
 
 export default function Modern({ resume }: TemplateProps) {
   const b = resume.basics;
   return (
     <div style={{ padding: "var(--pad)" }}>
-      <header className="mb-6">
-        <h1 className="text-[2em] font-bold" style={{ color: "var(--resume-accent)" }}>{b.name}</h1>
-        <div className="text-[1.05em] text-gray-700 mt-1">{b.label}</div>
-        <div className="text-[0.85em] text-gray-600 mt-2 flex flex-wrap gap-x-4 gap-y-1">
-          {b.email && <span>✉ {b.email}</span>}
-          {b.phone && <span>☎ {b.phone}</span>}
-          {b.location && <span>📍 {b.location}</span>}
-          {b.website && <span>🔗 {b.website}</span>}
+      <header className="mb-6 flex items-start gap-5">
+        <div className="flex-1 min-w-0">
+          <h1 className="text-[2em] font-bold" style={{ color: "var(--resume-accent)" }}>{b.name}</h1>
+          <div className="text-[1.05em] text-gray-700 mt-1">{b.label}</div>
+          <div className="text-[0.85em] text-gray-600 mt-2 flex flex-wrap gap-x-4 gap-y-1">
+            {b.email && <span>✉ {b.email}</span>}
+            {b.phone && <span>☎ {b.phone}</span>}
+            {b.location && <span>📍 {b.location}</span>}
+            {b.website && <span>🔗 {b.website}</span>}
+          </div>
+          {b.summary && <p className="mt-3 text-[0.95em] text-gray-800">{b.summary}</p>}
         </div>
-        {b.summary && <p className="mt-3 text-[0.95em] text-gray-800">{b.summary}</p>}
+        <Avatar basics={b} size={96} />
       </header>
 
       {resume.work.length > 0 && (

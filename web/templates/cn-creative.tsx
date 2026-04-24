@@ -1,11 +1,14 @@
 "use client";
-import { TemplateProps, range, itemCls } from "./shared";
+import { TemplateProps, range, itemCls, Avatar } from "./shared";
 
 export default function CNCreative({ resume }: TemplateProps) {
   const b = resume.basics;
   return (
     <div className="grid grid-cols-[35%_1fr]" style={{ minHeight: "inherit" }}>
       <aside style={{ background: "var(--resume-accent)", color: "white", padding: "var(--pad)" }}>
+        {b.showAvatar && b.avatar && (
+          <div className="mb-4"><Avatar basics={b} size={110} rounded="full" className="ring-2 ring-white/60" /></div>
+        )}
         <h1 className="text-[2em] font-bold leading-tight">{b.name}</h1>
         <div className="text-[0.95em] opacity-90 mt-1">{b.label}</div>
         <div className="h-px bg-white/40 my-4" />

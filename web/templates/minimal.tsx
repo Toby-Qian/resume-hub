@@ -1,5 +1,5 @@
 "use client";
-import { TemplateProps, range, itemCls } from "./shared";
+import { TemplateProps, range, itemCls, Avatar } from "./shared";
 
 export default function Minimal({ resume }: TemplateProps) {
   const b = resume.basics;
@@ -11,9 +11,12 @@ export default function Minimal({ resume }: TemplateProps) {
   );
   return (
     <div style={{ padding: "var(--pad)" }}>
-      <header className="mb-8">
-        <h1 className="text-[2.4em] font-light">{b.name}</h1>
-        <div className="text-[1em] text-gray-500 mt-1">{b.label}</div>
+      <header className="mb-8 flex items-center gap-5">
+        <div className="flex-1 min-w-0">
+          <h1 className="text-[2.4em] font-light">{b.name}</h1>
+          <div className="text-[1em] text-gray-500 mt-1">{b.label}</div>
+        </div>
+        <Avatar basics={b} size={80} rounded="sm" />
       </header>
 
       <Row title="Contact">

@@ -1,5 +1,5 @@
 "use client";
-import { TemplateProps, range, itemCls } from "./shared";
+import { TemplateProps, range, itemCls, Avatar } from "./shared";
 
 export default function ENAcademic({ resume }: TemplateProps) {
   const b = resume.basics;
@@ -9,6 +9,9 @@ export default function ENAcademic({ resume }: TemplateProps) {
   return (
     <div style={{ padding: "var(--pad)", fontFamily: "var(--resume-font-serif)" }}>
       <header className="text-center mb-3">
+        {b.showAvatar && b.avatar && (
+          <div className="flex justify-center mb-2"><Avatar basics={b} size={88} rounded="full" /></div>
+        )}
         <h1 className="text-[2.2em] font-bold">{b.name}</h1>
         <div className="text-[0.9em] text-gray-700 mt-1">
           {[b.location, b.phone, b.email, b.website].filter(Boolean).join(" · ")}

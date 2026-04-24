@@ -12,7 +12,7 @@ export function Editor() {
     const list = resume[section] as any[];
     update(section, list.map((x) => (x.id === id ? { ...x, [field]: value } : x)) as Resume[K]);
   };
-  const patchBasics = (field: string, value: string) =>
+  const patchBasics = (field: string, value: any) =>
     update("basics", { ...resume.basics, [field]: value });
 
   const RemoveBtn = ({ onClick }: { onClick: () => void }) => (
@@ -76,6 +76,53 @@ export function Editor() {
         <Field label={L.fields.website} value={resume.basics.website} onChange={(v) => patchBasics("website", v)} />
       </div>
       <Field textarea label={L.fields.summary} value={resume.basics.summary} onChange={(v) => patchBasics("summary", v)} />
+
+      {/* Avatar controls */}
+      <div className="flex items-start gap-3 mb-2">
+        <div className="flex-1">
+          <Field
+            label={L.fields.avatar}
+            value={resume.basics.avatar || ""}
+            onChange={(v) => patchBasics("avatar", v)}
+            placeholder="https://... or data:image/..."
+          />
+        </div>
+        <label className="flex flex-col items-center gap-1 text-[0.7rem] text-gray-600 cursor-pointer shrink-0 mt-[1.55rem]">
+          <input
+            type="checkbox"
+            className="accent-blue-600"
+            checked={!!resume.basics.showAvatar}
+            onChange={(e) => patchBasics("showAvatar", e.target.checked)}
+          />
+          <span>{L.fields.showAvatar}</span>
+        </label>
+      </div>
+      <div className="flex items-center gap-2 mb-3">
+        <input
+          type="file"
+          accept="image/*"
+          className="text-[0.7rem]"
+          onChange={(e) => {
+            const f = e.target.files?.[0];
+            if (!f) return;
+            if (f.size > 800_000) {
+              alert(L.form.avatarTooLarge);
+              return;
+            }
+            const r = new FileReader();
+            r.onload = () => patchBasics("avatar", String(r.result));
+            r.readAsDataURL(f);
+            e.target.value = "";
+          }}
+        />
+        {resume.basics.avatar && (
+          <button
+            onClick={() => { patchBasics("avatar", ""); patchBasics("showAvatar", false); }}
+            className="text-[0.7rem] text-red-500 hover:underline">
+            {L.actions.remove}
+          </button>
+        )}
+      </div>
 
       <SectionTitle onAdd={() => addItem("work")}>{L.sections.work}</SectionTitle>
       {resume.work.map((w) => (

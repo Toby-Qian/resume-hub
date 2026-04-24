@@ -1,5 +1,5 @@
 "use client";
-import { TemplateProps, range, itemCls } from "./shared";
+import { TemplateProps, range, itemCls, Avatar } from "./shared";
 
 export default function CNFormal({ resume }: TemplateProps) {
   const b = resume.basics;
@@ -8,10 +8,13 @@ export default function CNFormal({ resume }: TemplateProps) {
   );
   return (
     <div style={{ padding: "var(--pad)" }}>
-      <header className="flex justify-between items-end pb-3 mb-4 border-b-2" style={{ borderColor: "var(--resume-accent)" }}>
-        <div>
-          <h1 className="text-[2em] font-bold">{b.name}</h1>
-          <div className="text-[1em] text-gray-700 mt-1">{b.label}</div>
+      <header className="flex justify-between items-end pb-3 mb-4 border-b-2 gap-4" style={{ borderColor: "var(--resume-accent)" }}>
+        <div className="flex items-end gap-4 min-w-0">
+          <Avatar basics={b} size={88} rounded="md" />
+          <div>
+            <h1 className="text-[2em] font-bold">{b.name}</h1>
+            <div className="text-[1em] text-gray-700 mt-1">{b.label}</div>
+          </div>
         </div>
         <div className="text-[0.85em] text-right text-gray-700 space-y-0.5">
           {b.phone && <div>电话：{b.phone}</div>}

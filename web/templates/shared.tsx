@@ -14,6 +14,36 @@ export const range = (a?: string, b?: string) =>
 export const itemCls = (item: any, extra = "") =>
   `resume-item ${item?.breakBefore ? "page-break-before" : ""} ${extra}`.trim();
 
+/** Render the avatar only when user has both uploaded/pasted one AND enabled the toggle. */
+export function Avatar({
+  basics,
+  size = 88,
+  rounded = "full",
+  style,
+  className = "",
+}: {
+  basics: { avatar?: string; showAvatar?: boolean; name?: string };
+  size?: number;
+  rounded?: "full" | "md" | "sm" | "none";
+  style?: React.CSSProperties;
+  className?: string;
+}) {
+  if (!basics.showAvatar || !basics.avatar) return null;
+  const roundCls =
+    rounded === "full" ? "rounded-full" :
+    rounded === "md" ? "rounded-md" :
+    rounded === "sm" ? "rounded-sm" : "";
+  return (
+    /* eslint-disable-next-line @next/next/no-img-element */
+    <img
+      src={basics.avatar}
+      alt={basics.name || "avatar"}
+      className={`object-cover shrink-0 ${roundCls} ${className}`}
+      style={{ width: size, height: size, ...style }}
+    />
+  );
+}
+
 /**
  * Section: if items inside have `breakBefore`, the auto-generated CSS class
  * `page-break-before` on the item will push it to a new page. Templates

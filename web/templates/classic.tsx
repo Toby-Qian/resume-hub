@@ -1,11 +1,16 @@
 "use client";
-import { TemplateProps, Section, range, itemCls } from "./shared";
+import { TemplateProps, Section, range, itemCls, Avatar } from "./shared";
 
 export default function Classic({ resume }: TemplateProps) {
   const b = resume.basics;
   return (
     <div style={{ padding: "var(--pad)", fontFamily: "var(--resume-font-serif)" }}>
       <header className="text-center mb-6 pb-4 border-b-2 border-gray-800">
+        {b.showAvatar && b.avatar && (
+          <div className="flex justify-center mb-3">
+            <Avatar basics={b} size={90} rounded="full" />
+          </div>
+        )}
         <h1 className="text-[2.2em] font-bold tracking-wider">{b.name}</h1>
         <div className="text-[1em] italic text-gray-700 mt-1">{b.label}</div>
         <div className="text-[0.85em] text-gray-600 mt-2">

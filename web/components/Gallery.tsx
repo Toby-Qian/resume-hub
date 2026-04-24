@@ -4,11 +4,32 @@ import { useStore } from "@/lib/store";
 import { t } from "@/lib/i18n";
 import templatesData from "@/data/templates.json";
 
+// naive markdown-ish -> html: just enough to make a README readable inline
+// without pulling a markdown lib. Escapes HTML, then bolds/italics/code/links.
+function renderReadme(md: string): string {
+  let s = md
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
+  s = s.replace(/```([\s\S]*?)```/g, (_m, code) => `<pre class="bg-gray-100 p-2 rounded text-xs overflow-x-auto">${code}</pre>`);
+  s = s.replace(/`([^`]+)`/g, '<code class="bg-gray-100 px-1 rounded text-xs">$1</code>');
+  s = s.replace(/^### (.+)$/gm, '<h3 class="font-semibold mt-3 text-sm">$1</h3>');
+  s = s.replace(/^## (.+)$/gm, '<h2 class="font-semibold mt-3 text-base">$1</h2>');
+  s = s.replace(/^# (.+)$/gm, '<h1 class="font-bold mt-3 text-lg">$1</h1>');
+  s = s.replace(/\*\*([^*]+)\*\*/g, '<b>$1</b>');
+  s = s.replace(/\*([^*\n]+)\*/g, '<i>$1</i>');
+  s = s.replace(/!\[([^\]]*)\]\(([^)]+)\)/g, '<img alt="$1" src="$2" class="max-w-full my-2 rounded" loading="lazy" />');
+  s = s.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noreferrer" class="text-blue-600 underline">$1</a>');
+  s = s.replace(/\n{2,}/g, "</p><p class=\"my-2\">");
+  return `<p class="my-2">${s}</p>`;
+}
+
 type Row = {
   full_name: string; name: string; owner: string; html_url: string;
   description: string; stars: number; forks: number; language: string | null;
   topics: string[]; license: string | null; stack: string; lang: string;
   screenshot_guess: string; homepage: string | null;
+  default_branch?: string;
 };
 
 const STACKS = ["all", "html", "latex", "typst", "markdown", "docx", "other"];
@@ -53,6 +74,98 @@ function Thumbnail({ row }: { row: Row }) {
   );
 }
 
+function PreviewModal({ row, onClose, L }: { row: Row; onClose: () => void; L: any }) {
+  const [tab, setTab] = useState<"demo" | "readme">(row.homepage ? "demo" : "readme");
+  const [readme, setReadme] = useState<string | null>(null);
+  const [readmeErr, setReadmeErr] = useState(false);
+
+  useEffect(() => {
+    if (tab !== "readme" || readme !== null || readmeErr) return;
+    const tryFetch = async () => {
+      const branches = [row.default_branch || "main", "master", "main"];
+      const names = ["README.md", "readme.md", "Readme.md", "README.MD"];
+      for (const b of branches) {
+        for (const n of names) {
+          try {
+            const r = await fetch(`https://raw.githubusercontent.com/${row.full_name}/${b}/${n}`);
+            if (r.ok) {
+              const text = await r.text();
+              setReadme(text.slice(0, 20000));
+              return;
+            }
+          } catch { /* try next */ }
+        }
+      }
+      setReadmeErr(true);
+    };
+    tryFetch();
+  }, [tab, readme, readmeErr, row]);
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [onClose]);
+
+  const overleaf = `https://www.overleaf.com/clsi/import/github?url=${encodeURIComponent(row.html_url)}`;
+
+  return (
+    <div className="fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-4" onClick={onClose}>
+      <div className="bg-white rounded-lg shadow-2xl w-full max-w-5xl max-h-[90vh] flex flex-col overflow-hidden"
+        onClick={(e) => e.stopPropagation()}>
+        <header className="flex items-center justify-between px-4 py-3 border-b">
+          <div className="min-w-0">
+            <div className="font-semibold truncate">{row.full_name}</div>
+            <div className="text-xs text-gray-500 truncate">{row.description || "—"}</div>
+          </div>
+          <div className="flex items-center gap-2 shrink-0 ml-4">
+            <a href={row.html_url} target="_blank" rel="noreferrer"
+              className="text-xs px-3 py-1.5 rounded border border-gray-300 hover:bg-gray-50">
+              {L.gallery.openOnGithub}
+            </a>
+            {row.stack === "latex" && (
+              <a href={overleaf} target="_blank" rel="noreferrer"
+                className="text-xs px-3 py-1.5 rounded bg-emerald-600 text-white hover:bg-emerald-700">
+                {L.gallery.openInOverleaf}
+              </a>
+            )}
+            <button onClick={onClose}
+              className="text-xs px-3 py-1.5 rounded border border-gray-300 hover:bg-gray-50">
+              {L.gallery.close}
+            </button>
+          </div>
+        </header>
+        <div className="flex items-center gap-1 px-4 pt-3 border-b bg-gray-50">
+          {row.homepage && (
+            <button onClick={() => setTab("demo")}
+              className={`text-xs px-3 py-1.5 rounded-t ${tab === "demo" ? "bg-white border border-b-white border-gray-300" : "text-gray-500 hover:text-gray-800"}`}>
+              {L.gallery.previewHomepage}
+            </button>
+          )}
+          <button onClick={() => setTab("readme")}
+            className={`text-xs px-3 py-1.5 rounded-t ${tab === "readme" ? "bg-white border border-b-white border-gray-300" : "text-gray-500 hover:text-gray-800"}`}>
+            {L.gallery.previewReadme}
+          </button>
+        </div>
+        <div className="flex-1 overflow-auto">
+          {tab === "demo" && row.homepage ? (
+            <iframe src={row.homepage} className="w-full h-full min-h-[60vh]" sandbox="allow-scripts allow-same-origin allow-popups" />
+          ) : tab === "demo" ? (
+            <div className="p-8 text-center text-sm text-gray-500">{L.gallery.previewNoPreview}</div>
+          ) : readmeErr ? (
+            <div className="p-8 text-center text-sm text-gray-500">{L.gallery.previewNoPreview}</div>
+          ) : readme === null ? (
+            <div className="p-8 text-center text-sm text-gray-500">{L.gallery.previewLoading}</div>
+          ) : (
+            <div className="p-6 prose prose-sm max-w-none text-[0.9em] leading-relaxed"
+              dangerouslySetInnerHTML={{ __html: renderReadme(readme) }} />
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export function Gallery() {
   const { lang } = useStore();
   const L = t(lang);
@@ -60,6 +173,7 @@ export function Gallery() {
   const [flang, setFLang] = useState("all");
   const [q, setQ] = useState("");
   const [page, setPage] = useState(1);
+  const [preview, setPreview] = useState<Row | null>(null);
   const rows = (templatesData as any).templates as Row[];
 
   const filtered = useMemo(() => {
@@ -126,9 +240,9 @@ export function Gallery() {
             {shown.map((r) => (
               <div key={r.full_name}
                 className="border border-gray-200 rounded-lg bg-white hover:shadow-md hover:border-blue-400 transition overflow-hidden flex flex-col">
-                <a href={r.html_url} target="_blank" rel="noreferrer" className="block">
+                <button type="button" onClick={() => setPreview(r)} className="block text-left">
                   <Thumbnail row={r} />
-                </a>
+                </button>
                 <div className="p-3 flex-1 flex flex-col">
                   <div className="flex justify-between items-start">
                     <a href={r.html_url} target="_blank" rel="noreferrer"
@@ -145,6 +259,10 @@ export function Gallery() {
                     {r.language && <span className="text-[10px] px-1.5 py-0.5 rounded bg-gray-100 text-gray-700">{r.language}</span>}
                   </div>
                   <div className="mt-3 pt-3 border-t border-gray-100 flex gap-2">
+                    <button type="button" onClick={() => setPreview(r)}
+                      className="flex-1 text-xs text-center px-2 py-1.5 rounded bg-blue-600 text-white hover:bg-blue-700 transition">
+                      {L.gallery.preview}
+                    </button>
                     {r.stack === "latex" ? (
                       <a href={overleafUrl(r)} target="_blank" rel="noreferrer"
                         className="flex-1 text-xs text-center px-2 py-1.5 rounded bg-emerald-600 text-white hover:bg-emerald-700 transition">
@@ -152,7 +270,7 @@ export function Gallery() {
                       </a>
                     ) : null}
                     <a href={r.html_url} target="_blank" rel="noreferrer"
-                      className={`${r.stack === "latex" ? "flex-none" : "flex-1"} text-xs text-center px-2 py-1.5 rounded border border-gray-300 hover:bg-gray-50 transition`}>
+                      className="flex-none text-xs text-center px-2 py-1.5 rounded border border-gray-300 hover:bg-gray-50 transition">
                       {L.gallery.openOnGithub}
                     </a>
                   </div>
@@ -171,6 +289,8 @@ export function Gallery() {
           )}
         </>
       )}
+
+      {preview && <PreviewModal row={preview} onClose={() => setPreview(null)} L={L} />}
     </div>
   );
 }
