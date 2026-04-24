@@ -117,8 +117,7 @@ body { background: #f3f4f6; color: #111827; font-family: var(--resume-font-sans)
 
 /* ---------- Free-floating notes ---------------------------------------- */
 .resume-note {
-  /* outline only appears on hover/focus so the note reads as plain text in
-     the normal preview + print output */
+  /* The wrapper itself is not a pointer target; children drive interaction. */
 }
 .resume-note .note-body {
   outline: none;
@@ -127,12 +126,17 @@ body { background: #f3f4f6; color: #111827; font-family: var(--resume-font-sans)
   border: 1px dashed transparent;
   white-space: pre-wrap;
   line-height: 1.4;
-  transition: border-color 0.15s, background-color 0.15s;
+  cursor: text;
+  transition: border-color 0.15s, background-color 0.15s, box-shadow 0.15s;
 }
-.resume-note.hovered .note-body,
-.resume-note .note-body:focus {
+.resume-note:hover .note-body,
+.resume-note .note-body:focus,
+.resume-note.selected .note-body {
   border-color: #f59e0b;
   background-color: rgba(254, 243, 199, 0.5);
+}
+.resume-note.selected .note-body {
+  box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.35);
 }
 .resume-note .note-body.empty::before {
   content: "输入文本 / type text";
@@ -143,37 +147,54 @@ body { background: #f3f4f6; color: #111827; font-family: var(--resume-font-sans)
 
 .resume-note .note-chrome {
   position: absolute;
-  top: -26px;
+  top: -30px;
   left: 0;
   display: none;
   gap: 3px;
   align-items: center;
-  padding: 2px 3px;
+  padding: 3px 4px;
   background: white;
   border: 1px solid #d1d5db;
-  border-radius: 4px;
+  border-radius: 5px;
   font-size: 11px;
   line-height: 1;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
-  z-index: 10;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+  z-index: 30;
+  white-space: nowrap;
 }
-.resume-note.hovered .note-chrome { display: flex; }
+.resume-note:hover .note-chrome,
+.resume-note.selected .note-chrome { display: flex; }
 
 .resume-note .note-handle,
 .resume-note .note-btn {
   background: transparent;
   border: none;
-  padding: 2px 5px;
-  font-size: 11px;
+  padding: 3px 6px;
+  font-size: 12px;
   line-height: 1;
   color: #374151;
   border-radius: 3px;
   cursor: pointer;
-  min-width: 18px;
+  min-width: 20px;
+  font-family: inherit;
 }
-.resume-note .note-handle { cursor: move; }
+.resume-note .note-handle {
+  cursor: move;
+  font-size: 13px;
+  padding: 3px 7px;
+  background: #fef3c7;
+  border: 1px solid #f59e0b;
+  color: #78350f;
+}
 .resume-note .note-handle:hover,
-.resume-note .note-btn:hover { background: #fef3c7; }
+.resume-note .note-btn:hover { background: #fde68a; }
+.resume-note .note-sep {
+  display: inline-block;
+  width: 1px;
+  height: 14px;
+  background: #e5e7eb;
+  margin: 0 2px;
+}
 .resume-note .note-del { color: #b91c1c; font-weight: 700; font-size: 14px; }
 .resume-note .note-del:hover { background: #fee2e2; }
 
@@ -204,18 +225,21 @@ body { background: #f3f4f6; color: #111827; font-family: var(--resume-font-sans)
 
 .resume-note .note-resize {
   position: absolute;
-  right: -2px;
-  bottom: -2px;
-  width: 12px;
-  height: 12px;
+  right: -4px;
+  bottom: -4px;
+  width: 14px;
+  height: 14px;
   background: #f59e0b;
   opacity: 0;
-  border: none;
-  border-radius: 2px;
+  border: 2px solid white;
+  border-radius: 3px;
   cursor: nwse-resize;
   transition: opacity 0.15s;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.25);
+  z-index: 25;
 }
-.resume-note.hovered .note-resize { opacity: 0.85; }
+.resume-note:hover .note-resize,
+.resume-note.selected .note-resize { opacity: 1; }
 
 @media print {
   .resume-note .note-body {

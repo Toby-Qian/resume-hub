@@ -90,6 +90,7 @@ export const T = {
       addNoteHint: "在简历任意位置添加自由文本框（可拖动/改字号/删除）",
       addImage: "图片",
       addImageHint: "在简历任意位置插入图片（可拖动、缩放、删除）",
+      noteHint: "文本框 / 图片：点击选中，直接拖动；方向键微移（Shift 10px），Delete 删除，Ctrl+D 复制",
     },
   },
   en: {
@@ -181,6 +182,7 @@ export const T = {
       addNoteHint: "Drop a free-floating text box anywhere on the resume (drag, resize, style, delete)",
       addImage: "Image",
       addImageHint: "Drop an image anywhere on the resume (drag, resize, delete)",
+      noteHint: "Notes & images: click to select, drag to move; arrow keys to nudge (Shift = 10px), Delete to remove, Ctrl+D to duplicate",
     },
   },
 } as const;

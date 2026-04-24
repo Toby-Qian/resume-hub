@@ -51,6 +51,10 @@ interface State {
   addImageNote: (src: string) => void;
   updateNote: (id: string, patch: Partial<ResumeNote>) => void;
   removeNote: (id: string) => void;
+  duplicateNote: (id: string) => void;
+  reorderNote: (id: string, dir: "front" | "back") => void;
+  selectedNoteId: string | null;
+  selectNote: (id: string | null) => void;
   setTemplate: (t: TemplateId) => void;
   setTheme: (t: Partial<ThemeTokens>) => void;
   setLang: (l: UILang) => void;
@@ -104,6 +108,8 @@ export const useStore = create<State>()(
         past: [],
         future: [],
         _batch: false,
+        selectedNoteId: null,
+        selectNote: (id) => set({ selectedNoteId: id }),
 
         setResume: (r) => mutate(r),
         update: (key, value) => mutate({ ...get().resume, [key]: value } as Resume),
@@ -132,7 +138,27 @@ export const useStore = create<State>()(
         },
         removeNote: (id) => {
           const r = get().resume;
+          if (get().selectedNoteId === id) set({ selectedNoteId: null });
           mutate({ ...r, notes: (r.notes || []).filter((n) => n.id !== id) });
+        },
+        duplicateNote: (id) => {
+          const r = get().resume;
+          const src = (r.notes || []).find((n) => n.id === id);
+          if (!src) return;
+          const copy: ResumeNote = { ...src, id: uid(), x: src.x + 24, y: src.y + 24 };
+          mutate({ ...r, notes: [...(r.notes || []), copy] });
+          set({ selectedNoteId: copy.id });
+        },
+        reorderNote: (id, dir) => {
+          const r = get().resume;
+          const list = r.notes || [];
+          const idx = list.findIndex((n) => n.id === id);
+          if (idx < 0) return;
+          const next = list.slice();
+          const [item] = next.splice(idx, 1);
+          if (dir === "front") next.push(item);
+          else next.unshift(item);
+          mutate({ ...r, notes: next });
         },
 
         setTemplate: (t) => set({ template: t }),     // not in history (UI state)
