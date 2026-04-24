@@ -42,11 +42,11 @@ export default function AcademicModern({ resume }: TemplateProps) {
 
       {resume.education.length > 0 && (
         <><H>Education</H>
-          {resume.education.map((e) => (
+          {resume.education.map((e, i) => (
             <Row key={e.id} breakBefore={(e as any).breakBefore}
-              left={<><b>{e.institution}</b> — {e.studyType}, {e.area}</>}
+              left={<><b><E path={`education.${i}.institution`}>{e.institution}</E></b> — <E path={`education.${i}.studyType`}>{e.studyType}</E>, <E path={`education.${i}.area`}>{e.area}</E></>}
               right={range(e.startDate, e.endDate)}>
-              {e.score && <div className="text-[0.88em] text-gray-600">{e.score}</div>}
+              {e.score && <div className="text-[0.88em] text-gray-600"><E path={`education.${i}.score`}>{e.score}</E></div>}
               {e.courses && e.courses.length > 0 && (
                 <div className="text-[0.82em] text-gray-500">{e.courses.join(" · ")}</div>
               )}
@@ -57,12 +57,12 @@ export default function AcademicModern({ resume }: TemplateProps) {
 
       {resume.work.length > 0 && (
         <><H>Research & Appointments</H>
-          {resume.work.map((w) => (
+          {resume.work.map((w, i) => (
             <Row key={w.id} breakBefore={(w as any).breakBefore}
-              left={<><b>{w.position}</b> · <span className="text-gray-700">{w.company}</span>{w.location && <span className="text-gray-500"> · {w.location}</span>}</>}
+              left={<><b><E path={`work.${i}.position`}>{w.position}</E></b> · <span className="text-gray-700"><E path={`work.${i}.company`}>{w.company}</E></span>{w.location && <span className="text-gray-500"> · <E path={`work.${i}.location`}>{w.location}</E></span>}</>}
               right={range(w.startDate, w.endDate)}>
               <ul className="list-disc ml-5 mt-1 text-[0.9em]">
-                {w.highlights.filter(Boolean).map((h, i) => <li key={i}>{h}</li>)}
+                {w.highlights.filter(Boolean).map((h, j) => <li key={j}><E path={`work.${i}.highlights.${j}`}>{h}</E></li>)}
               </ul>
             </Row>
           ))}
@@ -71,11 +71,11 @@ export default function AcademicModern({ resume }: TemplateProps) {
 
       {resume.projects.length > 0 && (
         <><H>Publications & Projects</H>
-          {resume.projects.map((p) => (
+          {resume.projects.map((p, i) => (
             <Row key={p.id} breakBefore={(p as any).breakBefore}
-              left={<><b>{p.name}</b>{p.url && <span className="text-[0.82em] text-gray-500"> — {p.url}</span>}</>}
+              left={<><b><E path={`projects.${i}.name`}>{p.name}</E></b>{p.url && <span className="text-[0.82em] text-gray-500"> — <E path={`projects.${i}.url`}>{p.url}</E></span>}</>}
               right={range(p.startDate, p.endDate)}>
-              {p.description && <div className="text-[0.9em] text-gray-700">{p.description}</div>}
+              {p.description && <div className="text-[0.9em] text-gray-700"><E path={`projects.${i}.description`} multiline>{p.description}</E></div>}
               {p.keywords && p.keywords.length > 0 && (
                 <div className="text-[0.82em] text-gray-500 mt-0.5">{p.keywords.join(" · ")}</div>
               )}
@@ -87,9 +87,9 @@ export default function AcademicModern({ resume }: TemplateProps) {
       {resume.awards.length > 0 && (
         <><H>Honors & Grants</H>
           <ul className="list-disc ml-5 text-[0.9em] space-y-0.5">
-            {resume.awards.map((a) => (
+            {resume.awards.map((a, i) => (
               <li key={a.id} className={itemCls(a)}>
-                <b>{a.title}</b> · {a.awarder} · <span className="text-gray-500">{a.date}</span>
+                <b><E path={`awards.${i}.title`}>{a.title}</E></b> · <E path={`awards.${i}.awarder`}>{a.awarder}</E> · <span className="text-gray-500"><E path={`awards.${i}.date`}>{a.date}</E></span>
               </li>
             ))}
           </ul>
@@ -100,8 +100,8 @@ export default function AcademicModern({ resume }: TemplateProps) {
         {resume.skills.length > 0 && (
           <div><H>Skills</H>
             <div className="text-[0.88em] space-y-0.5">
-              {resume.skills.map((s) => (
-                <div key={s.id} className={itemCls(s)}><b>{s.name}:</b> {s.keywords.join(", ")}</div>
+              {resume.skills.map((s, i) => (
+                <div key={s.id} className={itemCls(s)}><b><E path={`skills.${i}.name`}>{s.name}</E>:</b> {s.keywords.join(", ")}</div>
               ))}
             </div>
           </div>
@@ -109,7 +109,7 @@ export default function AcademicModern({ resume }: TemplateProps) {
         {resume.languages.length > 0 && (
           <div><H>Languages</H>
             <div className="text-[0.88em]">
-              {resume.languages.map((l) => `${l.language} (${l.fluency})`).join(" · ")}
+              {resume.languages.map((l, i) => `${l.language} (${l.fluency})`).join(" · ")}
             </div>
           </div>
         )}

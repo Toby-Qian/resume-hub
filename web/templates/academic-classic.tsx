@@ -38,13 +38,13 @@ export default function AcademicClassic({ resume }: TemplateProps) {
 
       {resume.education.length > 0 && (
         <><H>Education</H>
-          {resume.education.map((e) => (
+          {resume.education.map((e, i) => (
             <div key={e.id} className={itemCls(e, "mb-2 text-[0.93em]")}>
               <div className="flex justify-between">
-                <div><i>{e.institution}</i> — {e.studyType}, {e.area}</div>
+                <div><i><E path={`education.${i}.institution`}>{e.institution}</E></i> — <E path={`education.${i}.studyType`}>{e.studyType}</E>, <E path={`education.${i}.area`}>{e.area}</E></div>
                 <div className="text-gray-600">{range(e.startDate, e.endDate)}</div>
               </div>
-              {e.score && <div className="text-gray-700">{e.score}</div>}
+              {e.score && <div className="text-gray-700"><E path={`education.${i}.score`}>{e.score}</E></div>}
               {e.courses && e.courses.length > 0 && (
                 <div className="text-[0.88em] text-gray-600 italic">Coursework: {e.courses.join("; ")}</div>
               )}
@@ -55,14 +55,14 @@ export default function AcademicClassic({ resume }: TemplateProps) {
 
       {resume.work.length > 0 && (
         <><H>Academic Appointments</H>
-          {resume.work.map((w) => (
+          {resume.work.map((w, i) => (
             <div key={w.id} className={itemCls(w, "mb-3 text-[0.93em]")}>
               <div className="flex justify-between">
-                <div><b>{w.position}</b>, <i>{w.company}</i>{w.location && ` — ${w.location}`}</div>
+                <div><b><E path={`work.${i}.position`}>{w.position}</E></b>, <i><E path={`work.${i}.company`}>{w.company}</E></i>{w.location && ` — ${w.location}`}</div>
                 <div className="text-gray-600">{range(w.startDate, w.endDate)}</div>
               </div>
               <ul className="list-disc ml-5 mt-0.5">
-                {w.highlights.filter(Boolean).map((h, i) => <li key={i}>{h}</li>)}
+                {w.highlights.filter(Boolean).map((h, j) => <li key={j}><E path={`work.${i}.highlights.${j}`}>{h}</E></li>)}
               </ul>
             </div>
           ))}
@@ -75,11 +75,11 @@ export default function AcademicClassic({ resume }: TemplateProps) {
             <div key={p.id} className={itemCls(p, "mb-2 text-[0.92em]")}>
               <div>
                 <span className="font-mono text-[0.85em] text-gray-600 mr-1">[{idx + 1}]</span>
-                <b>{p.name}</b>
-                {p.url && <span className="text-[0.85em] text-gray-600"> — {p.url}</span>}
+                <b><E path={`projects.${idx}.name`}>{p.name}</E></b>
+                {p.url && <span className="text-[0.85em] text-gray-600"> — <E path={`projects.${idx}.url`}>{p.url}</E></span>}
                 {(p.startDate || p.endDate) && <span className="text-gray-600"> ({range(p.startDate, p.endDate)})</span>}
               </div>
-              {p.description && <div className="text-gray-700 pl-5">{p.description}</div>}
+              {p.description && <div className="text-gray-700 pl-5"><E path={`projects.${idx}.description`} multiline>{p.description}</E></div>}
             </div>
           ))}
         </>
@@ -88,9 +88,9 @@ export default function AcademicClassic({ resume }: TemplateProps) {
       {resume.awards.length > 0 && (
         <><H>Honors & Grants</H>
           <ul className="list-disc ml-5 text-[0.92em]">
-            {resume.awards.map((a) => (
+            {resume.awards.map((a, i) => (
               <li key={a.id} className={itemCls(a)}>
-                <b>{a.title}</b>, <i>{a.awarder}</i> ({a.date}){a.summary && `. ${a.summary}`}
+                <b><E path={`awards.${i}.title`}>{a.title}</E></b>, <i><E path={`awards.${i}.awarder`}>{a.awarder}</E></i> (<E path={`awards.${i}.date`}>{a.date}</E>){a.summary && `. ${a.summary}`}
               </li>
             ))}
           </ul>
@@ -100,8 +100,8 @@ export default function AcademicClassic({ resume }: TemplateProps) {
       {resume.skills.length > 0 && (
         <><H>Technical Skills</H>
           <div className="text-[0.92em]">
-            {resume.skills.map((s) => (
-              <div key={s.id} className={itemCls(s)}><b>{s.name}:</b> {s.keywords.join(", ")}</div>
+            {resume.skills.map((s, i) => (
+              <div key={s.id} className={itemCls(s)}><b><E path={`skills.${i}.name`}>{s.name}</E>:</b> {s.keywords.join(", ")}</div>
             ))}
           </div>
         </>
@@ -109,7 +109,7 @@ export default function AcademicClassic({ resume }: TemplateProps) {
 
       {resume.languages.length > 0 && (
         <><H>Languages</H>
-          <div className="text-[0.92em]">{resume.languages.map((l) => `${l.language} (${l.fluency})`).join("; ")}</div>
+          <div className="text-[0.92em]">{resume.languages.map((l, i) => `${l.language} (${l.fluency})`).join("; ")}</div>
         </>
       )}
     </div>

@@ -37,15 +37,15 @@ export default function Compact({ resume }: TemplateProps) {
       {resume.work.length > 0 && (
         <>
           <H>Experience</H>
-          {resume.work.map((w) => (
+          {resume.work.map((w, i) => (
             <div key={w.id} className={itemCls(w, "text-[0.86em] mb-1.5")}>
               <div className="flex justify-between">
-                <div><b>{w.company}</b> — <i>{w.position}</i>{w.location && <span className="text-gray-500"> · {w.location}</span>}</div>
+                <div><b><E path={`work.${i}.company`}>{w.company}</E></b> — <i><E path={`work.${i}.position`}>{w.position}</E></i>{w.location && <span className="text-gray-500"> · <E path={`work.${i}.location`}>{w.location}</E></span>}</div>
                 <div className="text-gray-500 whitespace-nowrap">{range(w.startDate, w.endDate)}</div>
               </div>
               {w.highlights.filter(Boolean).length > 0 && (
                 <ul className="list-[square] ml-4">
-                  {w.highlights.filter(Boolean).map((h, i) => <li key={i}>{h}</li>)}
+                  {w.highlights.filter(Boolean).map((h, j) => <li key={j}><E path={`work.${i}.highlights.${j}`}>{h}</E></li>)}
                 </ul>
               )}
             </div>
@@ -56,15 +56,15 @@ export default function Compact({ resume }: TemplateProps) {
       {resume.projects.length > 0 && (
         <>
           <H>Projects</H>
-          {resume.projects.map((p) => (
+          {resume.projects.map((p, i) => (
             <div key={p.id} className={itemCls(p, "text-[0.86em] mb-1")}>
               <div className="flex justify-between">
-                <div><b>{p.name}</b>{p.description && <span className="text-gray-700"> — {p.description}</span>}</div>
+                <div><b><E path={`projects.${i}.name`}>{p.name}</E></b>{p.description && <span className="text-gray-700"> — <E path={`projects.${i}.description`} multiline>{p.description}</E></span>}</div>
                 <div className="text-gray-500 whitespace-nowrap">{range(p.startDate, p.endDate)}</div>
               </div>
               {p.highlights.filter(Boolean).length > 0 && (
                 <ul className="list-[square] ml-4">
-                  {p.highlights.filter(Boolean).map((h, i) => <li key={i}>{h}</li>)}
+                  {p.highlights.filter(Boolean).map((h, j) => <li key={j}><E path={`projects.${i}.highlights.${j}`}>{h}</E></li>)}
                 </ul>
               )}
               {p.keywords && p.keywords.length > 0 && (
@@ -78,10 +78,10 @@ export default function Compact({ resume }: TemplateProps) {
       {resume.education.length > 0 && (
         <>
           <H>Education</H>
-          {resume.education.map((e) => (
+          {resume.education.map((e, i) => (
             <div key={e.id} className={itemCls(e, "text-[0.86em]")}>
               <div className="flex justify-between">
-                <div><b>{e.institution}</b> — {e.studyType}, {e.area}{e.score && <span className="text-gray-600"> · {e.score}</span>}</div>
+                <div><b><E path={`education.${i}.institution`}>{e.institution}</E></b> — <E path={`education.${i}.studyType`}>{e.studyType}</E>, <E path={`education.${i}.area`}>{e.area}</E>{e.score && <span className="text-gray-600"> · <E path={`education.${i}.score`}>{e.score}</E></span>}</div>
                 <div className="text-gray-500 whitespace-nowrap">{range(e.startDate, e.endDate)}</div>
               </div>
             </div>
@@ -93,9 +93,9 @@ export default function Compact({ resume }: TemplateProps) {
         <>
           <H>Skills</H>
           <div className="text-[0.86em] space-y-0.5">
-            {resume.skills.map((s) => (
+            {resume.skills.map((s, i) => (
               <div key={s.id} className={itemCls(s)}>
-                <b>{s.name}{s.level && ` (${s.level})`}:</b> {s.keywords.join(", ")}
+                <b><E path={`skills.${i}.name`}>{s.name}</E>{s.level && ` (${s.level})`}:</b> {s.keywords.join(", ")}
               </div>
             ))}
           </div>
@@ -106,13 +106,13 @@ export default function Compact({ resume }: TemplateProps) {
         <>
           <H>Honors & Languages</H>
           <div className="text-[0.85em] space-y-0.5">
-            {resume.awards.map((a) => (
+            {resume.awards.map((a, i) => (
               <div key={a.id} className={itemCls(a)}>
-                <b>{a.title}</b> · {a.awarder} · <span className="text-gray-500">{a.date}</span>
+                <b><E path={`awards.${i}.title`}>{a.title}</E></b> · <E path={`awards.${i}.awarder`}>{a.awarder}</E> · <span className="text-gray-500"><E path={`awards.${i}.date`}>{a.date}</E></span>
               </div>
             ))}
             {resume.languages.length > 0 && (
-              <div>{resume.languages.map((l) => `${l.language} (${l.fluency})`).join(" · ")}</div>
+              <div>{resume.languages.map((l, i) => `${l.language} (${l.fluency})`).join(" · ")}</div>
             )}
           </div>
         </>

@@ -33,13 +33,13 @@ export default function AcademicCN({ resume }: TemplateProps) {
 
       {resume.education.length > 0 && (
         <><H>教育经历</H>
-          {resume.education.map((e) => (
+          {resume.education.map((e, i) => (
             <div key={e.id} className={itemCls(e, "mb-1.5 text-[0.93em]")}>
               <div className="flex justify-between">
-                <div><b>{e.institution}</b> · {e.studyType} · {e.area}</div>
+                <div><b><E path={`education.${i}.institution`}>{e.institution}</E></b> · <E path={`education.${i}.studyType`}>{e.studyType}</E> · <E path={`education.${i}.area`}>{e.area}</E></div>
                 <div className="text-gray-600">{range(e.startDate, e.endDate)}</div>
               </div>
-              {e.score && <div className="text-gray-700 text-[0.88em]">{e.score}</div>}
+              {e.score && <div className="text-gray-700 text-[0.88em]"><E path={`education.${i}.score`}>{e.score}</E></div>}
               {e.courses && e.courses.length > 0 && (
                 <div className="text-[0.85em] text-gray-600">主修：{e.courses.join("、")}</div>
               )}
@@ -50,14 +50,14 @@ export default function AcademicCN({ resume }: TemplateProps) {
 
       {resume.work.length > 0 && (
         <><H>科研 / 工作经历</H>
-          {resume.work.map((w) => (
+          {resume.work.map((w, i) => (
             <div key={w.id} className={itemCls(w, "mb-2 text-[0.93em]")}>
               <div className="flex justify-between">
-                <div><b>{w.company}</b> · {w.position}{w.location && ` · ${w.location}`}</div>
+                <div><b><E path={`work.${i}.company`}>{w.company}</E></b> · <E path={`work.${i}.position`}>{w.position}</E>{w.location && ` · ${w.location}`}</div>
                 <div className="text-gray-600">{range(w.startDate, w.endDate)}</div>
               </div>
               <ul className="list-disc ml-5 mt-0.5">
-                {w.highlights.filter(Boolean).map((h, i) => <li key={i}>{h}</li>)}
+                {w.highlights.filter(Boolean).map((h, j) => <li key={j}><E path={`work.${i}.highlights.${j}`}>{h}</E></li>)}
               </ul>
             </div>
           ))}
@@ -67,12 +67,12 @@ export default function AcademicCN({ resume }: TemplateProps) {
       {resume.projects.length > 0 && (
         <><H>发表论文 / 研究项目</H>
           <ol className="text-[0.9em] space-y-1 list-decimal ml-6">
-            {resume.projects.map((p) => (
+            {resume.projects.map((p, i) => (
               <li key={p.id} className={itemCls(p)}>
-                <b>{p.name}</b>
-                {p.description && <span>。{p.description}</span>}
+                <b><E path={`projects.${i}.name`}>{p.name}</E></b>
+                {p.description && <span>。<E path={`projects.${i}.description`} multiline>{p.description}</E></span>}
                 {(p.startDate || p.endDate) && <span className="text-gray-600">（{range(p.startDate, p.endDate)}）</span>}
-                {p.url && <div className="text-[0.82em] text-gray-600 break-all">{p.url}</div>}
+                {p.url && <div className="text-[0.82em] text-gray-600 break-all"><E path={`projects.${i}.url`}>{p.url}</E></div>}
               </li>
             ))}
           </ol>
@@ -82,9 +82,9 @@ export default function AcademicCN({ resume }: TemplateProps) {
       {resume.awards.length > 0 && (
         <><H>荣誉奖励</H>
           <ul className="list-disc ml-5 text-[0.9em]">
-            {resume.awards.map((a) => (
+            {resume.awards.map((a, i) => (
               <li key={a.id} className={itemCls(a)}>
-                <b>{a.title}</b>，{a.awarder}，{a.date}{a.summary && `。${a.summary}`}
+                <b><E path={`awards.${i}.title`}>{a.title}</E></b>，<E path={`awards.${i}.awarder`}>{a.awarder}</E>，<E path={`awards.${i}.date`}>{a.date}</E>{a.summary && `。${a.summary}`}
               </li>
             ))}
           </ul>
@@ -94,9 +94,9 @@ export default function AcademicCN({ resume }: TemplateProps) {
       {resume.skills.length > 0 && (
         <><H>专业技能</H>
           <div className="text-[0.9em] space-y-0.5">
-            {resume.skills.map((s) => (
+            {resume.skills.map((s, i) => (
               <div key={s.id} className={itemCls(s)}>
-                <b>{s.name}{s.level && `（${s.level}）`}：</b>{s.keywords.join("、")}
+                <b><E path={`skills.${i}.name`}>{s.name}</E>{s.level && `（${s.level}）`}：</b>{s.keywords.join("、")}
               </div>
             ))}
           </div>
@@ -105,7 +105,7 @@ export default function AcademicCN({ resume }: TemplateProps) {
 
       {resume.languages.length > 0 && (
         <><H>语言能力</H>
-          <div className="text-[0.9em]">{resume.languages.map((l) => `${l.language}（${l.fluency}）`).join(" · ")}</div>
+          <div className="text-[0.9em]">{resume.languages.map((l, i) => `${l.language}（${l.fluency}）`).join(" · ")}</div>
         </>
       )}
     </div>

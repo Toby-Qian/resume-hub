@@ -39,10 +39,10 @@ export default function AcademicMinimal({ resume }: TemplateProps) {
 
       {resume.education.length > 0 && (
         <Row label="Education">
-          {resume.education.map((e) => (
+          {resume.education.map((e, i) => (
             <div key={e.id} className={itemCls(e)}>
-              <div><i>{e.institution}</i>, {e.studyType}, {e.area} <span className="text-gray-500">· {range(e.startDate, e.endDate)}</span></div>
-              {e.score && <div className="text-gray-600 text-[0.9em]">{e.score}</div>}
+              <div><i><E path={`education.${i}.institution`}>{e.institution}</E></i>, <E path={`education.${i}.studyType`}>{e.studyType}</E>, <E path={`education.${i}.area`}>{e.area}</E> <span className="text-gray-500">· {range(e.startDate, e.endDate)}</span></div>
+              {e.score && <div className="text-gray-600 text-[0.9em]"><E path={`education.${i}.score`}>{e.score}</E></div>}
             </div>
           ))}
         </Row>
@@ -50,11 +50,11 @@ export default function AcademicMinimal({ resume }: TemplateProps) {
 
       {resume.work.length > 0 && (
         <Row label="Positions">
-          {resume.work.map((w) => (
+          {resume.work.map((w, i) => (
             <div key={w.id} className={itemCls(w)}>
-              <div><b>{w.position}</b>, <i>{w.company}</i> <span className="text-gray-500">· {range(w.startDate, w.endDate)}</span></div>
+              <div><b><E path={`work.${i}.position`}>{w.position}</E></b>, <i><E path={`work.${i}.company`}>{w.company}</E></i> <span className="text-gray-500">· {range(w.startDate, w.endDate)}</span></div>
               <ul className="list-[square] ml-5 text-[0.95em]">
-                {w.highlights.filter(Boolean).map((h, i) => <li key={i}>{h}</li>)}
+                {w.highlights.filter(Boolean).map((h, j) => <li key={j}><E path={`work.${i}.highlights.${j}`}>{h}</E></li>)}
               </ul>
             </div>
           ))}
@@ -66,8 +66,8 @@ export default function AcademicMinimal({ resume }: TemplateProps) {
           {resume.projects.map((p, i) => (
             <div key={p.id} className={itemCls(p)}>
               <span className="text-gray-500 mr-1">{i + 1}.</span>
-              <b>{p.name}</b>
-              {p.description && <span>. {p.description}</span>}
+              <b><E path={`projects.${i}.name`}>{p.name}</E></b>
+              {p.description && <span>. <E path={`projects.${i}.description`} multiline>{p.description}</E></span>}
               {(p.startDate || p.endDate) && <span className="text-gray-500"> · {range(p.startDate, p.endDate)}</span>}
             </div>
           ))}
@@ -76,9 +76,9 @@ export default function AcademicMinimal({ resume }: TemplateProps) {
 
       {resume.awards.length > 0 && (
         <Row label="Honors">
-          {resume.awards.map((a) => (
+          {resume.awards.map((a, i) => (
             <div key={a.id} className={itemCls(a)}>
-              <b>{a.title}</b>, {a.awarder} <span className="text-gray-500">· {a.date}</span>
+              <b><E path={`awards.${i}.title`}>{a.title}</E></b>, <E path={`awards.${i}.awarder`}>{a.awarder}</E> <span className="text-gray-500">· <E path={`awards.${i}.date`}>{a.date}</E></span>
             </div>
           ))}
         </Row>
@@ -86,15 +86,15 @@ export default function AcademicMinimal({ resume }: TemplateProps) {
 
       {resume.skills.length > 0 && (
         <Row label="Skills">
-          {resume.skills.map((s) => (
-            <div key={s.id} className={itemCls(s)}><b>{s.name}</b> — <span className="text-gray-700">{s.keywords.join(", ")}</span></div>
+          {resume.skills.map((s, i) => (
+            <div key={s.id} className={itemCls(s)}><b><E path={`skills.${i}.name`}>{s.name}</E></b> — <span className="text-gray-700">{s.keywords.join(", ")}</span></div>
           ))}
         </Row>
       )}
 
       {resume.languages.length > 0 && (
         <Row label="Languages">
-          <div>{resume.languages.map((l) => `${l.language} (${l.fluency})`).join(" · ")}</div>
+          <div>{resume.languages.map((l, i) => `${l.language} (${l.fluency})`).join(" · ")}</div>
         </Row>
       )}
     </div>

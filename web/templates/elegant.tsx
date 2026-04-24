@@ -48,9 +48,9 @@ export default function Elegant({ resume }: TemplateProps) {
         {resume.skills.length > 0 && (
           <>
             <SideH>Skills</SideH>
-            {resume.skills.map((s) => (
+            {resume.skills.map((s, i) => (
               <div key={s.id} className={itemCls(s, "text-[0.83em] mb-2")}>
-                <div className="font-semibold text-gray-800">{s.name}</div>
+                <div className="font-semibold text-gray-800"><E path={`skills.${i}.name`}>{s.name}</E></div>
                 <div className="text-gray-600">{s.keywords.join(" · ")}</div>
               </div>
             ))}
@@ -60,9 +60,9 @@ export default function Elegant({ resume }: TemplateProps) {
         {resume.languages.length > 0 && (
           <>
             <SideH>Languages</SideH>
-            {resume.languages.map((l) => (
+            {resume.languages.map((l, i) => (
               <div key={l.id} className={itemCls(l, "text-[0.83em]")}>
-                {l.language} · <span className="text-gray-600">{l.fluency}</span>
+                <E path={`languages.${i}.language`}>{l.language}</E> · <span className="text-gray-600"><E path={`languages.${i}.fluency`}>{l.fluency}</E></span>
               </div>
             ))}
           </>
@@ -71,10 +71,10 @@ export default function Elegant({ resume }: TemplateProps) {
         {resume.awards.length > 0 && (
           <>
             <SideH>Awards</SideH>
-            {resume.awards.map((a) => (
+            {resume.awards.map((a, i) => (
               <div key={a.id} className={itemCls(a, "text-[0.83em] mb-1")}>
-                <div className="font-semibold">{a.title}</div>
-                <div className="text-gray-600">{a.awarder} · {a.date}</div>
+                <div className="font-semibold"><E path={`awards.${i}.title`}>{a.title}</E></div>
+                <div className="text-gray-600"><E path={`awards.${i}.awarder`}>{a.awarder}</E> · <E path={`awards.${i}.date`}>{a.date}</E></div>
               </div>
             ))}
           </>
@@ -90,15 +90,15 @@ export default function Elegant({ resume }: TemplateProps) {
         {resume.work.length > 0 && (
           <>
             <MainH>Experience</MainH>
-            {resume.work.map((w) => (
+            {resume.work.map((w, i) => (
               <div key={w.id} className={itemCls(w, "mb-4 text-[0.92em]")}>
                 <div className="flex justify-between items-baseline">
-                  <div><b>{w.position}</b> · <span className="text-gray-700">{w.company}</span></div>
+                  <div><b><E path={`work.${i}.position`}>{w.position}</E></b> · <span className="text-gray-700"><E path={`work.${i}.company`}>{w.company}</E></span></div>
                   <div className="text-[0.85em] text-gray-500">{range(w.startDate, w.endDate)}</div>
                 </div>
-                {w.location && <div className="text-[0.82em] text-gray-500">{w.location}</div>}
+                {w.location && <div className="text-[0.82em] text-gray-500"><E path={`work.${i}.location`}>{w.location}</E></div>}
                 <ul className="list-disc ml-5 mt-1">
-                  {w.highlights.filter(Boolean).map((h, i) => <li key={i}>{h}</li>)}
+                  {w.highlights.filter(Boolean).map((h, j) => <li key={j}><E path={`work.${i}.highlights.${j}`}>{h}</E></li>)}
                 </ul>
               </div>
             ))}
@@ -108,16 +108,16 @@ export default function Elegant({ resume }: TemplateProps) {
         {resume.projects.length > 0 && (
           <>
             <MainH>Projects</MainH>
-            {resume.projects.map((p) => (
+            {resume.projects.map((p, i) => (
               <div key={p.id} className={itemCls(p, "mb-3 text-[0.92em]")}>
                 <div className="flex justify-between items-baseline">
-                  <div><b>{p.name}</b>{p.url && <span className="text-[0.82em] text-gray-500"> — {p.url}</span>}</div>
+                  <div><b><E path={`projects.${i}.name`}>{p.name}</E></b>{p.url && <span className="text-[0.82em] text-gray-500"> — <E path={`projects.${i}.url`}>{p.url}</E></span>}</div>
                   <div className="text-[0.85em] text-gray-500">{range(p.startDate, p.endDate)}</div>
                 </div>
-                <div className="text-gray-700">{p.description}</div>
+                <div className="text-gray-700"><E path={`projects.${i}.description`} multiline>{p.description}</E></div>
                 {p.highlights.filter(Boolean).length > 0 && (
                   <ul className="list-disc ml-5 mt-1">
-                    {p.highlights.filter(Boolean).map((h, i) => <li key={i}>{h}</li>)}
+                    {p.highlights.filter(Boolean).map((h, j) => <li key={j}><E path={`projects.${i}.highlights.${j}`}>{h}</E></li>)}
                   </ul>
                 )}
               </div>
@@ -128,13 +128,13 @@ export default function Elegant({ resume }: TemplateProps) {
         {resume.education.length > 0 && (
           <>
             <MainH>Education</MainH>
-            {resume.education.map((e) => (
+            {resume.education.map((e, i) => (
               <div key={e.id} className={itemCls(e, "mb-2 text-[0.92em]")}>
                 <div className="flex justify-between items-baseline">
-                  <div><b>{e.institution}</b> · {e.studyType}, {e.area}</div>
+                  <div><b><E path={`education.${i}.institution`}>{e.institution}</E></b> · <E path={`education.${i}.studyType`}>{e.studyType}</E>, <E path={`education.${i}.area`}>{e.area}</E></div>
                   <div className="text-[0.85em] text-gray-500">{range(e.startDate, e.endDate)}</div>
                 </div>
-                {e.score && <div className="text-[0.85em] text-gray-600">{e.score}</div>}
+                {e.score && <div className="text-[0.85em] text-gray-600"><E path={`education.${i}.score`}>{e.score}</E></div>}
               </div>
             ))}
           </>

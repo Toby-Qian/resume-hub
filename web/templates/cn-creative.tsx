@@ -23,9 +23,9 @@ export default function CNCreative({ resume }: TemplateProps) {
         {resume.skills.length > 0 && (
           <>
             <div className="mt-6 mb-2 font-semibold tracking-wider text-[0.85em]">专业技能</div>
-            {resume.skills.map((s) => (
+            {resume.skills.map((s, i) => (
               <div key={s.id} className={itemCls(s, "text-[0.85em] mb-2")}>
-                <div className="font-semibold">{s.name}</div>
+                <div className="font-semibold"><E path={`skills.${i}.name`}>{s.name}</E></div>
                 <div className="opacity-90">{s.keywords.join(" · ")}</div>
               </div>
             ))}
@@ -34,8 +34,8 @@ export default function CNCreative({ resume }: TemplateProps) {
         {resume.languages.length > 0 && (
           <>
             <div className="mt-6 mb-2 font-semibold tracking-wider text-[0.85em]">语言</div>
-            {resume.languages.map((l) => (
-              <div key={l.id} className={itemCls(l, "text-[0.85em]")}>{l.language} · {l.fluency}</div>
+            {resume.languages.map((l, i) => (
+              <div key={l.id} className={itemCls(l, "text-[0.85em]")}><E path={`languages.${i}.language`}>{l.language}</E> · <E path={`languages.${i}.fluency`}>{l.fluency}</E></div>
             ))}
           </>
         )}
@@ -47,11 +47,11 @@ export default function CNCreative({ resume }: TemplateProps) {
         {resume.work.length > 0 && (
           <section className="resume-section mb-5">
             <h2 className="text-[1em] font-bold mb-2" style={{ color: "var(--resume-accent)" }}>工作经历</h2>
-            {resume.work.map((w) => (
+            {resume.work.map((w, i) => (
               <div key={w.id} className={itemCls(w, "mb-3 text-[0.92em]")}>
-                <div className="flex justify-between"><b>{w.company} · {w.position}</b><span className="text-gray-500">{range(w.startDate, w.endDate)}</span></div>
+                <div className="flex justify-between"><b><E path={`work.${i}.company`}>{w.company}</E> · <E path={`work.${i}.position`}>{w.position}</E></b><span className="text-gray-500">{range(w.startDate, w.endDate)}</span></div>
                 <ul className="list-disc ml-5 mt-1">
-                  {w.highlights.filter(Boolean).map((h, i) => <li key={i}>{h}</li>)}
+                  {w.highlights.filter(Boolean).map((h, j) => <li key={j}><E path={`work.${i}.highlights.${j}`}>{h}</E></li>)}
                 </ul>
               </div>
             ))}
@@ -61,12 +61,12 @@ export default function CNCreative({ resume }: TemplateProps) {
         {resume.projects.length > 0 && (
           <section className="resume-section mb-5">
             <h2 className="text-[1em] font-bold mb-2" style={{ color: "var(--resume-accent)" }}>项目经历</h2>
-            {resume.projects.map((p) => (
+            {resume.projects.map((p, i) => (
               <div key={p.id} className={itemCls(p, "mb-3 text-[0.92em]")}>
-                <div className="flex justify-between"><b>{p.name}</b><span className="text-gray-500">{range(p.startDate, p.endDate)}</span></div>
-                <div className="text-gray-700">{p.description}</div>
+                <div className="flex justify-between"><b><E path={`projects.${i}.name`}>{p.name}</E></b><span className="text-gray-500">{range(p.startDate, p.endDate)}</span></div>
+                <div className="text-gray-700"><E path={`projects.${i}.description`} multiline>{p.description}</E></div>
                 <ul className="list-disc ml-5">
-                  {p.highlights.filter(Boolean).map((h, i) => <li key={i}>{h}</li>)}
+                  {p.highlights.filter(Boolean).map((h, j) => <li key={j}><E path={`projects.${i}.highlights.${j}`}>{h}</E></li>)}
                 </ul>
               </div>
             ))}
@@ -76,10 +76,10 @@ export default function CNCreative({ resume }: TemplateProps) {
         {resume.education.length > 0 && (
           <section className="resume-section mb-5">
             <h2 className="text-[1em] font-bold mb-2" style={{ color: "var(--resume-accent)" }}>教育背景</h2>
-            {resume.education.map((e) => (
+            {resume.education.map((e, i) => (
               <div key={e.id} className={itemCls(e, "text-[0.92em] mb-1")}>
-                <div className="flex justify-between"><b>{e.institution}</b><span className="text-gray-500">{range(e.startDate, e.endDate)}</span></div>
-                <div>{e.studyType} · {e.area}{e.score ? ` · ${e.score}` : ""}</div>
+                <div className="flex justify-between"><b><E path={`education.${i}.institution`}>{e.institution}</E></b><span className="text-gray-500">{range(e.startDate, e.endDate)}</span></div>
+                <div><E path={`education.${i}.studyType`}>{e.studyType}</E> · <E path={`education.${i}.area`}>{e.area}</E>{e.score ? ` · ${e.score}` : ""}</div>
               </div>
             ))}
           </section>
@@ -89,8 +89,8 @@ export default function CNCreative({ resume }: TemplateProps) {
           <section className="resume-section">
             <h2 className="text-[1em] font-bold mb-2" style={{ color: "var(--resume-accent)" }}>荣誉奖项</h2>
             <ul className="list-disc ml-5 text-[0.92em]">
-              {resume.awards.map((a) => (
-                <li key={a.id} className={itemCls(a)}><b>{a.title}</b> · {a.awarder} · {a.date}</li>
+              {resume.awards.map((a, i) => (
+                <li key={a.id} className={itemCls(a)}><b><E path={`awards.${i}.title`}>{a.title}</E></b> · <E path={`awards.${i}.awarder`}>{a.awarder}</E> · <E path={`awards.${i}.date`}>{a.date}</E></li>
               ))}
             </ul>
           </section>

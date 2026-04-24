@@ -49,12 +49,12 @@ export default function Timeline({ resume }: TemplateProps) {
       {resume.work.length > 0 && (
         <>
           <H>Experience</H>
-          {resume.work.map((w) => (
+          {resume.work.map((w, i) => (
             <Node key={w.id} date={range(w.startDate, w.endDate)} breakBefore={(w as any).breakBefore}>
-              <div className="text-[0.93em]"><b>{w.position}</b> · <span className="text-gray-700">{w.company}</span></div>
-              {w.location && <div className="text-[0.8em] text-gray-500">{w.location}</div>}
+              <div className="text-[0.93em]"><b><E path={`work.${i}.position`}>{w.position}</E></b> · <span className="text-gray-700"><E path={`work.${i}.company`}>{w.company}</E></span></div>
+              {w.location && <div className="text-[0.8em] text-gray-500"><E path={`work.${i}.location`}>{w.location}</E></div>}
               <ul className="list-disc ml-5 mt-1 text-[0.9em]">
-                {w.highlights.filter(Boolean).map((h, i) => <li key={i}>{h}</li>)}
+                {w.highlights.filter(Boolean).map((h, j) => <li key={j}><E path={`work.${i}.highlights.${j}`}>{h}</E></li>)}
               </ul>
             </Node>
           ))}
@@ -64,13 +64,13 @@ export default function Timeline({ resume }: TemplateProps) {
       {resume.projects.length > 0 && (
         <>
           <H>Projects</H>
-          {resume.projects.map((p) => (
+          {resume.projects.map((p, i) => (
             <Node key={p.id} date={range(p.startDate, p.endDate)} breakBefore={(p as any).breakBefore}>
-              <div className="text-[0.93em]"><b>{p.name}</b></div>
-              {p.description && <div className="text-[0.88em] text-gray-700">{p.description}</div>}
+              <div className="text-[0.93em]"><b><E path={`projects.${i}.name`}>{p.name}</E></b></div>
+              {p.description && <div className="text-[0.88em] text-gray-700"><E path={`projects.${i}.description`} multiline>{p.description}</E></div>}
               {p.highlights.filter(Boolean).length > 0 && (
                 <ul className="list-disc ml-5 mt-1 text-[0.88em]">
-                  {p.highlights.filter(Boolean).map((h, i) => <li key={i}>{h}</li>)}
+                  {p.highlights.filter(Boolean).map((h, j) => <li key={j}><E path={`projects.${i}.highlights.${j}`}>{h}</E></li>)}
                 </ul>
               )}
               {p.keywords && p.keywords.length > 0 && (
@@ -84,10 +84,10 @@ export default function Timeline({ resume }: TemplateProps) {
       {resume.education.length > 0 && (
         <>
           <H>Education</H>
-          {resume.education.map((e) => (
+          {resume.education.map((e, i) => (
             <Node key={e.id} date={range(e.startDate, e.endDate)} breakBefore={(e as any).breakBefore}>
-              <div className="text-[0.93em]"><b>{e.institution}</b></div>
-              <div className="text-[0.88em]">{e.studyType} · {e.area}{e.score ? ` · ${e.score}` : ""}</div>
+              <div className="text-[0.93em]"><b><E path={`education.${i}.institution`}>{e.institution}</E></b></div>
+              <div className="text-[0.88em]"><E path={`education.${i}.studyType`}>{e.studyType}</E> · <E path={`education.${i}.area`}>{e.area}</E>{e.score ? ` · ${e.score}` : ""}</div>
             </Node>
           ))}
         </>
@@ -97,9 +97,9 @@ export default function Timeline({ resume }: TemplateProps) {
         <>
           <H>Skills</H>
           <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-[0.88em]">
-            {resume.skills.map((s) => (
+            {resume.skills.map((s, i) => (
               <div key={s.id} className={itemCls(s)}>
-                <b>{s.name}</b>
+                <b><E path={`skills.${i}.name`}>{s.name}</E></b>
                 {s.keywords.length > 0 && <span className="text-gray-600"> — {s.keywords.join(", ")}</span>}
               </div>
             ))}
@@ -111,11 +111,11 @@ export default function Timeline({ resume }: TemplateProps) {
         <>
           <H>Honors & Languages</H>
           <div className="text-[0.88em] space-y-0.5">
-            {resume.awards.map((a) => (
-              <div key={a.id} className={itemCls(a)}><b>{a.title}</b> · {a.awarder} · <span className="text-gray-500">{a.date}</span></div>
+            {resume.awards.map((a, i) => (
+              <div key={a.id} className={itemCls(a)}><b><E path={`awards.${i}.title`}>{a.title}</E></b> · <E path={`awards.${i}.awarder`}>{a.awarder}</E> · <span className="text-gray-500"><E path={`awards.${i}.date`}>{a.date}</E></span></div>
             ))}
             {resume.languages.length > 0 && (
-              <div>{resume.languages.map((l) => `${l.language} (${l.fluency})`).join(" · ")}</div>
+              <div>{resume.languages.map((l, i) => `${l.language} (${l.fluency})`).join(" · ")}</div>
             )}
           </div>
         </>

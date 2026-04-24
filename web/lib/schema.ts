@@ -74,6 +74,22 @@ export interface ResumeLanguage {
   fluency: string;
 }
 
+/** Free-floating text box the user can drop anywhere on the paper for layout
+ *  freedom beyond the template's fixed sections. Coordinates are relative to
+ *  the .paper top-left, in px at 96dpi A4 scale. */
+export interface ResumeNote {
+  id: string;
+  text: string;
+  x: number;
+  y: number;
+  width: number;      // px
+  fontSize?: number;  // px, default 14
+  bold?: boolean;
+  color?: string;     // hex
+  bg?: string;        // hex / transparent
+  align?: "left" | "center" | "right";
+}
+
 export interface Resume {
   basics: ResumeBasics;
   work: ResumeWork[];
@@ -82,11 +98,12 @@ export interface Resume {
   skills: ResumeSkill[];
   awards: ResumeAward[];
   languages: ResumeLanguage[];
+  notes?: ResumeNote[];
 }
 
 export const emptyResume = (): Resume => ({
   basics: { name: "", label: "", email: "", phone: "", location: "", website: "", summary: "" },
-  work: [], education: [], projects: [], skills: [], awards: [], languages: [],
+  work: [], education: [], projects: [], skills: [], awards: [], languages: [], notes: [],
 });
 
 export type SectionKey = "work" | "education" | "projects" | "skills" | "awards" | "languages";

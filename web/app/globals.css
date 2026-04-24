@@ -115,6 +115,104 @@ body { background: #f3f4f6; color: #111827; font-family: var(--resume-font-sans)
   .drag-handle { display: none !important; }
 }
 
+/* ---------- Free-floating notes ---------------------------------------- */
+.resume-note {
+  /* outline only appears on hover/focus so the note reads as plain text in
+     the normal preview + print output */
+}
+.resume-note .note-body {
+  outline: none;
+  padding: 2px 4px;
+  border-radius: 3px;
+  border: 1px dashed transparent;
+  white-space: pre-wrap;
+  line-height: 1.4;
+  transition: border-color 0.15s, background-color 0.15s;
+}
+.resume-note.hovered .note-body,
+.resume-note .note-body:focus {
+  border-color: #f59e0b;
+  background-color: rgba(254, 243, 199, 0.5);
+}
+.resume-note .note-body.empty::before {
+  content: "输入文本 / type text";
+  color: #9ca3af;
+  font-style: italic;
+}
+.resume-note .note-body:focus.empty::before { content: ""; }
+
+.resume-note .note-chrome {
+  position: absolute;
+  top: -26px;
+  left: 0;
+  display: none;
+  gap: 3px;
+  align-items: center;
+  padding: 2px 3px;
+  background: white;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  font-size: 11px;
+  line-height: 1;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+  z-index: 10;
+}
+.resume-note.hovered .note-chrome { display: flex; }
+
+.resume-note .note-handle,
+.resume-note .note-btn {
+  background: transparent;
+  border: none;
+  padding: 2px 5px;
+  font-size: 11px;
+  line-height: 1;
+  color: #374151;
+  border-radius: 3px;
+  cursor: pointer;
+  min-width: 18px;
+}
+.resume-note .note-handle { cursor: move; }
+.resume-note .note-handle:hover,
+.resume-note .note-btn:hover { background: #fef3c7; }
+.resume-note .note-del { color: #b91c1c; font-weight: 700; font-size: 14px; }
+.resume-note .note-del:hover { background: #fee2e2; }
+
+.resume-note .note-size input {
+  width: 36px;
+  font-size: 11px;
+  padding: 1px 2px;
+  border: 1px solid #d1d5db;
+  border-radius: 3px;
+  text-align: center;
+  background: white;
+}
+
+.resume-note .note-resize {
+  position: absolute;
+  right: -2px;
+  bottom: -2px;
+  width: 12px;
+  height: 12px;
+  background: #f59e0b;
+  opacity: 0;
+  border: none;
+  border-radius: 2px;
+  cursor: nwse-resize;
+  transition: opacity 0.15s;
+}
+.resume-note.hovered .note-resize { opacity: 0.85; }
+
+@media print {
+  .resume-note .note-body {
+    border-color: transparent !important;
+    background: transparent !important;
+    padding: 0 !important;
+  }
+  .resume-note .note-body.empty::before { content: ""; }
+  .resume-note .note-chrome,
+  .resume-note .note-resize { display: none !important; }
+}
+
 /* ---------- Print -------------------------------------------------------- */
 @media print {
   @page { size: A4; margin: 0; }

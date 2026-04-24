@@ -85,6 +85,8 @@ export const T = {
     preview: {
       pageHint: "灰色分隔线为 A4 分页边界，打印/导出 PDF 时会自动换页",
       editHint: "点击任意文字即可在预览中直接编辑 · 悬停文本区块左侧出现 ⋮⋮ 即可拖动整段",
+      addNote: "文本框",
+      addNoteHint: "在简历任意位置添加自由文本框（可拖动/改字号/删除）",
     },
   },
   en: {
@@ -171,6 +173,8 @@ export const T = {
     preview: {
       pageHint: "Grey lines mark A4 page boundaries — print / PDF export will split automatically",
       editHint: "Click any text to edit it inline · hover a block for the ⋮⋮ handle to drag it",
+      addNote: "Text box",
+      addNoteHint: "Drop a free-floating text box anywhere on the resume (drag, resize, style, delete)",
     },
   },
 } as const;

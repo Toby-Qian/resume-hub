@@ -39,6 +39,9 @@ interface State {
   update: <K extends keyof Resume>(key: K, value: Resume[K]) => void;
   addItem: (section: SectionKey) => void;
   removeItem: (section: SectionKey, id: string) => void;
+  addNote: () => void;
+  updateNote: (id: string, patch: Partial<import("./schema").ResumeNote>) => void;
+  removeNote: (id: string) => void;
   setTemplate: (t: TemplateId) => void;
   setTheme: (t: Partial<ThemeTokens>) => void;
   setLang: (l: UILang) => void;
@@ -73,6 +76,22 @@ export const useStore = create<State>()(
         set({ resume: { ...get().resume, [section]: [...(get().resume[section] as any[]), blankItem(section)] } as Resume }),
       removeItem: (section, id) =>
         set({ resume: { ...get().resume, [section]: (get().resume[section] as any[]).filter((x) => x.id !== id) } as Resume }),
+      addNote: () => {
+        const r = get().resume;
+        const notes = r.notes || [];
+        // Stagger each new note so they don't stack on top of each other.
+        const offset = (notes.length % 8) * 18;
+        const note = { id: uid(), text: "", x: 80 + offset, y: 80 + offset, width: 240, fontSize: 14 };
+        set({ resume: { ...r, notes: [...notes, note] } });
+      },
+      updateNote: (id, patch) => {
+        const r = get().resume;
+        set({ resume: { ...r, notes: (r.notes || []).map((n) => (n.id === id ? { ...n, ...patch } : n)) } });
+      },
+      removeNote: (id) => {
+        const r = get().resume;
+        set({ resume: { ...r, notes: (r.notes || []).filter((n) => n.id !== id) } });
+      },
       setTemplate: (t) => set({ template: t }),
       setTheme: (t) => set({ theme: { ...get().theme, ...t } }),
       setLang: (l) => set({ lang: l }),
