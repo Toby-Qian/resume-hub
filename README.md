@@ -1,11 +1,12 @@
 # resume-hub — 简历模板聚合 & 在线编辑器
 
+[![Live](https://img.shields.io/badge/live-resume--hub--mu--eight.vercel.app-black?logo=vercel)](https://resume-hub-mu-eight.vercel.app)
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FToby-Qian%2Fresume-hub&root-directory=web)
 [![Weekly refresh](https://github.com/Toby-Qian/resume-hub/actions/workflows/refresh-templates.yml/badge.svg)](https://github.com/Toby-Qian/resume-hub/actions/workflows/refresh-templates.yml)
 
 一个集 **GitHub 简历模板聚合** + **在线表单编辑** + **多主题切换** + **PDF 导出** 于一体的 Web 应用，中英双语简历皆可。
 
-> 🚀 线上地址：部署到 Vercel 后把 URL 贴回这里即可。
+> 🚀 **线上地址**：<https://resume-hub-mu-eight.vercel.app>
 
 ## 1. 功能
 
