@@ -159,6 +159,22 @@ export function Editor() {
               className="w-full accent-blue-600"
             />
           </div>
+          <div className="flex items-center justify-between text-[0.7rem] text-gray-600 pt-1 border-t border-gray-200">
+            <span>
+              {(L.fields as any).avatarPositionHint}
+              {((resume.basics.avatarOffsetX || 0) !== 0 || (resume.basics.avatarOffsetY || 0) !== 0) && (
+                <span className="ml-1 font-mono text-gray-500">
+                  ({resume.basics.avatarOffsetX || 0}, {resume.basics.avatarOffsetY || 0})
+                </span>
+              )}
+            </span>
+            <button
+              type="button"
+              onClick={() => { patchBasics("avatarOffsetX", 0); patchBasics("avatarOffsetY", 0); }}
+              className="px-2 py-0.5 rounded border border-gray-300 hover:bg-gray-100">
+              {(L.fields as any).avatarReset}
+            </button>
+          </div>
         </div>
       )}
 

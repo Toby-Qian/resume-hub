@@ -7,6 +7,11 @@ import Timeline from "./timeline";
 import CNFormal from "./cn-formal";
 import CNCreative from "./cn-creative";
 import ENAcademic from "./en-academic";
+import AcademicClassic from "./academic-classic";
+import AcademicModern from "./academic-modern";
+import AcademicPub from "./academic-pub";
+import AcademicMinimal from "./academic-minimal";
+import AcademicCN from "./academic-cn";
 import type { TemplateId } from "@/lib/store";
 import type { TemplateProps } from "./shared";
 
@@ -20,9 +25,16 @@ export const templates: Record<TemplateId, (p: TemplateProps) => JSX.Element> = 
   "cn-formal": CNFormal,
   "cn-creative": CNCreative,
   "en-academic": ENAcademic,
+  "academic-classic": AcademicClassic,
+  "academic-modern": AcademicModern,
+  "academic-pub": AcademicPub,
+  "academic-minimal": AcademicMinimal,
+  "academic-cn": AcademicCN,
 };
 
 export const templateList: TemplateId[] = [
   "modern", "classic", "minimal", "elegant", "compact", "timeline",
-  "cn-formal", "cn-creative", "en-academic",
+  "cn-formal", "cn-creative",
+  "en-academic", "academic-classic", "academic-modern",
+  "academic-pub", "academic-minimal", "academic-cn",
 ];

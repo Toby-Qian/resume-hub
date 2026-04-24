@@ -13,6 +13,8 @@ export interface ResumeBasics {
   showAvatar?: boolean;   // toggle whether templates render the photo
   avatarShape?: "circle" | "rounded" | "square" | "portrait"; // portrait = 3:4 passport
   avatarSize?: number;    // width in px; height = width (portrait = width * 4/3)
+  avatarOffsetX?: number; // drag offset relative to template's natural slot (px)
+  avatarOffsetY?: number;
 }
 
 export interface ResumeWork {

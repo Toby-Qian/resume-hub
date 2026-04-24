@@ -1,4 +1,7 @@
+"use client";
+import { useRef } from "react";
 import type { Resume } from "@/lib/schema";
+import { useStore } from "@/lib/store";
 
 export interface TemplateProps {
   resume: Resume;
@@ -28,12 +31,15 @@ export function Avatar({
     name?: string;
     avatarShape?: "circle" | "rounded" | "square" | "portrait";
     avatarSize?: number;
+    avatarOffsetX?: number;
+    avatarOffsetY?: number;
   };
   size?: number;
   rounded?: "full" | "md" | "sm" | "none";
   style?: React.CSSProperties;
   className?: string;
 }) {
+  const dragging = useRef<{ sx: number; sy: number; ox: number; oy: number } | null>(null);
   if (!basics.showAvatar || !basics.avatar) return null;
   // User-set shape / size override the template's default preference.
   const explicit = basics.avatarShape;
@@ -46,13 +52,54 @@ export function Avatar({
     : (rounded === "full" ? "rounded-full"
         : rounded === "md" ? "rounded-md"
         : rounded === "sm" ? "rounded-sm" : "");
+  const ox = basics.avatarOffsetX || 0;
+  const oy = basics.avatarOffsetY || 0;
+
+  // Drag to reposition. We push Xpx/Ypx offsets into the store; the rendered
+  // image uses a CSS transform so the template's layout flow isn't disturbed
+  // (avatar can visually wander anywhere the user wants, text stays in place).
+  const onMouseDown = (e: React.MouseEvent) => {
+    if (e.button !== 0) return;
+    e.preventDefault();
+    const st = useStore.getState();
+    dragging.current = {
+      sx: e.clientX, sy: e.clientY,
+      ox: st.resume.basics.avatarOffsetX || 0,
+      oy: st.resume.basics.avatarOffsetY || 0,
+    };
+    const onMove = (ev: MouseEvent) => {
+      if (!dragging.current) return;
+      const { resume, update } = useStore.getState();
+      update("basics", {
+        ...resume.basics,
+        avatarOffsetX: Math.round(dragging.current.ox + (ev.clientX - dragging.current.sx)),
+        avatarOffsetY: Math.round(dragging.current.oy + (ev.clientY - dragging.current.sy)),
+      });
+    };
+    const onUp = () => {
+      dragging.current = null;
+      window.removeEventListener("mousemove", onMove);
+      window.removeEventListener("mouseup", onUp);
+    };
+    window.addEventListener("mousemove", onMove);
+    window.addEventListener("mouseup", onUp);
+  };
+
   return (
     /* eslint-disable-next-line @next/next/no-img-element */
     <img
       src={basics.avatar}
       alt={basics.name || "avatar"}
-      className={`object-cover shrink-0 ${roundCls} ${className}`}
-      style={{ width: w, height: h, ...style }}
+      draggable={false}
+      onMouseDown={onMouseDown}
+      title="拖动以调整位置 / drag to reposition"
+      className={`object-cover shrink-0 select-none ${roundCls} ${className}`}
+      style={{
+        width: w, height: h,
+        transform: `translate(${ox}px, ${oy}px)`,
+        cursor: "grab",
+        ...style,
+      }}
     />
   );
 }

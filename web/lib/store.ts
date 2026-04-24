@@ -7,7 +7,10 @@ import { sampleEN, sampleZH } from "./samples";
 export type TemplateId =
   | "modern" | "classic" | "minimal"
   | "elegant" | "compact" | "timeline"
-  | "cn-formal" | "cn-creative" | "en-academic";
+  | "cn-formal" | "cn-creative"
+  | "en-academic"
+  | "academic-classic" | "academic-modern" | "academic-pub"
+  | "academic-minimal" | "academic-cn";
 
 export interface ThemeTokens {
   accent: string;          // primary color
