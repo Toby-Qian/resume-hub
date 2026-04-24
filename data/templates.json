@@ -1,6 +1,6 @@
 {
   "generated_at": "2026-04-23T13:49:49Z",
-  "count": 521,
+  "count": 451,
   "templates": [
     {
       "full_name": "geekcompany/ResumeSample",
@@ -303,41 +303,6 @@
       "screenshot_guess": "https://raw.githubusercontent.com/sharu725/online-cv/master/preview.png"
     },
     {
-      "full_name": "liyupi/free-programming-resources",
-      "name": "free-programming-resources",
-      "owner": "liyupi",
-      "html_url": "https://github.com/liyupi/free-programming-resources",
-      "description": "2026 年最新的免费编程资源大全，持续更新！🔥 覆盖各种语言和方向（Java / Python / C++ / JavaScript / TypeScript / Golang / 前端 / 后端 / AI大模型应用开发 / AI Agent开发等）的学习路线、零基础入门教程、项目实战教程、经典编程书籍、面试题合集、求职经验分享、简历模板、开源项目推荐、开发工具推荐、实用技术资源等，对程序员和计算机专业学生非常有帮助！⭐️ 学编程，先收藏这个仓库！",
-      "stars": 3467,
-      "forks": 554,
-      "language": "HTML",
-      "topics": [
-        "agents",
-        "ai",
-        "algorithms",
-        "android",
-        "awesome",
-        "backend",
-        "cpp",
-        "frontend",
-        "go",
-        "interview",
-        "ios",
-        "java",
-        "javascript",
-        "programming",
-        "python",
-        "resources"
-      ],
-      "license": "MIT",
-      "default_branch": "main",
-      "pushed_at": "2026-03-23T04:26:34Z",
-      "homepage": "http://dogyupi.com",
-      "stack": "html",
-      "lang": "zh",
-      "screenshot_guess": "https://raw.githubusercontent.com/liyupi/free-programming-resources/main/preview.png"
-    },
-    {
       "full_name": "jankapunkt/latexcv",
       "name": "latexcv",
       "owner": "jankapunkt",
@@ -507,24 +472,6 @@
       "stack": "html",
       "lang": "mixed",
       "screenshot_guess": "https://raw.githubusercontent.com/hua1995116/react-resume-site/master/preview.png"
-    },
-    {
-      "full_name": "yuezih/King-of-Pigeon",
-      "name": "King-of-Pigeon",
-      "owner": "yuezih",
-      "html_url": "https://github.com/yuezih/King-of-Pigeon",
-      "description": "计算机保研简历与文书实用模板",
-      "stars": 2192,
-      "forks": 86,
-      "language": null,
-      "topics": [],
-      "license": "MIT",
-      "default_branch": "main",
-      "pushed_at": "2024-06-04T09:23:47Z",
-      "homepage": "",
-      "stack": "other",
-      "lang": "zh",
-      "screenshot_guess": "https://raw.githubusercontent.com/yuezih/King-of-Pigeon/main/preview.png"
     },
     {
       "full_name": "welovedevs/react-ultimate-resume",
@@ -1067,24 +1014,6 @@
       "screenshot_guess": "https://raw.githubusercontent.com/CodingDocs/typora-markdown-resume/master/preview.png"
     },
     {
-      "full_name": "BigDataScholar/TheKingOfBigData",
-      "name": "TheKingOfBigData",
-      "owner": "BigDataScholar",
-      "html_url": "https://github.com/BigDataScholar/TheKingOfBigData",
-      "description": "🚀🚀🚀优质的历史文章，大数据高频考点，Java一线大厂知识考点，更有精美简历模板，简历指导手册和上百本技术书籍，最重要的就是被全网下载上千次的我自己花精力去画的大数据生态圈，Kafka，Spark，Scala的思维导图...这是一个你在大数据学习路上不能错过的宝藏项目！",
-      "stars": 877,
-      "forks": 229,
-      "language": null,
-      "topics": [],
-      "license": null,
-      "default_branch": "master",
-      "pushed_at": "2021-08-25T07:47:49Z",
-      "homepage": "",
-      "stack": "other",
-      "lang": "zh",
-      "screenshot_guess": "https://raw.githubusercontent.com/BigDataScholar/TheKingOfBigData/master/preview.png"
-    },
-    {
       "full_name": "OrangeX4/Chinese-Resume-in-Typst",
       "name": "Chinese-Resume-in-Typst",
       "owner": "OrangeX4",
@@ -1212,30 +1141,6 @@
       "screenshot_guess": "https://raw.githubusercontent.com/hantang/latex-templates/main/preview.png"
     },
     {
-      "full_name": "amusi/AI-Job-Resume",
-      "name": "AI-Job-Resume",
-      "owner": "amusi",
-      "html_url": "https://github.com/amusi/AI-Job-Resume",
-      "description": "AI 算法岗简历模板",
-      "stars": 704,
-      "forks": 89,
-      "language": null,
-      "topics": [
-        "artificial-intelligence",
-        "computer-vision",
-        "deep-learning",
-        "natural-language-processing",
-        "resume"
-      ],
-      "license": null,
-      "default_branch": "master",
-      "pushed_at": "2019-08-19T18:07:45Z",
-      "homepage": "",
-      "stack": "other",
-      "lang": "zh",
-      "screenshot_guess": "https://raw.githubusercontent.com/amusi/AI-Job-Resume/master/preview.png"
-    },
-    {
       "full_name": "nordicgiant2/react-nice-resume",
       "name": "react-nice-resume",
       "owner": "nordicgiant2",
@@ -1280,33 +1185,6 @@
       "screenshot_guess": "https://raw.githubusercontent.com/mikepqr/resume-markdown/main/preview.png"
     },
     {
-      "full_name": "subidit/rover-resume",
-      "name": "rover-resume",
-      "owner": "subidit",
-      "html_url": "https://github.com/subidit/rover-resume",
-      "description": "ATS friendly LaTeX resume template. Create a unique looking CV from scratch. ",
-      "stars": 638,
-      "forks": 113,
-      "language": "TeX",
-      "topics": [
-        "awesome",
-        "cv",
-        "cv-templates",
-        "latex",
-        "latex-template",
-        "resume",
-        "resume-template",
-        "typography"
-      ],
-      "license": "CC-BY-4.0",
-      "default_branch": "main",
-      "pushed_at": "2025-01-30T15:19:37Z",
-      "homepage": "",
-      "stack": "latex",
-      "lang": "en",
-      "screenshot_guess": "https://raw.githubusercontent.com/subidit/rover-resume/main/preview.png"
-    },
-    {
       "full_name": "tbaltrushaitis/cv",
       "name": "cv",
       "owner": "tbaltrushaitis",
@@ -1335,29 +1213,6 @@
       "stack": "html",
       "lang": "en",
       "screenshot_guess": "https://raw.githubusercontent.com/tbaltrushaitis/cv/master/preview.png"
-    },
-    {
-      "full_name": "apoorvkh/cvpr-latex-template",
-      "name": "cvpr-latex-template",
-      "owner": "apoorvkh",
-      "html_url": "https://github.com/apoorvkh/cvpr-latex-template",
-      "description": "Extended LaTeX template for CVPR/ICCV papers",
-      "stars": 617,
-      "forks": 187,
-      "language": "BibTeX Style",
-      "topics": [
-        "cvpr",
-        "iccv",
-        "latex",
-        "latex-template"
-      ],
-      "license": null,
-      "default_branch": "main",
-      "pushed_at": "2026-01-23T02:04:18Z",
-      "homepage": "",
-      "stack": "latex",
-      "lang": "en",
-      "screenshot_guess": "https://raw.githubusercontent.com/apoorvkh/cvpr-latex-template/main/preview.png"
     },
     {
       "full_name": "spagnuolocarmine/TwentySecondsCurriculumVitae-LaTex",
@@ -1405,32 +1260,6 @@
       "stack": "html",
       "lang": "en",
       "screenshot_guess": "https://raw.githubusercontent.com/mnjul/html-resume/master/preview.png"
-    },
-    {
-      "full_name": "tomcat123a/-chanlun",
-      "name": "-chanlun",
-      "owner": "tomcat123a",
-      "html_url": "https://github.com/tomcat123a/-chanlun",
-      "description": "文件 笔和线段的一种划分.py,只需要把k线high，low数据输入，就能自动实现笔，线段，中枢，买卖点，走势类型的划分了。可以把sh.csv 作为输入文件。个人简历见.pdf。时间的力量。有人说择时很困难，有人说选股很容易，有人说统计套利需要的IT配套设施很重要。还有人说系统有不可测原理。众说纷纭。分布式的系统，当你的影响可以被忽略，你才能实现，Jiang主席所谓之，闷声发大财。第一周，大盘跌了1%，挣钱了一万，挣了5%。 #股票 #股市 #缠论 https://v.kuaishou.com/bFEl6M Copy this message and open 【Kwai】to view!",
-      "stars": 564,
-      "forks": 322,
-      "language": "Python",
-      "topics": [
-        "deep-learning",
-        "deep-neural-networks",
-        "deep-reinforcement-learning",
-        "trading",
-        "trading-algorithms",
-        "trading-bot",
-        "trading-strategies"
-      ],
-      "license": null,
-      "default_branch": "master",
-      "pushed_at": "2024-04-02T09:20:48Z",
-      "homepage": "",
-      "stack": "other",
-      "lang": "zh",
-      "screenshot_guess": "https://raw.githubusercontent.com/tomcat123a/-chanlun/master/preview.png"
     },
     {
       "full_name": "ptsouchlos/modern-cv",
@@ -1533,40 +1362,6 @@
       "stack": "latex",
       "lang": "mixed",
       "screenshot_guess": "https://raw.githubusercontent.com/dyweb/Deedy-Resume-for-Chinese/master/preview.png"
-    },
-    {
-      "full_name": "ByCh4n/BCHackTool",
-      "name": "BCHackTool",
-      "owner": "ByCh4n",
-      "html_url": "https://github.com/ByCh4n/BCHackTool",
-      "description": "🔥 Professional Penetration Testing Framework v4.0 - Automated subdomain enumeration, vulnerability scanning with Nuclei, port scanning, and comprehensive HTML reports. Features parallel scanning, resume capability, and real-time progress tracking.",
-      "stars": 527,
-      "forks": 88,
-      "language": "Shell",
-      "topics": [
-        "automation",
-        "bash-script",
-        "bug-bounty",
-        "cybersecurity",
-        "ethical-hacking",
-        "nuclei",
-        "osint",
-        "penetration-testing",
-        "recon-tool",
-        "red-team",
-        "security-scanner",
-        "security-tools",
-        "subdomain-enumeration",
-        "vulnerability-scanner",
-        "web-security"
-      ],
-      "license": "NOASSERTION",
-      "default_branch": "main",
-      "pushed_at": "2026-01-09T13:42:26Z",
-      "homepage": "https://github.com/ByCh4n/BCHackTool",
-      "stack": "html",
-      "lang": "en",
-      "screenshot_guess": "https://raw.githubusercontent.com/ByCh4n/BCHackTool/main/preview.png"
     },
     {
       "full_name": "sc932/resume",
@@ -1995,24 +1790,6 @@
       "screenshot_guess": "https://raw.githubusercontent.com/darhonbek/resume_templates/master/preview.png"
     },
     {
-      "full_name": "MCG-NKU/CVPR_Template",
-      "name": "CVPR_Template",
-      "owner": "MCG-NKU",
-      "html_url": "https://github.com/MCG-NKU/CVPR_Template",
-      "description": "",
-      "stars": 385,
-      "forks": 60,
-      "language": "TeX",
-      "topics": [],
-      "license": null,
-      "default_branch": "master",
-      "pushed_at": "2023-08-17T01:22:06Z",
-      "homepage": null,
-      "stack": "latex",
-      "lang": "en",
-      "screenshot_guess": "https://raw.githubusercontent.com/MCG-NKU/CVPR_Template/master/preview.png"
-    },
-    {
       "full_name": "mmmlllnnn/ResumeCollection",
       "name": "ResumeCollection",
       "owner": "mmmlllnnn",
@@ -2278,31 +2055,6 @@
       "stack": "latex",
       "lang": "en",
       "screenshot_guess": "https://raw.githubusercontent.com/treyhunner/resume/master/preview.png"
-    },
-    {
-      "full_name": "walmik/timer.jquery",
-      "name": "timer.jquery",
-      "owner": "walmik",
-      "html_url": "https://github.com/walmik/timer.jquery",
-      "description": "jQuery Timer: Start/Stop/Resume/Remove pretty timer inside any HTML element.",
-      "stars": 297,
-      "forks": 81,
-      "language": "JavaScript",
-      "topics": [
-        "countdown",
-        "duration",
-        "jquery",
-        "jquery-timer",
-        "timer-displays",
-        "timer-plugin"
-      ],
-      "license": "MIT",
-      "default_branch": "master",
-      "pushed_at": "2024-12-15T19:50:54Z",
-      "homepage": "https://walmik.github.io/timer.jquery/",
-      "stack": "html",
-      "lang": "en",
-      "screenshot_guess": "https://raw.githubusercontent.com/walmik/timer.jquery/master/preview.png"
     },
     {
       "full_name": "Erik-Cupsa/ResumeTemplate",
@@ -2834,89 +2586,6 @@
       "screenshot_guess": "https://raw.githubusercontent.com/weidong-repo/AIResume/main/preview.png"
     },
     {
-      "full_name": "shubhamku044/la-resume",
-      "name": "la-resume",
-      "owner": "shubhamku044",
-      "html_url": "https://github.com/shubhamku044/la-resume",
-      "description": "La-Resume is a free and ATS-friendly resume builder powered by LaTeX. Just enter your details, preview, and download the PDF and LaTeX source. Built with Next.js and TypeScript.",
-      "stars": 196,
-      "forks": 24,
-      "language": "TypeScript",
-      "topics": [
-        "ats-friendly",
-        "latex",
-        "nextjs",
-        "pdf-generator",
-        "resume-builder",
-        "resume-template",
-        "typescript"
-      ],
-      "license": "MIT",
-      "default_branch": "main",
-      "pushed_at": "2026-02-21T06:19:38Z",
-      "homepage": "https://la-resume.tech",
-      "stack": "latex",
-      "lang": "en",
-      "screenshot_guess": "https://raw.githubusercontent.com/shubhamku044/la-resume/main/preview.png"
-    },
-    {
-      "full_name": "Hunterdii/Smart-AI-Resume-Analyzer",
-      "name": "Smart-AI-Resume-Analyzer",
-      "owner": "Hunterdii",
-      "html_url": "https://github.com/Hunterdii/Smart-AI-Resume-Analyzer",
-      "description": "📄 Smart Resume AI is a powerful tool designed to revolutionize your job application process. With features like 📚 professional template building, 🔍 ATS-friendly analysis, and 🎯 AI-driven optimization, it ensures your resume stands out to recruiters. Smart Resume AI provides everything you need to craft a tailored, eye-catching resume. 🚀",
-      "stars": 194,
-      "forks": 72,
-      "language": "C",
-      "topics": [
-        "admin-panel",
-        "ai-resume-analyzer-github",
-        "courses-certificates",
-        "dashboard",
-        "dashboard-application",
-        "feedback",
-        "feedback-form",
-        "final-project",
-        "final-year-project",
-        "job-role-descriptions",
-        "jobs-search",
-        "python3",
-        "resume-analysis",
-        "resume-analyzer",
-        "resume-builder",
-        "resume-generator",
-        "resume-parser",
-        "resume-template",
-        "resume-upload",
-        "streamlit"
-      ],
-      "license": "MIT",
-      "default_branch": "main",
-      "pushed_at": "2026-04-18T11:28:26Z",
-      "homepage": "https://resumind.streamlit.app/",
-      "stack": "other",
-      "lang": "en",
-      "screenshot_guess": "https://raw.githubusercontent.com/Hunterdii/Smart-AI-Resume-Analyzer/main/preview.png"
-    },
-    {
-      "full_name": "bcefghj/learn-nanobot",
-      "name": "learn-nanobot",
-      "owner": "bcefghj",
-      "html_url": "https://github.com/bcefghj/learn-nanobot",
-      "description": "面向小白的 HKUDS/nanobot 面试学习指南 | 17章深度教程 | 134道八股文 | 哆啦A梦漫画图解 | STAR面试法 | 简历模板",
-      "stars": 193,
-      "forks": 22,
-      "language": "Python",
-      "topics": [],
-      "license": "MIT",
-      "default_branch": "main",
-      "pushed_at": "2026-04-01T20:23:34Z",
-      "homepage": null,
-      "stack": "other",
-      "lang": "zh",
-      "screenshot_guess": "https://raw.githubusercontent.com/bcefghj/learn-nanobot/main/preview.png"
-    },
-    {
       "full_name": "jobpare/cvgen",
       "name": "cvgen",
       "owner": "jobpare",
@@ -3108,29 +2777,6 @@
       "screenshot_guess": "https://raw.githubusercontent.com/rrdelaney/material-resume/master/preview.png"
     },
     {
-      "full_name": "stuxf/basic-typst-resume-template",
-      "name": "basic-typst-resume-template",
-      "owner": "stuxf",
-      "html_url": "https://github.com/stuxf/basic-typst-resume-template",
-      "description": "A basic resume for typst, designed to work well with ATS systems.",
-      "stars": 178,
-      "forks": 83,
-      "language": "Typst",
-      "topics": [
-        "resume",
-        "resume-template",
-        "typst",
-        "typst-template"
-      ],
-      "license": "Unlicense",
-      "default_branch": "main",
-      "pushed_at": "2026-03-28T23:08:55Z",
-      "homepage": "",
-      "stack": "typst",
-      "lang": "en",
-      "screenshot_guess": "https://raw.githubusercontent.com/stuxf/basic-typst-resume-template/main/preview.png"
-    },
-    {
       "full_name": "Thomashighbaugh/resume",
       "name": "resume",
       "owner": "Thomashighbaugh",
@@ -3227,24 +2873,6 @@
       "stack": "latex",
       "lang": "en",
       "screenshot_guess": "https://raw.githubusercontent.com/antkr10/tex-cvbuilder/main/preview.png"
-    },
-    {
-      "full_name": "fabriciotrinndade/ats-resume-generator-html",
-      "name": "ats-resume-generator-html",
-      "owner": "fabriciotrinndade",
-      "html_url": "https://github.com/fabriciotrinndade/ats-resume-generator-html",
-      "description": "ATS-first resume builder focused on clarity, portability, and full control.",
-      "stars": 165,
-      "forks": 35,
-      "language": "TypeScript",
-      "topics": [],
-      "license": null,
-      "default_branch": "main",
-      "pushed_at": "2026-04-10T00:19:25Z",
-      "homepage": "https://atsflow.xyz",
-      "stack": "html",
-      "lang": "en",
-      "screenshot_guess": "https://raw.githubusercontent.com/fabriciotrinndade/ats-resume-generator-html/main/preview.png"
     },
     {
       "full_name": "Slyces/awesome-cv-timeline",
@@ -3723,24 +3351,6 @@
       "screenshot_guess": "https://raw.githubusercontent.com/rimijoker/Fake_Terminal_Resume_Website/master/preview.png"
     },
     {
-      "full_name": "small-bears/cars",
-      "name": "cars",
-      "owner": "small-bears",
-      "html_url": "https://github.com/small-bears/cars",
-      "description": "基于SpringBoot Vue的校园招聘推荐系统(源代码+数据库+配套论文+ppt) java毕业设计，基于微信小程序，Ai对话，协同过滤推荐算法，基于安卓毕业设计，机器学习，深度学习，大数据毕业设计，Python+Django+Vue ，php ，Flask,node.js ，SpringBoot Vue，SSM，JSP ，Uniapp，hadoop和spark框架，hive框架，ThinkPhp，Flask，Koa，Express，Springcloud，ASP.Net，C#，Mysql，1. 前台用户 可使用功能：首页、职位招聘、培训活动、公告资讯、个人中心（含修改密码、简历投递、面试通知、参加面试、面试结果、培训报名、薪资发放、我的收藏） 2. 管理员（后台模块） 管理类功能：主页",
-      "stars": 128,
-      "forks": 0,
-      "language": "JavaScript",
-      "topics": [],
-      "license": null,
-      "default_branch": "master",
-      "pushed_at": "2025-12-18T14:49:45Z",
-      "homepage": "",
-      "stack": "html",
-      "lang": "zh",
-      "screenshot_guess": "https://raw.githubusercontent.com/small-bears/cars/master/preview.png"
-    },
-    {
       "full_name": "bobby-didcoding/didcoding_resume_template",
       "name": "didcoding_resume_template",
       "owner": "bobby-didcoding",
@@ -3757,57 +3367,6 @@
       "stack": "html",
       "lang": "en",
       "screenshot_guess": "https://raw.githubusercontent.com/bobby-didcoding/didcoding_resume_template/main/preview.png"
-    },
-    {
-      "full_name": "vinaysomawat/Resume-Builder",
-      "name": "Resume-Builder",
-      "owner": "vinaysomawat",
-      "html_url": "https://github.com/vinaysomawat/Resume-Builder",
-      "description": "A customizable web-based template editor utilizing Javascript, designed to create personalized resumes and letters in a variety of formats.",
-      "stars": 123,
-      "forks": 77,
-      "language": "HTML",
-      "topics": [
-        "cv-template",
-        "resume-builder",
-        "resume-creator",
-        "resume-site-builder",
-        "resume-template",
-        "resume-website",
-        "resumes"
-      ],
-      "license": "MIT",
-      "default_branch": "master",
-      "pushed_at": "2022-02-18T16:23:53Z",
-      "homepage": "https://vinaysomawat.github.io/Resume-Builder/",
-      "stack": "html",
-      "lang": "en",
-      "screenshot_guess": "https://raw.githubusercontent.com/vinaysomawat/Resume-Builder/master/preview.png"
-    },
-    {
-      "full_name": "santosfrancisco/gatsby-starter-cv",
-      "name": "gatsby-starter-cv",
-      "owner": "santosfrancisco",
-      "html_url": "https://github.com/santosfrancisco/gatsby-starter-cv",
-      "description": "A simple starter to get up and developing your digital curriculum with GatsbyJS",
-      "stars": 122,
-      "forks": 38,
-      "language": "JavaScript",
-      "topics": [
-        "cv-template",
-        "gatsbyjs",
-        "javascript",
-        "reactjs",
-        "styled-components",
-        "template"
-      ],
-      "license": "MIT",
-      "default_branch": "master",
-      "pushed_at": "2023-12-02T14:01:48Z",
-      "homepage": "https://santosfrancisco.github.io/gatsby-starter-cv/",
-      "stack": "html",
-      "lang": "en",
-      "screenshot_guess": "https://raw.githubusercontent.com/santosfrancisco/gatsby-starter-cv/master/preview.png"
     },
     {
       "full_name": "vidluther/markdown-resume",
@@ -3932,24 +3491,6 @@
       "screenshot_guess": "https://raw.githubusercontent.com/liangjingkanji/Resume-Template/master/preview.png"
     },
     {
-      "full_name": "small-bears/hires",
-      "name": "hires",
-      "owner": "small-bears",
-      "html_url": "https://github.com/small-bears/hires",
-      "description": " (协同过滤推荐算法)校园招聘系统 java springboot vue ssm mysql python Django vue 企业招聘系统(源代码+数据库+配套论文+ppt) 角色：管理员、用户、企业   管理员：我的信息、用户管理、简历管理、应聘邀请管理、企业管理、职位分类管理、招聘信息管理、求职信息管理、招聘结果管理、留言反馈、交流论坛 等进行操作。  用户：企业宣讲、招聘信息、交流论坛、公告信息、留言反馈、个人中心 、php,Flask,node.js,SSM,JSP,Uniapp,hadoop,spark,hive,ThinkPhp,Flask,Koa,Express,Springcloud,ASP.Net,C#,Mysql,大数据毕业设计,基于微信小程序,Ai对话,协同过滤推",
-      "stars": 115,
-      "forks": 0,
-      "language": "Vue",
-      "topics": [],
-      "license": null,
-      "default_branch": "main",
-      "pushed_at": "2026-04-05T21:25:48Z",
-      "homepage": "",
-      "stack": "html",
-      "lang": "zh",
-      "screenshot_guess": "https://raw.githubusercontent.com/small-bears/hires/main/preview.png"
-    },
-    {
       "full_name": "kelyvin/jsonresume-theme-caffeine",
       "name": "jsonresume-theme-caffeine",
       "owner": "kelyvin",
@@ -3979,34 +3520,6 @@
       "screenshot_guess": "https://raw.githubusercontent.com/kelyvin/jsonresume-theme-caffeine/master/preview.png"
     },
     {
-      "full_name": "ppresume/community",
-      "name": "community",
-      "owner": "ppresume",
-      "html_url": "https://github.com/ppresume/community",
-      "description": "Discussions, feedbacks, roadmaps, community for PPResume.",
-      "stars": 112,
-      "forks": 3,
-      "language": "MDX",
-      "topics": [
-        "cjk",
-        "latex",
-        "ppresume",
-        "react",
-        "resume",
-        "resume-builder",
-        "resume-template",
-        "texlive",
-        "typst"
-      ],
-      "license": "CC-BY-4.0",
-      "default_branch": "main",
-      "pushed_at": "2025-03-24T02:53:22Z",
-      "homepage": "https://blog.ppresume.com",
-      "stack": "other",
-      "lang": "en",
-      "screenshot_guess": "https://raw.githubusercontent.com/ppresume/community/main/preview.png"
-    },
-    {
       "full_name": "Yi-Lynn/cv-latex-template",
       "name": "cv-latex-template",
       "owner": "Yi-Lynn",
@@ -4023,24 +3536,6 @@
       "stack": "latex",
       "lang": "en",
       "screenshot_guess": "https://raw.githubusercontent.com/Yi-Lynn/cv-latex-template/main/preview.png"
-    },
-    {
-      "full_name": "small-bears/hire",
-      "name": "hire",
-      "owner": "small-bears",
-      "html_url": "https://github.com/small-bears/hire",
-      "description": " java springboot vue ssm mysql python Django 校园招聘网站(源代码+数据库+配套论文+ppt) 角色：管理员、用户、公司  管理员：管理员进入主页面，主要功能包括对个人中心、求职者管理、公司管理、岗位分类管理、岗位信息管理、应聘信息管理、面试通知管理、个人简历管理、交流论坛、系统管理等进行操作。  用户：系统首页 、公司 、 岗位信息、交流论坛、 招聘资讯、php,Flask,node.js,SSM,JSP,Uniapp,hadoop,spark,hive,ThinkPhp,Flask,Koa,Express,Springcloud,ASP.Net,C#,Mysql,大数据毕业设计,基于微信小程序,Ai对话,协同过滤推荐算法,基于安卓,机器学习,深",
-      "stars": 112,
-      "forks": 0,
-      "language": "Vue",
-      "topics": [],
-      "license": null,
-      "default_branch": "main",
-      "pushed_at": "2026-04-05T21:25:23Z",
-      "homepage": "",
-      "stack": "html",
-      "lang": "zh",
-      "screenshot_guess": "https://raw.githubusercontent.com/small-bears/hire/main/preview.png"
     },
     {
       "full_name": "maksymilan/zju-resume-template",
@@ -4207,27 +3702,6 @@
       "screenshot_guess": "https://raw.githubusercontent.com/abrandenberger/academic-resume/main/preview.png"
     },
     {
-      "full_name": "XiaomingX/jobleap-cn-ai-job-search",
-      "name": "jobleap-cn-ai-job-search",
-      "owner": "XiaomingX",
-      "html_url": "https://github.com/XiaomingX/jobleap-cn-ai-job-search",
-      "description": "招聘和找工作相关信息通告.jobleap.cn 是一个基于人工智能（AI）技术的智能求职平台，专门为技术人员和应届毕业生量身定制，提供全方位的职业发展和求职辅助服务。它集成了模拟面试、面试押题、智能简历模板、职位匹配分析等功能，帮助用户科学规划职业路径，精准定位岗位，从而大幅提升面试通过率和求职效率。",
-      "stars": 107,
-      "forks": 6,
-      "language": "Python",
-      "topics": [
-        "awesome",
-        "jobsearch"
-      ],
-      "license": "Apache-2.0",
-      "default_branch": "main",
-      "pushed_at": "2026-04-23T11:49:24Z",
-      "homepage": "https://mp.jobleap4u.com/",
-      "stack": "other",
-      "lang": "zh",
-      "screenshot_guess": "https://raw.githubusercontent.com/XiaomingX/jobleap-cn-ai-job-search/main/preview.png"
-    },
-    {
       "full_name": "cystema/PlushCV",
       "name": "PlushCV",
       "owner": "cystema",
@@ -4285,24 +3759,6 @@
       "stack": "html",
       "lang": "en",
       "screenshot_guess": "https://raw.githubusercontent.com/kawamataryo/resume-template/master/preview.png"
-    },
-    {
-      "full_name": "n0tssss/NutssssIndex",
-      "name": "NutssssIndex",
-      "owner": "n0tssss",
-      "html_url": "https://github.com/n0tssss/NutssssIndex",
-      "description": "原创个人极简风格单页模板！个人主页系列、个人简历等",
-      "stars": 100,
-      "forks": 25,
-      "language": "CSS",
-      "topics": [],
-      "license": "GPL-3.0",
-      "default_branch": "master",
-      "pushed_at": "2026-01-26T02:13:12Z",
-      "homepage": "",
-      "stack": "html",
-      "lang": "zh",
-      "screenshot_guess": "https://raw.githubusercontent.com/n0tssss/NutssssIndex/master/preview.png"
     },
     {
       "full_name": "clementbouly/interactive-resume-template",
@@ -4567,34 +4023,6 @@
       "stack": "latex",
       "lang": "en",
       "screenshot_guess": "https://raw.githubusercontent.com/abhineetgupta/ai-resume-builder/main/preview.png"
-    },
-    {
-      "full_name": "sardorml/vantage-typst",
-      "name": "vantage-typst",
-      "owner": "sardorml",
-      "html_url": "https://github.com/sardorml/vantage-typst",
-      "description": "Simple ATS friendly typst cv template.",
-      "stars": 86,
-      "forks": 19,
-      "language": "Typst",
-      "topics": [
-        "curriculum-vitae",
-        "cv",
-        "cv-template",
-        "resume",
-        "resume-template",
-        "template",
-        "two-column-cv",
-        "typst",
-        "typst-template"
-      ],
-      "license": "MIT",
-      "default_branch": "main",
-      "pushed_at": "2024-11-20T02:24:23Z",
-      "homepage": "",
-      "stack": "typst",
-      "lang": "en",
-      "screenshot_guess": "https://raw.githubusercontent.com/sardorml/vantage-typst/main/preview.png"
     },
     {
       "full_name": "ananyalohani/iiitd-resume",
@@ -4891,24 +4319,6 @@
       "screenshot_guess": "https://raw.githubusercontent.com/epidrome/awesome-cv-templates/master/preview.png"
     },
     {
-      "full_name": "mdavis-xyz/friggeri-letter",
-      "name": "friggeri-letter",
-      "owner": "mdavis-xyz",
-      "html_url": "https://github.com/mdavis-xyz/friggeri-letter",
-      "description": "A LaTeX template for a cover letter to go with the Friggeri Resume",
-      "stars": 73,
-      "forks": 28,
-      "language": "TeX",
-      "topics": [],
-      "license": "NOASSERTION",
-      "default_branch": "master",
-      "pushed_at": "2021-05-16T22:54:05Z",
-      "homepage": null,
-      "stack": "latex",
-      "lang": "en",
-      "screenshot_guess": "https://raw.githubusercontent.com/mdavis-xyz/friggeri-letter/master/preview.png"
-    },
-    {
       "full_name": "jiffyclub/html-css-resume-template",
       "name": "html-css-resume-template",
       "owner": "jiffyclub",
@@ -5015,24 +4425,6 @@
       "stack": "latex",
       "lang": "en",
       "screenshot_guess": "https://raw.githubusercontent.com/aidanscannell/my-org-resume/master/preview.png"
-    },
-    {
-      "full_name": "karlitos/KissMyResume",
-      "name": "KissMyResume",
-      "owner": "karlitos",
-      "html_url": "https://github.com/karlitos/KissMyResume",
-      "description": "Generate polished résumés and CVs in HTML, PDF,  MS Word and other formats and Keep It Simple. ",
-      "stars": 68,
-      "forks": 6,
-      "language": "TypeScript",
-      "topics": [],
-      "license": "MIT",
-      "default_branch": "master",
-      "pushed_at": "2023-01-07T21:25:32Z",
-      "homepage": null,
-      "stack": "html",
-      "lang": "en",
-      "screenshot_guess": "https://raw.githubusercontent.com/karlitos/KissMyResume/master/preview.png"
     },
     {
       "full_name": "peterpf/modern-typst-resume",
@@ -5173,24 +4565,6 @@
       "stack": "html",
       "lang": "zh",
       "screenshot_guess": "https://raw.githubusercontent.com/imdong/resume.md/master/preview.png"
-    },
-    {
-      "full_name": "haegyeong/android_engineer",
-      "name": "android_engineer",
-      "owner": "haegyeong",
-      "html_url": "https://github.com/haegyeong/android_engineer",
-      "description": "一份android工程师的简历模板",
-      "stars": 62,
-      "forks": 42,
-      "language": null,
-      "topics": [],
-      "license": null,
-      "default_branch": "master",
-      "pushed_at": "2018-04-19T11:55:39Z",
-      "homepage": null,
-      "stack": "other",
-      "lang": "zh",
-      "screenshot_guess": "https://raw.githubusercontent.com/haegyeong/android_engineer/master/preview.png"
     },
     {
       "full_name": "Maaato/react-resume",
@@ -5347,24 +4721,6 @@
       "screenshot_guess": "https://raw.githubusercontent.com/chrisby/prometheusCV/main/preview.png"
     },
     {
-      "full_name": "divad12/resume",
-      "name": "resume",
-      "owner": "divad12",
-      "html_url": "https://github.com/divad12/resume",
-      "description": "Yaml resume compiled into multiple formats (such as LaTeX, HTML (TODO), etc.)",
-      "stars": 58,
-      "forks": 7,
-      "language": "TeX",
-      "topics": [],
-      "license": null,
-      "default_branch": "master",
-      "pushed_at": "2016-10-20T05:04:07Z",
-      "homepage": "",
-      "stack": "latex",
-      "lang": "en",
-      "screenshot_guess": "https://raw.githubusercontent.com/divad12/resume/master/preview.png"
-    },
-    {
       "full_name": "x3388638/cakeresume-html-editor",
       "name": "cakeresume-html-editor",
       "owner": "x3388638",
@@ -5457,24 +4813,6 @@
       "stack": "latex",
       "lang": "en",
       "screenshot_guess": "https://raw.githubusercontent.com/athola/simple-resume/main/preview.png"
-    },
-    {
-      "full_name": "thinakaranmanokaran/ATS_Resume_Templates",
-      "name": "ATS_Resume_Templates",
-      "owner": "thinakaranmanokaran",
-      "html_url": "https://github.com/thinakaranmanokaran/ATS_Resume_Templates",
-      "description": "🚀 Curated by Thinakaran Manokaran — MERN stack dev & designer — this repo offers ATS-friendly, modern resume templates 🧾 for developers, designers & students 🌱. Clean, minimal & optimized to pass Applicant Tracking Systems ✅. Perfect for job seekers! 💼✨",
-      "stars": 56,
-      "forks": 0,
-      "language": null,
-      "topics": [],
-      "license": null,
-      "default_branch": "main",
-      "pushed_at": "2026-02-09T05:49:19Z",
-      "homepage": null,
-      "stack": "other",
-      "lang": "en",
-      "screenshot_guess": "https://raw.githubusercontent.com/thinakaranmanokaran/ATS_Resume_Templates/main/preview.png"
     },
     {
       "full_name": "fanzeyi/cv",
@@ -5711,42 +5049,6 @@
       "stack": "latex",
       "lang": "en",
       "screenshot_guess": "https://raw.githubusercontent.com/thisisshi/SoftwareEngineerLatexResume/master/preview.png"
-    },
-    {
-      "full_name": "Boese0601/Curriculum-Vitae-Latex",
-      "name": "Curriculum-Vitae-Latex",
-      "owner": "Boese0601",
-      "html_url": "https://github.com/Boese0601/Curriculum-Vitae-Latex",
-      "description": "A simple version of CV/Resume for application of Master/Doctoral degree.",
-      "stars": 51,
-      "forks": 2,
-      "language": "TeX",
-      "topics": [],
-      "license": null,
-      "default_branch": "main",
-      "pushed_at": "2021-04-07T03:36:44Z",
-      "homepage": "",
-      "stack": "latex",
-      "lang": "en",
-      "screenshot_guess": "https://raw.githubusercontent.com/Boese0601/Curriculum-Vitae-Latex/main/preview.png"
-    },
-    {
-      "full_name": "help-pros/template",
-      "name": "template",
-      "owner": "help-pros",
-      "html_url": "https://github.com/help-pros/template",
-      "description": "简历、商务、合同、PPT范文模板",
-      "stars": 51,
-      "forks": 23,
-      "language": "Rich Text Format",
-      "topics": [],
-      "license": null,
-      "default_branch": "master",
-      "pushed_at": "2020-06-01T11:25:00Z",
-      "homepage": "",
-      "stack": "other",
-      "lang": "zh",
-      "screenshot_guess": "https://raw.githubusercontent.com/help-pros/template/master/preview.png"
     },
     {
       "full_name": "MuhammedBuyukkinaci/Data-Scientist-LaTeX-Resume-with-Photo",
@@ -6015,24 +5317,6 @@
       "screenshot_guess": "https://raw.githubusercontent.com/RessMatthew/USTC-Resume-LaTeX-Template/main/preview.png"
     },
     {
-      "full_name": "666bears/jobhunt",
-      "name": "jobhunt",
-      "owner": "666bears",
-      "html_url": "https://github.com/666bears/jobhunt",
-      "description": "基于Java+SpringBoot+Vue的求职招聘系统(源代码+数据库+配套论文+ppt) java毕业设计，基于微信小程序，基于安卓毕业设计，机器学习，大数据毕业设计，Python+Django+Vue ，php ，node.js ，SpringBoot Vue，SSM，JSP ，Uniapp，hadoop和spark框架，hive框架角色：管理员、企业、用户  当游客打开系统的网址后，首先看到的就是首页界面。在这里，游客能够看到心聘求职平台的导航条显示首页、招聘岗位、公告栏、在线留言、后台管理、个人中心。  管理员：管理员登录进入心聘求职平台的实现可以查看系统首页、个人中心、用户管理、企业管理、招聘岗位管理、行业类型管理、求职贴管理、简历投递管理、面试邀请管理、在线咨询管理、企业回复管",
-      "stars": 47,
-      "forks": 0,
-      "language": null,
-      "topics": [],
-      "license": null,
-      "default_branch": "main",
-      "pushed_at": "2025-12-14T09:19:52Z",
-      "homepage": "",
-      "stack": "other",
-      "lang": "zh",
-      "screenshot_guess": "https://raw.githubusercontent.com/666bears/jobhunt/main/preview.png"
-    },
-    {
       "full_name": "imuhammadessa/Responsive-resume",
       "name": "Responsive-resume",
       "owner": "imuhammadessa",
@@ -6112,43 +5396,6 @@
       "screenshot_guess": "https://raw.githubusercontent.com/AyushR1/Resume-Template/main/preview.png"
     },
     {
-      "full_name": "steve1316/android-cv-bot-template",
-      "name": "android-cv-bot-template",
-      "owner": "steve1316",
-      "html_url": "https://github.com/steve1316/android-cv-bot-template",
-      "description": "Template Project for an Android CV Bot using OpenCV for template matching, MediaProjection for taking screenshots, and AccessiblityService to execute gestures on screen.",
-      "stars": 44,
-      "forks": 12,
-      "language": "TypeScript",
-      "topics": [
-        "accessibilityservice",
-        "accessiblity",
-        "android",
-        "automation",
-        "bot",
-        "control",
-        "example",
-        "google-ml-kit",
-        "javascript",
-        "kotlin",
-        "mediaprojection",
-        "mobile",
-        "notification",
-        "ocr",
-        "opencv",
-        "react",
-        "react-native",
-        "template"
-      ],
-      "license": null,
-      "default_branch": "main",
-      "pushed_at": "2023-02-09T07:05:00Z",
-      "homepage": "",
-      "stack": "html",
-      "lang": "en",
-      "screenshot_guess": "https://raw.githubusercontent.com/steve1316/android-cv-bot-template/main/preview.png"
-    },
-    {
       "full_name": "WonderCV-com/resume-skills-and-tools",
       "name": "resume-skills-and-tools",
       "owner": "WonderCV-com",
@@ -6202,32 +5449,6 @@
       "stack": "html",
       "lang": "en",
       "screenshot_guess": "https://raw.githubusercontent.com/nietaki/markdown-resume/master/preview.png"
-    },
-    {
-      "full_name": "WonderCV-com/resume-templates",
-      "name": "resume-templates",
-      "owner": "WonderCV-com",
-      "html_url": "https://github.com/WonderCV-com/resume-templates",
-      "description": "100+ 专业中文简历模板，ATS 友好，覆盖互联网/金融/应届生等场景 | WonderCV Resume Templates",
-      "stars": 43,
-      "forks": 3,
-      "language": null,
-      "topics": [
-        "ats",
-        "chinese-resume",
-        "cv",
-        "job-search",
-        "resume",
-        "resume-template",
-        "wondercv"
-      ],
-      "license": "NOASSERTION",
-      "default_branch": "main",
-      "pushed_at": "2026-04-03T12:16:31Z",
-      "homepage": "https://wondercv.com",
-      "stack": "other",
-      "lang": "mixed",
-      "screenshot_guess": "https://raw.githubusercontent.com/WonderCV-com/resume-templates/main/preview.png"
     },
     {
       "full_name": "petezh/Modular-Resume",
@@ -6414,35 +5635,6 @@
       "stack": "latex",
       "lang": "en",
       "screenshot_guess": "https://raw.githubusercontent.com/martinothamar/CV-Latex-Template/master/preview.png"
-    },
-    {
-      "full_name": "Hazrat-Ali9/Hazrat-Ali-Portfolio",
-      "name": "Hazrat-Ali-Portfolio",
-      "owner": "Hazrat-Ali9",
-      "html_url": "https://github.com/Hazrat-Ali9/Hazrat-Ali-Portfolio",
-      "description": "🛼 HTML CSS JavaScript 🤢 React Tailwind CSS 🥶 or other frameworks 🤡  🚟About Me Skills Projects 👹 Resume Blog and 🐯 Contact Form Fully 🦄  🏰responsive design SEO 🍇 optimized real-world 🚒 projects GitHub contributions 🚢 and live demos 🚁",
-      "stars": 41,
-      "forks": 0,
-      "language": "JavaScript",
-      "topics": [
-        "ali",
-        "framework",
-        "front-end",
-        "frontend-web",
-        "hazrat",
-        "html-css-javascript",
-        "javascript",
-        "portfolio",
-        "react",
-        "website"
-      ],
-      "license": "MIT",
-      "default_branch": "main",
-      "pushed_at": "2025-10-04T17:26:27Z",
-      "homepage": "https://github.com/Hazrat-Ali9/Hazrat-Ali-Portfolio",
-      "stack": "html",
-      "lang": "en",
-      "screenshot_guess": "https://raw.githubusercontent.com/Hazrat-Ali9/Hazrat-Ali-Portfolio/main/preview.png"
     },
     {
       "full_name": "Roald87/xelatex-cv-roald",
@@ -6761,47 +5953,6 @@
       "screenshot_guess": "https://raw.githubusercontent.com/rileycai/Resume-FontEnd/master/preview.png"
     },
     {
-      "full_name": "spencergg/resume-parser",
-      "name": "resume-parser",
-      "owner": "spencergg",
-      "html_url": "https://github.com/spencergg/resume-parser",
-      "description": "ResumeSDK简历解析 - 中英文简历解析",
-      "stars": 37,
-      "forks": 3,
-      "language": "Python",
-      "topics": [
-        "java",
-        "parser",
-        "python",
-        "resume"
-      ],
-      "license": null,
-      "default_branch": "master",
-      "pushed_at": "2024-03-24T15:52:11Z",
-      "homepage": "",
-      "stack": "other",
-      "lang": "zh",
-      "screenshot_guess": "https://raw.githubusercontent.com/spencergg/resume-parser/master/preview.png"
-    },
-    {
-      "full_name": "666bears/OnlineOrdering",
-      "name": "OnlineOrdering",
-      "owner": "666bears",
-      "html_url": "https://github.com/666bears/OnlineOrdering",
-      "description": "基于Java+SpringBoot+Vue的大学生实习就业管理系统 (源代码+数据库+配套论文+ppt) java毕业设计，基于微信小程序，基于安卓毕业设计，机器学习，大数据毕业设计，Python+Django+Vue ，php ，Flask,node.js ，SpringBoot Vue，SSM，JSP ，Uniapp，hadoop和spark框架，hive框架，Ai对话，协同过滤推荐算法，一、前台：大学生角色 可使用的功能包括： 基础入口：系统首页 就业相关：实习岗位查看、就业资料查询、就业资讯浏览 社交互动：社区交流 智能辅助：智能 AI（推测是求职 / 实习咨询工具） 个人中心：包含修改密码、聊天记录、个人简历管理、实习申请、面试安排 / 结果、反馈建议、个人发布内容、收藏内容等功能",
-      "stars": 37,
-      "forks": 0,
-      "language": null,
-      "topics": [],
-      "license": null,
-      "default_branch": "main",
-      "pushed_at": "2025-12-18T09:52:28Z",
-      "homepage": "",
-      "stack": "other",
-      "lang": "zh",
-      "screenshot_guess": "https://raw.githubusercontent.com/666bears/OnlineOrdering/main/preview.png"
-    },
-    {
       "full_name": "amy-tabb/atabb-CV-public",
       "name": "atabb-CV-public",
       "owner": "amy-tabb",
@@ -6845,24 +5996,6 @@
       "stack": "html",
       "lang": "en",
       "screenshot_guess": "https://raw.githubusercontent.com/RodolfoFerro/flask-resume-template/master/preview.png"
-    },
-    {
-      "full_name": "666bears/jobHunts",
-      "name": "jobHunts",
-      "owner": "666bears",
-      "html_url": "https://github.com/666bears/jobHunts",
-      "description": "基于SSM的个人求职招聘管理系统(源代码+数据库+配套论文+ppt) java毕业设计，基于微信小程序，基于安卓毕业设计，机器学习，大数据毕业设计，Python+Django+Vue ，php ，Flask,node.js ，SpringBoot Vue，SSM，JSP ，Uniapp，hadoop和spark框架，hive框架角色：管理员、、普通管理员、用户  网站首页页面主要包括首页、招聘信息、求职信息、试卷、公告信息、个人中心、后台管理等内容，并根据需要进行详细操作；  管理员：管理员登录系统后，可以对首页、个人中心、用户管理、普通管理员管理、招聘信息管理、简历信息管理、求职信息管理、规划信息管理、留言信息管理 、系统管理、考试管理等进行相应的操作管理，  普通管理员：普通管理员登录系",
-      "stars": 36,
-      "forks": 0,
-      "language": null,
-      "topics": [],
-      "license": null,
-      "default_branch": "main",
-      "pushed_at": "2025-12-15T11:39:40Z",
-      "homepage": "",
-      "stack": "other",
-      "lang": "zh",
-      "screenshot_guess": "https://raw.githubusercontent.com/666bears/jobHunts/main/preview.png"
     },
     {
       "full_name": "vgnshiyer/ASU-sparkysundevil-resume-template",
@@ -6957,42 +6090,6 @@
       "stack": "latex",
       "lang": "zh",
       "screenshot_guess": "https://raw.githubusercontent.com/CSW33/NPU-CV/main/preview.png"
-    },
-    {
-      "full_name": "666bears/employment",
-      "name": "employment",
-      "owner": "666bears",
-      "html_url": "https://github.com/666bears/employment",
-      "description": "基于Java+SSM+Jsp的大学就业信息管理系统(源代码+数据库+万字文档+ppt)角色：管理员、企业、用户  管理员：个人中心、招聘资讯管理、用户管理、企业管理、企业信息管理、个人简历管理、职位分类管理、行业领域管理、招聘信息管理应聘信息管理、轮播图管理  企业：个人中心、企业信息管理、个人简历管理、职位分类管理、行业领域管理、招聘信息管理、应聘信息管理  用户：登陆注册、应聘、首页、招聘资讯、企业信息、招聘信息、我的、跳转到后台、收藏、评论、个人中心、个人简历管理、应聘信息管理、我的收藏管理",
-      "stars": 35,
-      "forks": 0,
-      "language": null,
-      "topics": [],
-      "license": null,
-      "default_branch": "main",
-      "pushed_at": "2023-11-05T09:27:45Z",
-      "homepage": null,
-      "stack": "other",
-      "lang": "zh",
-      "screenshot_guess": "https://raw.githubusercontent.com/666bears/employment/main/preview.png"
-    },
-    {
-      "full_name": "stevegeek/latex-templates",
-      "name": "latex-templates",
-      "owner": "stevegeek",
-      "html_url": "https://github.com/stevegeek/latex-templates",
-      "description": "A collection of my LaTeX templates: CV (resume), letter head and PhD Thesis",
-      "stars": 34,
-      "forks": 8,
-      "language": null,
-      "topics": [],
-      "license": null,
-      "default_branch": "master",
-      "pushed_at": "2011-04-01T07:08:29Z",
-      "homepage": "",
-      "stack": "latex",
-      "lang": "en",
-      "screenshot_guess": "https://raw.githubusercontent.com/stevegeek/latex-templates/master/preview.png"
     },
     {
       "full_name": "SirToffski/Asciidoctor-Resume-Template",
@@ -7137,39 +6234,6 @@
       "stack": "other",
       "lang": "en",
       "screenshot_guess": "https://raw.githubusercontent.com/Christbowel/CVE-2024-25600_Nuclei-Template/main/preview.png"
-    },
-    {
-      "full_name": "JeevansSP/resume-optimizer",
-      "name": "resume-optimizer",
-      "owner": "JeevansSP",
-      "html_url": "https://github.com/JeevansSP/resume-optimizer",
-      "description": "Open-source AI resume tailoring service — upload PDF, paste job description, get an ATS-optimized resume. Built with FastAPI, Vue 3, Google Gemini, and LaTeX.",
-      "stars": 31,
-      "forks": 13,
-      "language": "Python",
-      "topics": [
-        "ai",
-        "ats",
-        "fastapi",
-        "gemini",
-        "google-adk",
-        "job-search",
-        "latex",
-        "open-source",
-        "pdflatex",
-        "python",
-        "razorpay",
-        "resume",
-        "resume-builder",
-        "vue3"
-      ],
-      "license": "MIT",
-      "default_branch": "main",
-      "pushed_at": "2026-04-07T06:05:07Z",
-      "homepage": "",
-      "stack": "latex",
-      "lang": "en",
-      "screenshot_guess": "https://raw.githubusercontent.com/JeevansSP/resume-optimizer/main/preview.png"
     },
     {
       "full_name": "Mukilan-v/Resume-Builder",
@@ -7687,24 +6751,6 @@
       "screenshot_guess": "https://raw.githubusercontent.com/anishshobithps/resume/main/preview.png"
     },
     {
-      "full_name": "itdevwu/resumeTeX",
-      "name": "resumeTeX",
-      "owner": "itdevwu",
-      "html_url": "https://github.com/itdevwu/resumeTeX",
-      "description": "Clean and simple LaTeX resume template for ATS system.",
-      "stars": 28,
-      "forks": 2,
-      "language": "TeX",
-      "topics": [],
-      "license": "Apache-2.0",
-      "default_branch": "master",
-      "pushed_at": "2024-12-04T06:24:00Z",
-      "homepage": null,
-      "stack": "latex",
-      "lang": "en",
-      "screenshot_guess": "https://raw.githubusercontent.com/itdevwu/resumeTeX/master/preview.png"
-    },
-    {
       "full_name": "nikaro/goresume",
       "name": "goresume",
       "owner": "nikaro",
@@ -7848,24 +6894,6 @@
       "stack": "latex",
       "lang": "mixed",
       "screenshot_guess": "https://raw.githubusercontent.com/Levitate-Qian/latex-resume-template/main/preview.png"
-    },
-    {
-      "full_name": "SuperBruceJia/CVPR-LaTeX-Paper-Template",
-      "name": "CVPR-LaTeX-Paper-Template",
-      "owner": "SuperBruceJia",
-      "html_url": "https://github.com/SuperBruceJia/CVPR-LaTeX-Paper-Template",
-      "description": "These are CVPR Main Paper, Supplementary Materials, and Rebuttal LaTeX templates.",
-      "stars": 27,
-      "forks": 8,
-      "language": "TeX",
-      "topics": [],
-      "license": "MIT",
-      "default_branch": "main",
-      "pushed_at": "2022-10-30T03:38:52Z",
-      "homepage": "",
-      "stack": "latex",
-      "lang": "en",
-      "screenshot_guess": "https://raw.githubusercontent.com/SuperBruceJia/CVPR-LaTeX-Paper-Template/main/preview.png"
     },
     {
       "full_name": "jam643/resume",
@@ -8082,39 +7110,6 @@
       "screenshot_guess": "https://raw.githubusercontent.com/thepranaygupta/resume-latex-template/main/preview.png"
     },
     {
-      "full_name": "lucasnevespereira/resumme-builder",
-      "name": "resumme-builder",
-      "owner": "lucasnevespereira",
-      "html_url": "https://github.com/lucasnevespereira/resumme-builder",
-      "description": "Resume builder in Golang using json data and html templates",
-      "stars": 25,
-      "forks": 12,
-      "language": "Go Template",
-      "topics": [
-        "api",
-        "cli",
-        "command-line",
-        "command-line-tool",
-        "converter",
-        "cv",
-        "generator",
-        "go",
-        "golang",
-        "open-source",
-        "opencv",
-        "opensource",
-        "pdf",
-        "resume"
-      ],
-      "license": "MIT",
-      "default_branch": "main",
-      "pushed_at": "2026-02-05T23:32:26Z",
-      "homepage": "",
-      "stack": "html",
-      "lang": "en",
-      "screenshot_guess": "https://raw.githubusercontent.com/lucasnevespereira/resumme-builder/main/preview.png"
-    },
-    {
       "full_name": "wearzdk/lite-cv-ai",
       "name": "lite-cv-ai",
       "owner": "wearzdk",
@@ -8245,47 +7240,6 @@
       "screenshot_guess": "https://raw.githubusercontent.com/PM-Hu/My_resume/master/preview.png"
     },
     {
-      "full_name": "EmaSuriano/gatsby-theme-jsonresume",
-      "name": "gatsby-theme-jsonresume",
-      "owner": "EmaSuriano",
-      "html_url": "https://github.com/EmaSuriano/gatsby-theme-jsonresume",
-      "description": "A Gatsby Theme with JSONResume to host your Resume in HTML and PDF",
-      "stars": 24,
-      "forks": 5,
-      "language": "JavaScript",
-      "topics": [
-        "gatsby",
-        "gatsby-theme",
-        "jsonresume",
-        "resume"
-      ],
-      "license": "MIT",
-      "default_branch": "master",
-      "pushed_at": "2024-01-29T18:10:08Z",
-      "homepage": "https://gatsby-theme-jsonresume.netlify.com",
-      "stack": "html",
-      "lang": "en",
-      "screenshot_guess": "https://raw.githubusercontent.com/EmaSuriano/gatsby-theme-jsonresume/master/preview.png"
-    },
-    {
-      "full_name": "zafree/salt",
-      "name": "salt",
-      "owner": "zafree",
-      "html_url": "https://github.com/zafree/salt",
-      "description": "Salt - Resume HTML Template, include psd and pdf too. enjoy :)",
-      "stars": 24,
-      "forks": 2,
-      "language": "CSS",
-      "topics": [],
-      "license": "MIT",
-      "default_branch": "master",
-      "pushed_at": "2016-10-16T12:05:25Z",
-      "homepage": "http://zafree.github.io/salt/",
-      "stack": "html",
-      "lang": "en",
-      "screenshot_guess": "https://raw.githubusercontent.com/zafree/salt/master/preview.png"
-    },
-    {
       "full_name": "avinash201199/Resume-Templates",
       "name": "Resume-Templates",
       "owner": "avinash201199",
@@ -8325,29 +7279,6 @@
       "stack": "typst",
       "lang": "mixed",
       "screenshot_guess": "https://raw.githubusercontent.com/Lain-Ego0/Typst-resume-template/main/preview.png"
-    },
-    {
-      "full_name": "tobethieren/open-cv-template",
-      "name": "open-cv-template",
-      "owner": "tobethieren",
-      "html_url": "https://github.com/tobethieren/open-cv-template",
-      "description": "Clean LaTeX CV template (EN/NL)",
-      "stars": 23,
-      "forks": 2,
-      "language": "TeX",
-      "topics": [
-        "cv",
-        "latex",
-        "resume",
-        "template"
-      ],
-      "license": "LPPL-1.3c",
-      "default_branch": "main",
-      "pushed_at": "2026-03-29T17:26:39Z",
-      "homepage": "",
-      "stack": "latex",
-      "lang": "en",
-      "screenshot_guess": "https://raw.githubusercontent.com/tobethieren/open-cv-template/main/preview.png"
     },
     {
       "full_name": "mwylde/resume.rb",
@@ -8548,24 +7479,6 @@
       "stack": "html",
       "lang": "en",
       "screenshot_guess": "https://raw.githubusercontent.com/asfand-dev/impact-cv/master/preview.png"
-    },
-    {
-      "full_name": "axi-0925/Latex-",
-      "name": "Latex-",
-      "owner": "axi-0925",
-      "html_url": "https://github.com/axi-0925/Latex-",
-      "description": "Latex中文简历，overleaf直接copy进行编辑",
-      "stars": 22,
-      "forks": 2,
-      "language": "TeX",
-      "topics": [],
-      "license": null,
-      "default_branch": "main",
-      "pushed_at": "2021-06-19T07:36:44Z",
-      "homepage": null,
-      "stack": "latex",
-      "lang": "zh",
-      "screenshot_guess": "https://raw.githubusercontent.com/axi-0925/Latex-/main/preview.png"
     },
     {
       "full_name": "drehimself/resume-template",
@@ -9038,32 +7951,6 @@
       "screenshot_guess": "https://raw.githubusercontent.com/james-see/fake-resume-generator/master/preview.png"
     },
     {
-      "full_name": "steadyfall/simple-technical-resume-template",
-      "name": "simple-technical-resume-template",
-      "owner": "steadyfall",
-      "html_url": "https://github.com/steadyfall/simple-technical-resume-template",
-      "description": "A simple technical resume designed to fit within a page and work well with ATS.",
-      "stars": 19,
-      "forks": 9,
-      "language": "Typst",
-      "topics": [
-        "cv",
-        "cv-template",
-        "pdf",
-        "resume",
-        "resume-template",
-        "typst",
-        "typst-template"
-      ],
-      "license": "MIT",
-      "default_branch": "main",
-      "pushed_at": "2025-10-30T20:10:17Z",
-      "homepage": "https://typst.app/universe/package/simple-technical-resume",
-      "stack": "typst",
-      "lang": "en",
-      "screenshot_guess": "https://raw.githubusercontent.com/steadyfall/simple-technical-resume-template/main/preview.png"
-    },
-    {
       "full_name": "shengyuan-lu/CS-Resume-LaTeX-Template",
       "name": "CS-Resume-LaTeX-Template",
       "owner": "shengyuan-lu",
@@ -9086,24 +7973,6 @@
       "screenshot_guess": "https://raw.githubusercontent.com/shengyuan-lu/CS-Resume-LaTeX-Template/main/preview.png"
     },
     {
-      "full_name": "zszazi/OpenCV-Template-matching-and-SIFT",
-      "name": "OpenCV-Template-matching-and-SIFT",
-      "owner": "zszazi",
-      "html_url": "https://github.com/zszazi/OpenCV-Template-matching-and-SIFT",
-      "description": "",
-      "stars": 19,
-      "forks": 3,
-      "language": "Jupyter Notebook",
-      "topics": [],
-      "license": null,
-      "default_branch": "master",
-      "pushed_at": "2019-09-20T02:28:44Z",
-      "homepage": null,
-      "stack": "other",
-      "lang": "en",
-      "screenshot_guess": "https://raw.githubusercontent.com/zszazi/OpenCV-Template-matching-and-SIFT/master/preview.png"
-    },
-    {
       "full_name": "bear01/Resume-",
       "name": "Resume-",
       "owner": "bear01",
@@ -9120,24 +7989,6 @@
       "stack": "html",
       "lang": "zh",
       "screenshot_guess": "https://raw.githubusercontent.com/bear01/Resume-/master/preview.png"
-    },
-    {
-      "full_name": "jeff1hwang/vCard3",
-      "name": "vCard3",
-      "owner": "jeff1hwang",
-      "html_url": "https://github.com/jeff1hwang/vCard3",
-      "description": "有个性的简历网页模板，用于个人主页，个人网站",
-      "stars": 19,
-      "forks": 9,
-      "language": "HTML",
-      "topics": [],
-      "license": null,
-      "default_branch": "main",
-      "pushed_at": "2021-02-07T13:09:57Z",
-      "homepage": null,
-      "stack": "html",
-      "lang": "zh",
-      "screenshot_guess": "https://raw.githubusercontent.com/jeff1hwang/vCard3/main/preview.png"
     },
     {
       "full_name": "carlosjorger/cuvimaker",
@@ -9307,24 +8158,6 @@
       "screenshot_guess": "https://raw.githubusercontent.com/lyttonlee/resume/master/preview.png"
     },
     {
-      "full_name": "LGBamboo/iOS-offer",
-      "name": "iOS-offer",
-      "owner": "LGBamboo",
-      "html_url": "https://github.com/LGBamboo/iOS-offer",
-      "description": "iOS高级简历制作+模板参考",
-      "stars": 18,
-      "forks": 7,
-      "language": null,
-      "topics": [],
-      "license": null,
-      "default_branch": "main",
-      "pushed_at": "2021-08-04T08:09:55Z",
-      "homepage": "",
-      "stack": "other",
-      "lang": "zh",
-      "screenshot_guess": "https://raw.githubusercontent.com/LGBamboo/iOS-offer/main/preview.png"
-    },
-    {
       "full_name": "zjncs/TJU-CV",
       "name": "TJU-CV",
       "owner": "zjncs",
@@ -9482,24 +8315,6 @@
       "screenshot_guess": "https://raw.githubusercontent.com/ayushupneja/UpnejaResumeTemplate/master/preview.png"
     },
     {
-      "full_name": "n3odym3/OpenCV_PySimpleGUI_Template",
-      "name": "OpenCV_PySimpleGUI_Template",
-      "owner": "n3odym3",
-      "html_url": "https://github.com/n3odym3/OpenCV_PySimpleGUI_Template",
-      "description": "Template code to create a graphical user interface and file/webcam/video control to OpenCV",
-      "stars": 17,
-      "forks": 2,
-      "language": "Python",
-      "topics": [],
-      "license": "Apache-2.0",
-      "default_branch": "main",
-      "pushed_at": "2023-06-04T15:58:56Z",
-      "homepage": null,
-      "stack": "other",
-      "lang": "en",
-      "screenshot_guess": "https://raw.githubusercontent.com/n3odym3/OpenCV_PySimpleGUI_Template/main/preview.png"
-    },
-    {
       "full_name": "codingmarket07/Responsive-Resume-UI-Design",
       "name": "Responsive-Resume-UI-Design",
       "owner": "codingmarket07",
@@ -9552,28 +8367,6 @@
       "stack": "html",
       "lang": "mixed",
       "screenshot_guess": "https://raw.githubusercontent.com/luoshushu/vue-resume/master/preview.png"
-    },
-    {
-      "full_name": "Shubham-cyber-prog/Portfolio-",
-      "name": "Portfolio-",
-      "owner": "Shubham-cyber-prog",
-      "html_url": "https://github.com/Shubham-cyber-prog/Portfolio-",
-      "description": "A modern and responsive personal portfolio website built using HTML and CSS to showcase my skills, projects, and contact information. Designed with a clean layout to highlight frontend development work and provide quick access to GitHub, LinkedIn, and resume.",
-      "stars": 17,
-      "forks": 0,
-      "language": "HTML",
-      "topics": [
-        "bootstrap5",
-        "css3",
-        "html"
-      ],
-      "license": null,
-      "default_branch": "main",
-      "pushed_at": "2025-05-20T15:18:38Z",
-      "homepage": "https://shubham-cyber-prog.github.io/Portfolio-/",
-      "stack": "html",
-      "lang": "en",
-      "screenshot_guess": "https://raw.githubusercontent.com/Shubham-cyber-prog/Portfolio-/main/preview.png"
     },
     {
       "full_name": "hexWars/resume",
@@ -9646,28 +8439,6 @@
       "screenshot_guess": "https://raw.githubusercontent.com/beyondlong/resume-builder/main/preview.png"
     },
     {
-      "full_name": "ytlyy1773/curriculum-vitae",
-      "name": "curriculum-vitae",
-      "owner": "ytlyy1773",
-      "html_url": "https://github.com/ytlyy1773/curriculum-vitae",
-      "description": "518套IT计算机简历模板Java交互android安卓ios开发运维Web测试UI",
-      "stars": 17,
-      "forks": 3,
-      "language": null,
-      "topics": [
-        "free",
-        "open",
-        "vitae"
-      ],
-      "license": null,
-      "default_branch": "master",
-      "pushed_at": "2024-07-24T15:13:10Z",
-      "homepage": "https://www.jwblog.cn",
-      "stack": "other",
-      "lang": "zh",
-      "screenshot_guess": "https://raw.githubusercontent.com/ytlyy1773/curriculum-vitae/master/preview.png"
-    },
-    {
       "full_name": "aldi/bulma-cv-template",
       "name": "bulma-cv-template",
       "owner": "aldi",
@@ -9737,28 +8508,6 @@
       "stack": "latex",
       "lang": "mixed",
       "screenshot_guess": "https://raw.githubusercontent.com/changren-wcr/Chinese-Resume-Template/master/preview.png"
-    },
-    {
-      "full_name": "rybakit/cv.template",
-      "name": "cv.template",
-      "owner": "rybakit",
-      "html_url": "https://github.com/rybakit/cv.template",
-      "description": "Effortlessly create personalized CVs in various formats.",
-      "stars": 16,
-      "forks": 4,
-      "language": "HTML",
-      "topics": [
-        "cv",
-        "resume",
-        "resume-template"
-      ],
-      "license": "MIT",
-      "default_branch": "master",
-      "pushed_at": "2024-04-22T17:33:03Z",
-      "homepage": "",
-      "stack": "html",
-      "lang": "en",
-      "screenshot_guess": "https://raw.githubusercontent.com/rybakit/cv.template/master/preview.png"
     },
     {
       "full_name": "Piotr1215/cv-pipeline-template",
@@ -9863,33 +8612,6 @@
       "screenshot_guess": "https://raw.githubusercontent.com/azylman/linkedin-resume/master/preview.png"
     },
     {
-      "full_name": "atulcodex/nihory-basic",
-      "name": "nihory-basic",
-      "owner": "atulcodex",
-      "html_url": "https://github.com/atulcodex/nihory-basic",
-      "description": "Nihory is a creative 🌈 personal & portfolio template based on HTML, CSS and Javascript. You can use it for your personal resume, CV or your portfolio. It will help you to present your self even your Business & portfolio more smartly and easily. Nihory is written in valid and clean HTML & CSS3 code. It’s easy to customize 🖌",
-      "stars": 16,
-      "forks": 10,
-      "language": "HTML",
-      "topics": [
-        "free-portfolio-template",
-        "open-source",
-        "open-source-portfolio-template",
-        "opensource",
-        "portfolio",
-        "portfolio-site",
-        "portfolio-template",
-        "portfolio-website"
-      ],
-      "license": "Apache-2.0",
-      "default_branch": "main",
-      "pushed_at": "2020-12-12T14:24:00Z",
-      "homepage": "https://nihory-basic.netlify.app/",
-      "stack": "html",
-      "lang": "en",
-      "screenshot_guess": "https://raw.githubusercontent.com/atulcodex/nihory-basic/main/preview.png"
-    },
-    {
       "full_name": "redhat123456/resume",
       "name": "resume",
       "owner": "redhat123456",
@@ -9906,24 +8628,6 @@
       "stack": "html",
       "lang": "zh",
       "screenshot_guess": "https://raw.githubusercontent.com/redhat123456/resume/main/preview.png"
-    },
-    {
-      "full_name": "bcefghj/learn-OpenClaw",
-      "name": "learn-OpenClaw",
-      "owner": "bcefghj",
-      "html_url": "https://github.com/bcefghj/learn-OpenClaw",
-      "description": "🦞 learn-OpenClaw —— 面试导向完全学习指南 | 20节课 + 110道八股文 + 50道面试题 + STAR面试稿 + 简历模板 + 漫画插图",
-      "stars": 16,
-      "forks": 2,
-      "language": "Python",
-      "topics": [],
-      "license": "MIT",
-      "default_branch": "main",
-      "pushed_at": "2026-04-01T20:39:25Z",
-      "homepage": "",
-      "stack": "other",
-      "lang": "zh",
-      "screenshot_guess": "https://raw.githubusercontent.com/bcefghj/learn-OpenClaw/main/preview.png"
     },
     {
       "full_name": "btskinner/tex_cv",
@@ -9996,39 +8700,6 @@
       "stack": "latex",
       "lang": "en",
       "screenshot_guess": "https://raw.githubusercontent.com/zafarella/latex-resume-template/master/preview.png"
-    },
-    {
-      "full_name": "rohit-gohri/resume-template",
-      "name": "resume-template",
-      "owner": "rohit-gohri",
-      "html_url": "https://github.com/rohit-gohri/resume-template",
-      "description": "1 Page LaTeX Resume template with CI/CD ",
-      "stars": 15,
-      "forks": 7,
-      "language": "TeX",
-      "topics": [
-        "actions",
-        "cicd",
-        "cv",
-        "font-awesome",
-        "github-actions",
-        "hacktoberfest",
-        "hiring",
-        "latex",
-        "overleaf",
-        "pdf-generator",
-        "pdflatex",
-        "resume",
-        "resume-template",
-        "template"
-      ],
-      "license": "MIT",
-      "default_branch": "main",
-      "pushed_at": "2021-06-26T10:21:48Z",
-      "homepage": "https://rohit.page/blog/projects/ci-cd-for-your-resume-wth-this-github-template/?utm_source=github&utm_medium=repo&utm_campaign=hf",
-      "stack": "latex",
-      "lang": "en",
-      "screenshot_guess": "https://raw.githubusercontent.com/rohit-gohri/resume-template/main/preview.png"
     },
     {
       "full_name": "Alireza-Jahanbakhshi/LaTeX-Resume-Template",
@@ -10179,24 +8850,6 @@
       "screenshot_guess": "https://raw.githubusercontent.com/fahdi/resume-builder-chatgpt/main/preview.png"
     },
     {
-      "full_name": "bcefghj/multi-agent-trading-system",
-      "name": "multi-agent-trading-system",
-      "owner": "bcefghj",
-      "html_url": "https://github.com/bcefghj/multi-agent-trading-system",
-      "description": "多Agent量化交易与投资决策系统 | 6-Agent并行+辩论+风控 | Python/Java/Go三语言实现 | 配套面试八股文+STAR法+简历模板 | 从零到面试全攻略",
-      "stars": 14,
-      "forks": 3,
-      "language": "Python",
-      "topics": [],
-      "license": null,
-      "default_branch": "main",
-      "pushed_at": "2026-04-06T12:59:00Z",
-      "homepage": null,
-      "stack": "other",
-      "lang": "zh",
-      "screenshot_guess": "https://raw.githubusercontent.com/bcefghj/multi-agent-trading-system/main/preview.png"
-    },
-    {
       "full_name": "mmb/latex_resume_template",
       "name": "latex_resume_template",
       "owner": "mmb",
@@ -10345,24 +8998,6 @@
       "screenshot_guess": "https://raw.githubusercontent.com/thomascrha/resume/main/preview.png"
     },
     {
-      "full_name": "canadalearningcode/llc-css-fundamentals",
-      "name": "llc-css-fundamentals",
-      "owner": "canadalearningcode",
-      "html_url": "https://github.com/canadalearningcode/llc-css-fundamentals",
-      "description": "HTML & CSS, Level 2 - Online Resume - (SLIDES - http://ladieslearningcode.github.io/llc-css-fundamentals/slides.html), (SAMPLE PROJECT - http://ladieslearningcode.github.io/llc-css-fundamentals/project/final.html), (LEARNER FILES - http://bit.ly/llc-css2)",
-      "stars": 13,
-      "forks": 38,
-      "language": "HTML",
-      "topics": [],
-      "license": "NOASSERTION",
-      "default_branch": "master",
-      "pushed_at": "2019-07-30T14:52:50Z",
-      "homepage": "",
-      "stack": "html",
-      "lang": "en",
-      "screenshot_guess": "https://raw.githubusercontent.com/canadalearningcode/llc-css-fundamentals/master/preview.png"
-    },
-    {
       "full_name": "kwokwilliam/Web-Based-Resume",
       "name": "Web-Based-Resume",
       "owner": "kwokwilliam",
@@ -10379,29 +9014,6 @@
       "stack": "html",
       "lang": "en",
       "screenshot_guess": "https://raw.githubusercontent.com/kwokwilliam/Web-Based-Resume/master/preview.png"
-    },
-    {
-      "full_name": "venkat-0706/Chandu.dev",
-      "name": "Chandu.dev",
-      "owner": "venkat-0706",
-      "html_url": "https://github.com/venkat-0706/Chandu.dev",
-      "description": "A personal portfolio is a responsive website built with HTML, CSS, and JavaScript to showcase your skills, projects, resume, and contact info in an interactive and professional way.",
-      "stars": 13,
-      "forks": 0,
-      "language": "HTML",
-      "topics": [
-        "cloudinary",
-        "css",
-        "html",
-        "javascript"
-      ],
-      "license": "MIT",
-      "default_branch": "main",
-      "pushed_at": "2026-03-04T09:22:27Z",
-      "homepage": "https://venkat-0706.github.io/Chandu.dev/",
-      "stack": "html",
-      "lang": "en",
-      "screenshot_guess": "https://raw.githubusercontent.com/venkat-0706/Chandu.dev/main/preview.png"
     },
     {
       "full_name": "xidianpanpei/resume-source",
@@ -10724,24 +9336,6 @@
       "screenshot_guess": "https://raw.githubusercontent.com/ValenCassa/cv-template/main/preview.png"
     },
     {
-      "full_name": "RabahSend/targeted-latex-cv-template",
-      "name": "targeted-latex-cv-template",
-      "owner": "RabahSend",
-      "html_url": "https://github.com/RabahSend/targeted-latex-cv-template",
-      "description": "A clean and customizable LaTeX resume template designed for students, developers, and tech profiles applying to targeted job offers. ATS-friendly, GPT-editable, and ready to automate.",
-      "stars": 12,
-      "forks": 1,
-      "language": "TeX",
-      "topics": [],
-      "license": "MIT",
-      "default_branch": "main",
-      "pushed_at": "2025-07-01T18:42:13Z",
-      "homepage": "",
-      "stack": "latex",
-      "lang": "en",
-      "screenshot_guess": "https://raw.githubusercontent.com/RabahSend/targeted-latex-cv-template/main/preview.png"
-    },
-    {
       "full_name": "rajdeep13-coder/Resume-Generator",
       "name": "Resume-Generator",
       "owner": "rajdeep13-coder",
@@ -10803,29 +9397,6 @@
       "screenshot_guess": "https://raw.githubusercontent.com/RohithRagavender/Resume-in-HTML/main/preview.png"
     },
     {
-      "full_name": "Agent-A345/CINE",
-      "name": "CINE",
-      "owner": "Agent-A345",
-      "html_url": "https://github.com/Agent-A345/CINE",
-      "description": "A cinematic, feature-rich Custom Video Player Web App built using HTML, CSS, and JavaScript, offering advanced playback controls, playlist management, resume functionality, and immersive viewing experience.",
-      "stars": 12,
-      "forks": 0,
-      "language": "JavaScript",
-      "topics": [
-        "css3",
-        "html5",
-        "javascript",
-        "video-player"
-      ],
-      "license": "MIT",
-      "default_branch": "main",
-      "pushed_at": "2026-04-10T04:18:11Z",
-      "homepage": "https://agent-a345.github.io/CINE/",
-      "stack": "html",
-      "lang": "en",
-      "screenshot_guess": "https://raw.githubusercontent.com/Agent-A345/CINE/main/preview.png"
-    },
-    {
       "full_name": "urmzd/incipit",
       "name": "incipit",
       "owner": "urmzd",
@@ -10862,24 +9433,6 @@
       "stack": "latex",
       "lang": "en",
       "screenshot_guess": "https://raw.githubusercontent.com/urmzd/incipit/main/preview.png"
-    },
-    {
-      "full_name": "NitishKumar525/My-Portfolio",
-      "name": "My-Portfolio",
-      "owner": "NitishKumar525",
-      "html_url": "https://github.com/NitishKumar525/My-Portfolio",
-      "description": "Welcome to my personal portfolio website! This project is created using HTML, CSS, and JavaScript to showcase my skills, projects, and experiences. It serves as a digital resume where you can learn more about my work and expertise.",
-      "stars": 12,
-      "forks": 1,
-      "language": "CSS",
-      "topics": [],
-      "license": null,
-      "default_branch": "main",
-      "pushed_at": "2024-10-06T15:46:28Z",
-      "homepage": "https://nitish-dev.vercel.app",
-      "stack": "html",
-      "lang": "en",
-      "screenshot_guess": "https://raw.githubusercontent.com/NitishKumar525/My-Portfolio/main/preview.png"
     },
     {
       "full_name": "huoyijie/easy-resume",
@@ -11179,30 +9732,6 @@
       "screenshot_guess": "https://raw.githubusercontent.com/linxiaohil/resume_with_photo/main/preview.png"
     },
     {
-      "full_name": "Jichengyuuuuu/resume-builder-skill",
-      "name": "resume-builder-skill",
-      "owner": "Jichengyuuuuu",
-      "html_url": "https://github.com/Jichengyuuuuu/resume-builder-skill",
-      "description": "AI resume skill，适用于任何 Agent 或 LLM —— 可以基于模糊的背景信息快速生成专业中文简历（HTML + DOCX），支持 ATS 优化、岗位定制技能、高阶顾问建议，无需反复调整。AI Agent Skill | Chinese Resume Builder | 简历生成 | Resume Optimization",
-      "stars": 10,
-      "forks": 1,
-      "language": null,
-      "topics": [
-        "ai-job-hunting-skill",
-        "ai-resume",
-        "job-hunting-skill",
-        "resume",
-        "resume-builder"
-      ],
-      "license": null,
-      "default_branch": "main",
-      "pushed_at": "2026-04-15T07:36:14Z",
-      "homepage": "",
-      "stack": "html",
-      "lang": "zh",
-      "screenshot_guess": "https://raw.githubusercontent.com/Jichengyuuuuu/resume-builder-skill/main/preview.png"
-    },
-    {
       "full_name": "asaotomo/CVE-2021-42013-Apache-RCE-Poc-Exp",
       "name": "CVE-2021-42013-Apache-RCE-Poc-Exp",
       "owner": "asaotomo",
@@ -11273,24 +9802,6 @@
       "stack": "typst",
       "lang": "en",
       "screenshot_guess": "https://raw.githubusercontent.com/munzirtaha/typst-cv/main/preview.png"
-    },
-    {
-      "full_name": "WGitBlog/RecruitmentPlatform",
-      "name": "RecruitmentPlatform",
-      "owner": "WGitBlog",
-      "html_url": "https://github.com/WGitBlog/RecruitmentPlatform",
-      "description": "基于 Spring Boot 的招聘网站服务系统致力于打造一个便捷高效的求职招聘平台，一方面为求职者提供海量职位信息的精准推送，助力其轻松找到心仪工作；另一方面，为企业雇主开辟人才招募的线上渠道，便于展示企业风采与岗位需求。在此系统中，求职者能够便捷地浏览各类职位详情、投递简历、收藏感兴趣职位，并接收个性化的职位推荐。企业雇主可在平台上全方位展示公司概况、团队文化以及具体的招聘岗位信息，同时还能发布行业动态与企业新闻，高效管理招聘流程。管理员则负责查询求职者、企业雇主和招聘职位等信息，实施用户角色管理、系统通知发布，以及审核企业雇主提交的招聘信息",
-      "stars": 9,
-      "forks": 2,
-      "language": "Vue",
-      "topics": [],
-      "license": null,
-      "default_branch": "master",
-      "pushed_at": "2025-04-26T13:27:45Z",
-      "homepage": null,
-      "stack": "html",
-      "lang": "zh",
-      "screenshot_guess": "https://raw.githubusercontent.com/WGitBlog/RecruitmentPlatform/master/preview.png"
     },
     {
       "full_name": "agm1n/awesome-cv-builder",
@@ -11406,24 +9917,6 @@
       "screenshot_guess": "https://raw.githubusercontent.com/habaneraa/typst-resume-one-page/main/preview.png"
     },
     {
-      "full_name": "NiuLee12138/java",
-      "name": "java",
-      "owner": "NiuLee12138",
-      "html_url": "https://github.com/NiuLee12138/java",
-      "description": "计算机毕设 java学习项目源码，文档，视频 乐z节10大项目 由简到难，从java web到ssm到springboot到微服务总有一款适合你 适合当做学习项目为简历添加亮点，或作为毕业设计阿巴阿巴你懂的… 资料齐全包括源码、超详细开发文档、安装环境。 具体如下：  01.乐z节云日记 02.乐 z节Ebuy 03.乐z节进销存 04.乐z节中信CRM客户管理系统 05.乐z节云E办后端 06.乐z节云E办前端 07.乐z节SpringCloud为服务全家桶 08.乐z节双十一互联网电商秒杀 09.微服务项目乐Z家 10.亿级高并发电商平台乐SHOP 11.乐z节易购商城      以上的资料均为乐字节官网购入，不是b站要来的免费缩水支离破碎版！ 建议先去b站搜索了解一下相关项目视频（b站有部分项目视频不保证完整）可做参考 觉得贵去看看乐字节官网怎么卖！  单买一个项目100（源码，文档）不带账号视频 打包10个项目600赠送乐字节官网账号密码，可观看完10个项目的完整开发视频 账号视频为附赠品，可永久观看不可更改密码！  找人带做2000块不如自己买个项目答辩前简单学学",
-      "stars": 7,
-      "forks": 0,
-      "language": null,
-      "topics": [],
-      "license": null,
-      "default_branch": "main",
-      "pushed_at": "2022-04-14T02:41:57Z",
-      "homepage": null,
-      "stack": "other",
-      "lang": "zh",
-      "screenshot_guess": "https://raw.githubusercontent.com/NiuLee12138/java/main/preview.png"
-    },
-    {
       "full_name": "cyliang/resume",
       "name": "resume",
       "owner": "cyliang",
@@ -11468,24 +9961,6 @@
       "stack": "html",
       "lang": "zh",
       "screenshot_guess": "https://raw.githubusercontent.com/TWcamel/resume-chinese-template/master/preview.png"
-    },
-    {
-      "full_name": "beikuzi/imgTrans",
-      "name": "imgTrans",
-      "owner": "beikuzi",
-      "html_url": "https://github.com/beikuzi/imgTrans",
-      "description": "注意：由于使用了opencv，路径不能带有中文。简历展示用，qt6引入opencv，实现一些基本的图像处理。结合从算法竞赛中所学的部分知识制作，代码总计超过千行。  \\n在opencv方面，实现了直方图均衡化(前缀和算法优化)、暗通道先验去雾(二维单调队列优化)、几种边缘检测、图片与base64互转、二值化、镜像等操作。 \\n 在qt上，使用bfs来遍历所有控件，实现为所有控件绑定eventFilter和按钮等绑上相同样式，以及实现了多钟控件的联动。",
-      "stars": 6,
-      "forks": 0,
-      "language": "C++",
-      "topics": [],
-      "license": null,
-      "default_branch": "main",
-      "pushed_at": "2023-10-12T05:31:06Z",
-      "homepage": "",
-      "stack": "other",
-      "lang": "zh",
-      "screenshot_guess": "https://raw.githubusercontent.com/beikuzi/imgTrans/main/preview.png"
     },
     {
       "full_name": "imtoby/QtBreakpointResumeExample",
@@ -11720,31 +10195,6 @@
       "stack": "html",
       "lang": "zh",
       "screenshot_guess": "https://raw.githubusercontent.com/lezzhao/resume/main/preview.png"
-    },
-    {
-      "full_name": "crazwade/profile",
-      "name": "profile",
-      "owner": "crazwade",
-      "html_url": "https://github.com/crazwade/profile",
-      "description": "中文履歷 / English Resume",
-      "stars": 3,
-      "forks": 0,
-      "language": "Vue",
-      "topics": [
-        "element-plus",
-        "eslint",
-        "tailwindcss",
-        "typescript",
-        "vite",
-        "vue3"
-      ],
-      "license": null,
-      "default_branch": "dev",
-      "pushed_at": "2024-08-19T07:48:05Z",
-      "homepage": "https://crazwade.github.io/profile",
-      "stack": "html",
-      "lang": "zh",
-      "screenshot_guess": "https://raw.githubusercontent.com/crazwade/profile/dev/preview.png"
     }
   ]
 }

@@ -59,6 +59,7 @@ export const T = {
     },
     templates: {
       modern: "现代", classic: "经典", minimal: "极简",
+      elegant: "优雅", compact: "紧凑", timeline: "时间线",
       "cn-formal": "中式正统", "cn-creative": "中式创意", "en-academic": "学术",
     },
     toast: {
@@ -137,6 +138,7 @@ export const T = {
     },
     templates: {
       modern: "Modern", classic: "Classic", minimal: "Minimal",
+      elegant: "Elegant", compact: "Compact", timeline: "Timeline",
       "cn-formal": "CN Formal", "cn-creative": "CN Creative", "en-academic": "Academic",
     },
     toast: {

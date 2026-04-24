@@ -40,8 +40,45 @@ QUERIES: list[tuple[str, str]] = [
 ]
 
 # Reject obvious non-template repos that still slip through.
-NEGATIVE_NAME = re.compile(r"interview|leetcode|tutorial|self-?learn|guide|awesome-(?!cv|resume)|system-?design|100-?days|book", re.I)
-POSITIVE_HINT = re.compile(r"resume|cv|简历", re.I)
+NEGATIVE_NAME = re.compile(
+    # study / career-advice collections
+    r"interview|leetcode|tutorial|self-?learn|guide|awesome-(?!cv|resume)|"
+    r"system-?design|100-?days|book|coding-?challenge|roadmap|"
+    # recruiter-side tools & job boards (not templates)
+    r"hiring|recruit(er|ing|ment)?|applicant-?tracking|"
+    r"resume-?(parser|parsing|screen|screening|scanner|scoring|ranking|checker|analy[sz]er)|"
+    r"ats-?(scan|parse|parser|checker)?|"
+    r"job-?(hunt|search|board|queue|tracker|crawler|scraper)|"
+    # advice / guides / cover letters — not templates
+    r"cover-?letter(-?tips)?|resume-?tips|resume-?writing|career-?(advice|guide|tips)|"
+    r"salary|interview-?(prep|question)|"
+    # "CV" false positives — computer vision / image processing / paper templates
+    r"opencv|open-?cv|computer-?vision|image-?processing|object-?detection|"
+    r"cvpr|iccv|eccv|neurips|\bnips\b|icml|siggraph|paper-?template|thesis-?template|"
+    # spam / ads
+    r"premium|pro-?version|cracked|crack-?|download-?free|free-?download|seo-?template|"
+    # unrelated collections occasionally slip in
+    r"dotfiles|wallpaper|icons?-?pack",
+    re.I,
+)
+# Name/topic match is stronger than description match — a lot of random tools
+# mention "resume" casually. We require the repo name OR topics to actually
+# advertise themselves as resume/cv.
+NAME_HINT = re.compile(r"resume|cv|简历|jianli|jsonresume", re.I)
+RESUME_TOPICS = {
+    "resume", "cv", "resume-template", "cv-template", "resume-templates",
+    "cv-templates", "resume-builder", "resume-website", "jsonresume",
+    "json-resume", "jsonresume-theme", "awesome-cv", "awesome-resume",
+    "latex-resume", "latex-template", "typst-resume", "typst-template",
+}
+# Topics that very rarely coexist with "I am a resume template" and mostly
+# mean the repo is something else that happens to mention cv/resume.
+BAD_TOPICS = {
+    "computer-vision", "opencv", "machine-learning", "deep-learning",
+    "object-detection", "image-processing", "data-science",
+    "interview-questions", "leetcode", "coding-interview",
+    "recruitment", "hiring",
+}
 
 # Content policy: drop repos whose name/description touches politically sensitive
 # figures/events or NSFW content. The gallery is meant for resume templates only;
@@ -62,11 +99,37 @@ EXPLICIT_BLACKLIST = {
 
 
 def is_blocked(repo: dict[str, Any]) -> bool:
+    """Policy filter: political / NSFW / explicit blacklist."""
     if repo.get("full_name") in EXPLICIT_BLACKLIST:
         return True
     owner = (repo.get("owner") or {}).get("login", "") if isinstance(repo.get("owner"), dict) else repo.get("owner", "")
     blob = f"{owner} {repo.get('name','')} {repo.get('description','') or ''} {' '.join(repo.get('topics') or [])}"
     return bool(CONTENT_DENY.search(blob))
+
+
+def is_noise(repo: dict[str, Any]) -> bool:
+    """Relevance filter: drop repos that are clearly not resume templates —
+    interview guides, job-board tools, ATS parsers, OpenCV projects, etc.
+    Applied both at scrape time and to existing templates.json via clean_templates.py.
+    """
+    name = repo.get("name", "") or ""
+    desc = repo.get("description", "") or ""
+    topics = [t.lower() for t in (repo.get("topics") or [])]
+    blob = f"{name} {desc}"
+
+    # Hard deny list
+    if NEGATIVE_NAME.search(blob):
+        return True
+    # Rule out repos tagged as other domains (CV = computer vision, etc.)
+    if any(t in BAD_TOPICS for t in topics):
+        return True
+    # Require the repo to actually *advertise* itself as a resume template —
+    # name OR topics must match. Description-only hits are too permissive.
+    if NAME_HINT.search(name):
+        return False
+    if any(t in RESUME_TOPICS for t in topics):
+        return False
+    return True
 
 PER_PAGE = 50
 MAX_PAGES = 2  # 100 repos per query is plenty
@@ -126,12 +189,7 @@ def fetch_query(q: str, hint: str) -> list[dict[str, Any]]:
         if not items:
             break
         for it in items:
-            blob = f"{it.get('name','')} {it.get('description','') or ''}"
-            if NEGATIVE_NAME.search(blob):
-                continue
-            if not POSITIVE_HINT.search(blob) and "resume" not in (it.get("topics") or []) and "cv" not in (it.get("topics") or []):
-                continue
-            if is_blocked(it):
+            if is_blocked(it) or is_noise(it):
                 continue
             out.append({
                 "full_name": it["full_name"],

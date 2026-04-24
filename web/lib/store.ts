@@ -4,7 +4,10 @@ import { persist } from "zustand/middleware";
 import { Resume, SectionKey, emptyResume } from "./schema";
 import { sampleEN, sampleZH } from "./samples";
 
-export type TemplateId = "modern" | "classic" | "minimal" | "cn-formal" | "cn-creative" | "en-academic";
+export type TemplateId =
+  | "modern" | "classic" | "minimal"
+  | "elegant" | "compact" | "timeline"
+  | "cn-formal" | "cn-creative" | "en-academic";
 
 export interface ThemeTokens {
   accent: string;          // primary color

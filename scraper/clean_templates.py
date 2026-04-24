@@ -10,7 +10,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from fetch_templates import is_blocked
+from fetch_templates import is_blocked, is_noise
 
 ROOT = Path(__file__).resolve().parent.parent
 TARGETS = [ROOT / "data" / "templates.json", ROOT / "web" / "data" / "templates.json"]
@@ -23,7 +23,7 @@ def main() -> None:
             continue
         doc = json.loads(path.read_text(encoding="utf-8"))
         before = len(doc.get("templates", []))
-        kept = [t for t in doc.get("templates", []) if not is_blocked(t)]
+        kept = [t for t in doc.get("templates", []) if not is_blocked(t) and not is_noise(t)]
         removed = before - len(kept)
         doc["templates"] = kept
         doc["count"] = len(kept)
