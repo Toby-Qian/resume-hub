@@ -29,6 +29,7 @@ export const T = {
     actions: {
       add: "添加", remove: "删除", loadSample: "加载示例", reset: "清空", print: "导出 PDF",
       importJson: "导入 JSON", exportJson: "导出 JSON",
+      undo: "撤销", redo: "重做",
     },
     theme: {
       accent: "主色", fontSans: "无衬线字体", fontSerif: "衬线字体",
@@ -87,6 +88,8 @@ export const T = {
       editHint: "点击任意文字即可在预览中直接编辑 · 悬停文本区块左侧出现 ⋮⋮ 即可拖动整段",
       addNote: "文本框",
       addNoteHint: "在简历任意位置添加自由文本框（可拖动/改字号/删除）",
+      addImage: "图片",
+      addImageHint: "在简历任意位置插入图片（可拖动、缩放、删除）",
     },
   },
   en: {
@@ -117,6 +120,7 @@ export const T = {
     actions: {
       add: "Add", remove: "Remove", loadSample: "Load sample", reset: "Reset", print: "Export PDF",
       importJson: "Import JSON", exportJson: "Export JSON",
+      undo: "Undo", redo: "Redo",
     },
     theme: {
       accent: "Accent", fontSans: "Sans font", fontSerif: "Serif font",
@@ -175,6 +179,8 @@ export const T = {
       editHint: "Click any text to edit it inline · hover a block for the ⋮⋮ handle to drag it",
       addNote: "Text box",
       addNoteHint: "Drop a free-floating text box anywhere on the resume (drag, resize, style, delete)",
+      addImage: "Image",
+      addImageHint: "Drop an image anywhere on the resume (drag, resize, delete)",
     },
   },
 } as const;

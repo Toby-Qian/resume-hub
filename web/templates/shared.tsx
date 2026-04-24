@@ -62,6 +62,7 @@ export function Avatar({
     if (e.button !== 0) return;
     e.preventDefault();
     const st = useStore.getState();
+    st.beginBatch();
     dragging.current = {
       sx: e.clientX, sy: e.clientY,
       ox: st.resume.basics.avatarOffsetX || 0,
@@ -78,6 +79,7 @@ export function Avatar({
     };
     const onUp = () => {
       dragging.current = null;
+      useStore.getState().endBatch();
       window.removeEventListener("mousemove", onMove);
       window.removeEventListener("mouseup", onUp);
     };
@@ -249,6 +251,7 @@ export function Draggable({
     e.preventDefault();
     e.stopPropagation();
     const st = useStore.getState();
+    st.beginBatch();
     const cur = (st.resume.basics.blockOffsets && st.resume.basics.blockOffsets[name]) || { x: 0, y: 0 };
     dragging.current = { sx: e.clientX, sy: e.clientY, ox: cur.x || 0, oy: cur.y || 0 };
     const onMove = (ev: MouseEvent) => {
@@ -263,6 +266,7 @@ export function Draggable({
     };
     const onUp = () => {
       dragging.current = null;
+      useStore.getState().endBatch();
       window.removeEventListener("mousemove", onMove);
       window.removeEventListener("mouseup", onUp);
     };

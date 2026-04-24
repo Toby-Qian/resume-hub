@@ -1,13 +1,24 @@
 "use client";
+import { useRef } from "react";
 import { useStore } from "@/lib/store";
 import { templates } from "@/templates";
 import { t } from "@/lib/i18n";
 import { NotesLayer } from "./NotesLayer";
+import { toast } from "@/lib/toast";
 
 export function Preview() {
-  const { resume, template, theme, lang, addNote } = useStore();
+  const { resume, template, theme, lang, addNote, addImageNote } = useStore();
   const L = t(lang);
   const Tpl = templates[template];
+  const imgRef = useRef<HTMLInputElement>(null);
+
+  const onPickImage = async (f: File) => {
+    if (f.size > 800 * 1024) { toast.error(L.form.avatarTooLarge); return; }
+    const reader = new FileReader();
+    reader.onload = () => addImageNote(reader.result as string);
+    reader.readAsDataURL(f);
+  };
+
   return (
     <div className="flex flex-col items-center">
       <div className="mb-2 flex items-center gap-2 no-print">
@@ -17,6 +28,14 @@ export function Preview() {
           className="text-xs px-2.5 py-1 rounded border border-amber-400 bg-amber-50 text-amber-800 hover:bg-amber-100 transition"
           title={(L.preview as any).addNoteHint ?? "在简历上添加一个自由文本框"}
         >+ {(L.preview as any).addNote ?? "文本框"}</button>
+        <button
+          type="button"
+          onClick={() => imgRef.current?.click()}
+          className="text-xs px-2.5 py-1 rounded border border-amber-400 bg-amber-50 text-amber-800 hover:bg-amber-100 transition"
+          title={(L.preview as any).addImageHint ?? "在简历上插入一张图片（可拖动、缩放）"}
+        >+ {(L.preview as any).addImage ?? "图片"}</button>
+        <input ref={imgRef} type="file" accept="image/*" className="hidden"
+          onChange={(e) => { const f = e.target.files?.[0]; if (f) onPickImage(f); e.target.value = ""; }} />
       </div>
       <div
         className={`paper paper-flow print-area density-${theme.density}`}

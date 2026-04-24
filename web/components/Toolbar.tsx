@@ -1,13 +1,29 @@
 "use client";
-import { useRef } from "react";
+import { useRef, useEffect } from "react";
 import { useStore } from "@/lib/store";
 import { t } from "@/lib/i18n";
 import { toast } from "@/lib/toast";
 
 export function Toolbar() {
-  const { lang, setLang, loadSample, reset, resume, setResume } = useStore();
+  const { lang, setLang, loadSample, reset, resume, setResume, undo, redo, past, future } = useStore();
   const L = t(lang);
   const fileRef = useRef<HTMLInputElement>(null);
+
+  // Ctrl/Cmd+Z undo, Ctrl/Cmd+Shift+Z or Ctrl+Y redo — but only when the
+  // event is NOT originating from a contentEditable / input (so typing Ctrl+Z
+  // inside a field still works as native browser undo there).
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (!(e.ctrlKey || e.metaKey)) return;
+      const tgt = e.target as HTMLElement | null;
+      if (tgt && (tgt.isContentEditable || tgt.tagName === "INPUT" || tgt.tagName === "TEXTAREA")) return;
+      const k = e.key.toLowerCase();
+      if (k === "z" && !e.shiftKey) { e.preventDefault(); useStore.getState().undo(); }
+      else if ((k === "z" && e.shiftKey) || k === "y") { e.preventDefault(); useStore.getState().redo(); }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, []);
 
   const onImport = async (f: File) => {
     try {
@@ -49,8 +65,23 @@ export function Toolbar() {
     </button>
   );
 
+  const canUndo = past.length > 0;
+  const canRedo = future.length > 0;
+
   return (
     <div className="flex flex-wrap items-center gap-2 no-print">
+      <div className="flex items-center gap-1 mr-1">
+        <button onClick={undo} disabled={!canUndo}
+          title={`${(L.actions as any).undo ?? "撤销"} (Ctrl+Z)`}
+          className={`text-xs px-2 py-1.5 rounded border transition ${canUndo ? "bg-white border-gray-300 hover:bg-gray-50" : "bg-gray-50 border-gray-200 text-gray-300 cursor-not-allowed"}`}>
+          ↶
+        </button>
+        <button onClick={redo} disabled={!canRedo}
+          title={`${(L.actions as any).redo ?? "重做"} (Ctrl+Shift+Z)`}
+          className={`text-xs px-2 py-1.5 rounded border transition ${canRedo ? "bg-white border-gray-300 hover:bg-gray-50" : "bg-gray-50 border-gray-200 text-gray-300 cursor-not-allowed"}`}>
+          ↷
+        </button>
+      </div>
       <Btn onClick={onLoadSample}>{L.actions.loadSample}</Btn>
       <Btn onClick={onReset}>{L.actions.reset}</Btn>
       <Btn onClick={() => fileRef.current?.click()}>{L.actions.importJson}</Btn>

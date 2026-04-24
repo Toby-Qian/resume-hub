@@ -186,6 +186,21 @@ body { background: #f3f4f6; color: #111827; font-family: var(--resume-font-sans)
   text-align: center;
   background: white;
 }
+.resume-note .note-color input[type="color"] {
+  width: 22px;
+  height: 18px;
+  padding: 0;
+  border: 1px solid #d1d5db;
+  border-radius: 3px;
+  background: white;
+  cursor: pointer;
+}
+.resume-note .note-image {
+  border: 1px dashed transparent;
+  border-radius: 3px;
+  transition: border-color 0.15s;
+}
+.resume-note.hovered .note-image { border-color: #f59e0b; }
 
 .resume-note .note-resize {
   position: absolute;
@@ -209,6 +224,7 @@ body { background: #f3f4f6; color: #111827; font-family: var(--resume-font-sans)
     padding: 0 !important;
   }
   .resume-note .note-body.empty::before { content: ""; }
+  .resume-note .note-image { border-color: transparent !important; }
   .resume-note .note-chrome,
   .resume-note .note-resize { display: none !important; }
 }

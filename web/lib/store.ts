@@ -1,7 +1,7 @@
 "use client";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import { Resume, SectionKey, emptyResume } from "./schema";
+import { Resume, SectionKey, emptyResume, ResumeNote } from "./schema";
 import { sampleEN, sampleZH } from "./samples";
 
 export type TemplateId =
@@ -30,23 +30,38 @@ export const defaultTheme: ThemeTokens = {
 
 export type UILang = "zh" | "en";
 
+const HISTORY_LIMIT = 80;
+
 interface State {
   resume: Resume;
   template: TemplateId;
   theme: ThemeTokens;
   lang: UILang;
+  past: Resume[];
+  future: Resume[];
+  /** When true, subsequent mutations do NOT push new history entries.
+   *  Use beginBatch()/endBatch() around drag+resize operations so each
+   *  continuous gesture counts as a single undo step. */
+  _batch: boolean;
   setResume: (r: Resume) => void;
   update: <K extends keyof Resume>(key: K, value: Resume[K]) => void;
   addItem: (section: SectionKey) => void;
   removeItem: (section: SectionKey, id: string) => void;
   addNote: () => void;
-  updateNote: (id: string, patch: Partial<import("./schema").ResumeNote>) => void;
+  addImageNote: (src: string) => void;
+  updateNote: (id: string, patch: Partial<ResumeNote>) => void;
   removeNote: (id: string) => void;
   setTemplate: (t: TemplateId) => void;
   setTheme: (t: Partial<ThemeTokens>) => void;
   setLang: (l: UILang) => void;
   loadSample: (l: UILang) => void;
   reset: () => void;
+  undo: () => void;
+  redo: () => void;
+  canUndo: () => boolean;
+  canRedo: () => boolean;
+  beginBatch: () => void;
+  endBatch: () => void;
 }
 
 const uid = () => Math.random().toString(36).slice(2, 9);
@@ -65,39 +80,112 @@ const blankItem = (s: SectionKey): any => {
 
 export const useStore = create<State>()(
   persist(
-    (set, get) => ({
-      resume: sampleZH,
-      template: "cn-formal",
-      theme: defaultTheme,
-      lang: "zh",
-      setResume: (r) => set({ resume: r }),
-      update: (key, value) => set({ resume: { ...get().resume, [key]: value } }),
-      addItem: (section) =>
-        set({ resume: { ...get().resume, [section]: [...(get().resume[section] as any[]), blankItem(section)] } as Resume }),
-      removeItem: (section, id) =>
-        set({ resume: { ...get().resume, [section]: (get().resume[section] as any[]).filter((x) => x.id !== id) } as Resume }),
-      addNote: () => {
-        const r = get().resume;
-        const notes = r.notes || [];
-        // Stagger each new note so they don't stack on top of each other.
-        const offset = (notes.length % 8) * 18;
-        const note = { id: uid(), text: "", x: 80 + offset, y: 80 + offset, width: 240, fontSize: 14 };
-        set({ resume: { ...r, notes: [...notes, note] } });
-      },
-      updateNote: (id, patch) => {
-        const r = get().resume;
-        set({ resume: { ...r, notes: (r.notes || []).map((n) => (n.id === id ? { ...n, ...patch } : n)) } });
-      },
-      removeNote: (id) => {
-        const r = get().resume;
-        set({ resume: { ...r, notes: (r.notes || []).filter((n) => n.id !== id) } });
-      },
-      setTemplate: (t) => set({ template: t }),
-      setTheme: (t) => set({ theme: { ...get().theme, ...t } }),
-      setLang: (l) => set({ lang: l }),
-      loadSample: (l) => set({ resume: l === "zh" ? sampleZH : sampleEN }),
-      reset: () => set({ resume: emptyResume() }),
-    }),
-    { name: "proj4-resume" }
+    (set, get) => {
+      /** Mutate resume + auto-record history (unless inside a batch). */
+      const mutate = (next: Resume) => {
+        const s = get();
+        if (s._batch) {
+          set({ resume: next });
+          return;
+        }
+        // Skip pointless snapshots when value is referentially equal.
+        if (next === s.resume) return;
+        const past = s.past.length >= HISTORY_LIMIT
+          ? [...s.past.slice(s.past.length - HISTORY_LIMIT + 1), s.resume]
+          : [...s.past, s.resume];
+        set({ resume: next, past, future: [] });
+      };
+
+      return {
+        resume: sampleZH,
+        template: "cn-formal",
+        theme: defaultTheme,
+        lang: "zh",
+        past: [],
+        future: [],
+        _batch: false,
+
+        setResume: (r) => mutate(r),
+        update: (key, value) => mutate({ ...get().resume, [key]: value } as Resume),
+        addItem: (section) =>
+          mutate({ ...get().resume, [section]: [...(get().resume[section] as any[]), blankItem(section)] } as Resume),
+        removeItem: (section, id) =>
+          mutate({ ...get().resume, [section]: (get().resume[section] as any[]).filter((x) => x.id !== id) } as Resume),
+
+        addNote: () => {
+          const r = get().resume;
+          const notes = r.notes || [];
+          const offset = (notes.length % 8) * 18;
+          const note: ResumeNote = { id: uid(), kind: "text", text: "", x: 80 + offset, y: 80 + offset, width: 240, fontSize: 14 };
+          mutate({ ...r, notes: [...notes, note] });
+        },
+        addImageNote: (src) => {
+          const r = get().resume;
+          const notes = r.notes || [];
+          const offset = (notes.length % 8) * 18;
+          const note: ResumeNote = { id: uid(), kind: "image", text: "", src, x: 80 + offset, y: 80 + offset, width: 180, height: 180 };
+          mutate({ ...r, notes: [...notes, note] });
+        },
+        updateNote: (id, patch) => {
+          const r = get().resume;
+          mutate({ ...r, notes: (r.notes || []).map((n) => (n.id === id ? { ...n, ...patch } : n)) });
+        },
+        removeNote: (id) => {
+          const r = get().resume;
+          mutate({ ...r, notes: (r.notes || []).filter((n) => n.id !== id) });
+        },
+
+        setTemplate: (t) => set({ template: t }),     // not in history (UI state)
+        setTheme: (t) => set({ theme: { ...get().theme, ...t } }), // ditto
+        setLang: (l) => set({ lang: l }),
+        loadSample: (l) => mutate(l === "zh" ? sampleZH : sampleEN),
+        reset: () => mutate(emptyResume()),
+
+        undo: () => {
+          const s = get();
+          if (s.past.length === 0) return;
+          const prev = s.past[s.past.length - 1];
+          set({
+            resume: prev,
+            past: s.past.slice(0, -1),
+            future: [s.resume, ...s.future].slice(0, HISTORY_LIMIT),
+          });
+        },
+        redo: () => {
+          const s = get();
+          if (s.future.length === 0) return;
+          const next = s.future[0];
+          set({
+            resume: next,
+            past: [...s.past, s.resume].slice(-HISTORY_LIMIT),
+            future: s.future.slice(1),
+          });
+        },
+        canUndo: () => get().past.length > 0,
+        canRedo: () => get().future.length > 0,
+
+        beginBatch: () => {
+          const s = get();
+          if (s._batch) return;
+          // Seed one history entry for the whole gesture, then suppress.
+          const past = s.past.length >= HISTORY_LIMIT
+            ? [...s.past.slice(s.past.length - HISTORY_LIMIT + 1), s.resume]
+            : [...s.past, s.resume];
+          set({ past, future: [], _batch: true });
+        },
+        endBatch: () => set({ _batch: false }),
+      };
+    },
+    {
+      name: "proj4-resume",
+      // Don't persist history to localStorage — too heavy, and a fresh page
+      // load resetting undo is fine UX.
+      partialize: (s) => ({
+        resume: s.resume,
+        template: s.template,
+        theme: s.theme,
+        lang: s.lang,
+      }) as any,
+    }
   )
 );

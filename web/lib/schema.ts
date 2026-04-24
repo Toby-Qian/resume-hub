@@ -79,14 +79,19 @@ export interface ResumeLanguage {
  *  the .paper top-left, in px at 96dpi A4 scale. */
 export interface ResumeNote {
   id: string;
+  kind?: "text" | "image";  // default "text"
   text: string;
+  src?: string;             // data URL, only when kind === "image"
   x: number;
   y: number;
-  width: number;      // px
-  fontSize?: number;  // px, default 14
+  width: number;            // px
+  height?: number;          // px (images), text auto-grows
+  fontSize?: number;        // px, default 14
   bold?: boolean;
-  color?: string;     // hex
-  bg?: string;        // hex / transparent
+  italic?: boolean;
+  underline?: boolean;
+  color?: string;           // hex
+  bg?: string;              // hex / transparent
   align?: "left" | "center" | "right";
 }
 
