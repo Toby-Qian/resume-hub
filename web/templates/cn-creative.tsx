@@ -1,5 +1,5 @@
 "use client";
-import { TemplateProps, range } from "./shared";
+import { TemplateProps, range, itemCls } from "./shared";
 
 export default function CNCreative({ resume }: TemplateProps) {
   const b = resume.basics;
@@ -19,7 +19,7 @@ export default function CNCreative({ resume }: TemplateProps) {
           <>
             <div className="mt-6 mb-2 font-semibold tracking-wider text-[0.85em]">专业技能</div>
             {resume.skills.map((s) => (
-              <div key={s.id} className="text-[0.85em] mb-2">
+              <div key={s.id} className={itemCls(s, "text-[0.85em] mb-2")}>
                 <div className="font-semibold">{s.name}</div>
                 <div className="opacity-90">{s.keywords.join(" · ")}</div>
               </div>
@@ -30,7 +30,7 @@ export default function CNCreative({ resume }: TemplateProps) {
           <>
             <div className="mt-6 mb-2 font-semibold tracking-wider text-[0.85em]">语言</div>
             {resume.languages.map((l) => (
-              <div key={l.id} className="text-[0.85em]">{l.language} · {l.fluency}</div>
+              <div key={l.id} className={itemCls(l, "text-[0.85em]")}>{l.language} · {l.fluency}</div>
             ))}
           </>
         )}
@@ -40,10 +40,10 @@ export default function CNCreative({ resume }: TemplateProps) {
         {b.summary && <p className="text-[0.95em] mb-5 text-gray-800">{b.summary}</p>}
 
         {resume.work.length > 0 && (
-          <section className="mb-5">
+          <section className="resume-section mb-5">
             <h2 className="text-[1em] font-bold mb-2" style={{ color: "var(--resume-accent)" }}>工作经历</h2>
             {resume.work.map((w) => (
-              <div key={w.id} className="mb-3 text-[0.92em]">
+              <div key={w.id} className={itemCls(w, "mb-3 text-[0.92em]")}>
                 <div className="flex justify-between"><b>{w.company} · {w.position}</b><span className="text-gray-500">{range(w.startDate, w.endDate)}</span></div>
                 <ul className="list-disc ml-5 mt-1">
                   {w.highlights.filter(Boolean).map((h, i) => <li key={i}>{h}</li>)}
@@ -54,10 +54,10 @@ export default function CNCreative({ resume }: TemplateProps) {
         )}
 
         {resume.projects.length > 0 && (
-          <section className="mb-5">
+          <section className="resume-section mb-5">
             <h2 className="text-[1em] font-bold mb-2" style={{ color: "var(--resume-accent)" }}>项目经历</h2>
             {resume.projects.map((p) => (
-              <div key={p.id} className="mb-3 text-[0.92em]">
+              <div key={p.id} className={itemCls(p, "mb-3 text-[0.92em]")}>
                 <div className="flex justify-between"><b>{p.name}</b><span className="text-gray-500">{range(p.startDate, p.endDate)}</span></div>
                 <div className="text-gray-700">{p.description}</div>
                 <ul className="list-disc ml-5">
@@ -69,10 +69,10 @@ export default function CNCreative({ resume }: TemplateProps) {
         )}
 
         {resume.education.length > 0 && (
-          <section className="mb-5">
+          <section className="resume-section mb-5">
             <h2 className="text-[1em] font-bold mb-2" style={{ color: "var(--resume-accent)" }}>教育背景</h2>
             {resume.education.map((e) => (
-              <div key={e.id} className="text-[0.92em] mb-1">
+              <div key={e.id} className={itemCls(e, "text-[0.92em] mb-1")}>
                 <div className="flex justify-between"><b>{e.institution}</b><span className="text-gray-500">{range(e.startDate, e.endDate)}</span></div>
                 <div>{e.studyType} · {e.area}{e.score ? ` · ${e.score}` : ""}</div>
               </div>
@@ -81,11 +81,11 @@ export default function CNCreative({ resume }: TemplateProps) {
         )}
 
         {resume.awards.length > 0 && (
-          <section>
+          <section className="resume-section">
             <h2 className="text-[1em] font-bold mb-2" style={{ color: "var(--resume-accent)" }}>荣誉奖项</h2>
             <ul className="list-disc ml-5 text-[0.92em]">
               {resume.awards.map((a) => (
-                <li key={a.id}><b>{a.title}</b> · {a.awarder} · {a.date}</li>
+                <li key={a.id} className={itemCls(a)}><b>{a.title}</b> · {a.awarder} · {a.date}</li>
               ))}
             </ul>
           </section>

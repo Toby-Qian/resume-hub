@@ -1,5 +1,5 @@
 "use client";
-import { TemplateProps, range } from "./shared";
+import { TemplateProps, range, itemCls } from "./shared";
 
 export default function ENAcademic({ resume }: TemplateProps) {
   const b = resume.basics;
@@ -20,7 +20,7 @@ export default function ENAcademic({ resume }: TemplateProps) {
         <>
           <H>Education</H>
           {resume.education.map((e) => (
-            <div key={e.id} className="mb-2 text-[0.95em]">
+            <div key={e.id} className={itemCls(e, "mb-2 text-[0.95em]")}>
               <div className="flex justify-between">
                 <div><i>{e.institution}</i></div>
                 <div>{range(e.startDate, e.endDate)}</div>
@@ -35,7 +35,7 @@ export default function ENAcademic({ resume }: TemplateProps) {
         <>
           <H>Research & Work Experience</H>
           {resume.work.map((w) => (
-            <div key={w.id} className="mb-3 text-[0.95em]">
+            <div key={w.id} className={itemCls(w, "mb-3 text-[0.95em]")}>
               <div className="flex justify-between">
                 <div><b>{w.position}</b>, <i>{w.company}</i></div>
                 <div>{range(w.startDate, w.endDate)}</div>
@@ -52,7 +52,7 @@ export default function ENAcademic({ resume }: TemplateProps) {
         <>
           <H>Publications & Projects</H>
           {resume.projects.map((p) => (
-            <div key={p.id} className="mb-2 text-[0.95em]">
+            <div key={p.id} className={itemCls(p, "mb-2 text-[0.95em]")}>
               <div className="flex justify-between">
                 <div><b>{p.name}</b></div>
                 <div>{range(p.startDate, p.endDate)}</div>
@@ -69,7 +69,7 @@ export default function ENAcademic({ resume }: TemplateProps) {
           <H>Honors & Awards</H>
           <ul className="list-disc ml-5 text-[0.95em]">
             {resume.awards.map((a) => (
-              <li key={a.id}><b>{a.title}</b>, {a.awarder} ({a.date}){a.summary && `. ${a.summary}`}</li>
+              <li key={a.id} className={itemCls(a)}><b>{a.title}</b>, {a.awarder} ({a.date}){a.summary && `. ${a.summary}`}</li>
             ))}
           </ul>
         </>
@@ -80,7 +80,7 @@ export default function ENAcademic({ resume }: TemplateProps) {
           <H>Technical Skills</H>
           <div className="text-[0.93em] space-y-0.5">
             {resume.skills.map((s) => (
-              <div key={s.id}><b>{s.name}:</b> {s.keywords.join(", ")}</div>
+              <div key={s.id} className={itemCls(s)}><b>{s.name}:</b> {s.keywords.join(", ")}</div>
             ))}
           </div>
         </>

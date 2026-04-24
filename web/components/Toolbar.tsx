@@ -2,6 +2,7 @@
 import { useRef } from "react";
 import { useStore } from "@/lib/store";
 import { t } from "@/lib/i18n";
+import { toast } from "@/lib/toast";
 
 export function Toolbar() {
   const { lang, setLang, loadSample, reset, resume, setResume } = useStore();
@@ -11,9 +12,13 @@ export function Toolbar() {
   const onImport = async (f: File) => {
     try {
       const obj = JSON.parse(await f.text());
+      if (!obj || typeof obj !== "object" || !("basics" in obj)) {
+        throw new Error("Not a resume JSON");
+      }
       setResume(obj);
-    } catch (e) {
-      alert("Invalid JSON");
+      toast.success(L.toast.imported);
+    } catch {
+      toast.error(L.toast.importError);
     }
   };
   const onExport = () => {
@@ -22,6 +27,17 @@ export function Toolbar() {
     const a = document.createElement("a");
     a.href = url; a.download = `${resume.basics.name || "resume"}.json`;
     a.click(); URL.revokeObjectURL(url);
+    toast.success(L.toast.exported);
+  };
+  const onReset = () => {
+    if (confirm(L.form.confirmReset)) {
+      reset();
+      toast.info(L.toast.reset);
+    }
+  };
+  const onLoadSample = () => {
+    loadSample(lang);
+    toast.success(L.toast.sampleLoaded);
   };
 
   const Btn = ({ onClick, children, primary }: any) => (
@@ -35,8 +51,8 @@ export function Toolbar() {
 
   return (
     <div className="flex flex-wrap items-center gap-2 no-print">
-      <Btn onClick={() => loadSample(lang)}>{L.actions.loadSample}</Btn>
-      <Btn onClick={() => { if (confirm("Clear?")) reset(); }}>{L.actions.reset}</Btn>
+      <Btn onClick={onLoadSample}>{L.actions.loadSample}</Btn>
+      <Btn onClick={onReset}>{L.actions.reset}</Btn>
       <Btn onClick={() => fileRef.current?.click()}>{L.actions.importJson}</Btn>
       <Btn onClick={onExport}>{L.actions.exportJson}</Btn>
       <Btn onClick={() => window.print()} primary>{L.actions.print}</Btn>
@@ -47,7 +63,11 @@ export function Toolbar() {
           className={`text-xs px-2 py-1 rounded ${lang === "en" ? "bg-gray-800 text-white" : "text-gray-600 hover:bg-gray-100"}`}>EN</button>
       </div>
       <input ref={fileRef} type="file" accept="application/json" className="hidden"
-        onChange={(e) => e.target.files && e.target.files[0] && onImport(e.target.files[0])} />
+        onChange={(e) => {
+          const f = e.target.files?.[0];
+          if (f) onImport(f);
+          e.target.value = "";
+        }} />
     </div>
   );
 }

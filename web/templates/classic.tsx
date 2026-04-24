@@ -1,5 +1,5 @@
 "use client";
-import { TemplateProps, Section, range } from "./shared";
+import { TemplateProps, Section, range, itemCls } from "./shared";
 
 export default function Classic({ resume }: TemplateProps) {
   const b = resume.basics;
@@ -17,7 +17,7 @@ export default function Classic({ resume }: TemplateProps) {
       {resume.education.length > 0 && (
         <Section title="Education">
           {resume.education.map((e) => (
-            <div key={e.id}>
+            <div key={e.id} className={itemCls(e)}>
               <div className="flex justify-between">
                 <div><b>{e.institution}</b> — {e.studyType}, {e.area}</div>
                 <div className="text-[0.9em]">{range(e.startDate, e.endDate)}</div>
@@ -31,7 +31,7 @@ export default function Classic({ resume }: TemplateProps) {
       {resume.work.length > 0 && (
         <Section title="Experience">
           {resume.work.map((w) => (
-            <div key={w.id}>
+            <div key={w.id} className={itemCls(w)}>
               <div className="flex justify-between">
                 <div><b>{w.company}</b> — <i>{w.position}</i></div>
                 <div className="text-[0.9em]">{range(w.startDate, w.endDate)}</div>
@@ -47,7 +47,7 @@ export default function Classic({ resume }: TemplateProps) {
       {resume.projects.length > 0 && (
         <Section title="Projects">
           {resume.projects.map((p) => (
-            <div key={p.id}>
+            <div key={p.id} className={itemCls(p)}>
               <div className="flex justify-between">
                 <div><b>{p.name}</b>{p.url && <span className="text-[0.85em] text-gray-600"> — {p.url}</span>}</div>
                 <div className="text-[0.9em]">{range(p.startDate, p.endDate)}</div>
@@ -64,7 +64,7 @@ export default function Classic({ resume }: TemplateProps) {
       {resume.skills.length > 0 && (
         <Section title="Skills">
           {resume.skills.map((s) => (
-            <div key={s.id} className="text-[0.92em]">
+            <div key={s.id} className={itemCls(s, "text-[0.92em]")}>
               <b>{s.name}:</b> {s.keywords.join(", ")}
             </div>
           ))}
@@ -74,7 +74,7 @@ export default function Classic({ resume }: TemplateProps) {
       {resume.awards.length > 0 && (
         <Section title="Honors & Awards">
           {resume.awards.map((a) => (
-            <div key={a.id} className="text-[0.92em]">
+            <div key={a.id} className={itemCls(a, "text-[0.92em]")}>
               <b>{a.title}</b>, {a.awarder} <span className="text-gray-600">({a.date})</span>
               {a.summary && <div>{a.summary}</div>}
             </div>

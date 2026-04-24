@@ -27,9 +27,37 @@ export function Editor() {
       {onAdd && <AddBtn onClick={onAdd} />}
     </div>
   );
-  const Card = ({ children, onRemove }: { children: React.ReactNode; onRemove: () => void }) => (
+  const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const validateEmail = (v: string) => (!v || emailRe.test(v) ? null : L.form.invalidEmail);
+
+  const Card = ({
+    children,
+    onRemove,
+    breakBefore,
+    onToggleBreak,
+  }: {
+    children: React.ReactNode;
+    onRemove: () => void;
+    breakBefore?: boolean;
+    onToggleBreak?: (v: boolean) => void;
+  }) => (
     <div className="border border-gray-200 rounded p-3 mb-3 bg-gray-50">
-      <div className="flex justify-end"><RemoveBtn onClick={onRemove} /></div>
+      <div className="flex justify-between items-center mb-1">
+        {onToggleBreak ? (
+          <label className="flex items-center gap-1 text-[0.7rem] text-gray-600 cursor-pointer select-none">
+            <input
+              type="checkbox"
+              className="accent-blue-600"
+              checked={!!breakBefore}
+              onChange={(e) => onToggleBreak(e.target.checked)}
+            />
+            ⤓ {L.form.breakBefore}
+          </label>
+        ) : (
+          <span />
+        )}
+        <RemoveBtn onClick={onRemove} />
+      </div>
       {children}
     </div>
   );
@@ -38,9 +66,11 @@ export function Editor() {
     <div className="space-y-1">
       <SectionTitle>{L.sections.basics}</SectionTitle>
       <div className="grid grid-cols-2 gap-x-3">
-        <Field label={L.fields.name} value={resume.basics.name} onChange={(v) => patchBasics("name", v)} />
+        <Field label={L.fields.name} value={resume.basics.name} onChange={(v) => patchBasics("name", v)}
+          required requiredMessage={L.form.required} />
         <Field label={L.fields.label} value={resume.basics.label} onChange={(v) => patchBasics("label", v)} />
-        <Field label={L.fields.email} value={resume.basics.email} onChange={(v) => patchBasics("email", v)} />
+        <Field label={L.fields.email} value={resume.basics.email} onChange={(v) => patchBasics("email", v)}
+          validate={validateEmail} />
         <Field label={L.fields.phone} value={resume.basics.phone} onChange={(v) => patchBasics("phone", v)} />
         <Field label={L.fields.location} value={resume.basics.location} onChange={(v) => patchBasics("location", v)} />
         <Field label={L.fields.website} value={resume.basics.website} onChange={(v) => patchBasics("website", v)} />
@@ -49,7 +79,9 @@ export function Editor() {
 
       <SectionTitle onAdd={() => addItem("work")}>{L.sections.work}</SectionTitle>
       {resume.work.map((w) => (
-        <Card key={w.id} onRemove={() => removeItem("work", w.id)}>
+        <Card key={w.id} onRemove={() => removeItem("work", w.id)}
+          breakBefore={(w as any).breakBefore}
+          onToggleBreak={(v) => patch("work", w.id, "breakBefore", v)}>
           <div className="grid grid-cols-2 gap-x-3">
             <Field label={L.fields.company} value={w.company} onChange={(v) => patch("work", w.id, "company", v)} />
             <Field label={L.fields.position} value={w.position} onChange={(v) => patch("work", w.id, "position", v)} />
@@ -64,7 +96,9 @@ export function Editor() {
 
       <SectionTitle onAdd={() => addItem("education")}>{L.sections.education}</SectionTitle>
       {resume.education.map((e) => (
-        <Card key={e.id} onRemove={() => removeItem("education", e.id)}>
+        <Card key={e.id} onRemove={() => removeItem("education", e.id)}
+          breakBefore={(e as any).breakBefore}
+          onToggleBreak={(v) => patch("education", e.id, "breakBefore", v)}>
           <div className="grid grid-cols-2 gap-x-3">
             <Field label={L.fields.institution} value={e.institution} onChange={(v) => patch("education", e.id, "institution", v)} />
             <Field label={L.fields.studyType} value={e.studyType} onChange={(v) => patch("education", e.id, "studyType", v)} />
@@ -80,7 +114,9 @@ export function Editor() {
 
       <SectionTitle onAdd={() => addItem("projects")}>{L.sections.projects}</SectionTitle>
       {resume.projects.map((p) => (
-        <Card key={p.id} onRemove={() => removeItem("projects", p.id)}>
+        <Card key={p.id} onRemove={() => removeItem("projects", p.id)}
+          breakBefore={(p as any).breakBefore}
+          onToggleBreak={(v) => patch("projects", p.id, "breakBefore", v)}>
           <div className="grid grid-cols-2 gap-x-3">
             <Field label={L.fields.projectName} value={p.name} onChange={(v) => patch("projects", p.id, "name", v)} />
             <Field label={L.fields.url} value={p.url || ""} onChange={(v) => patch("projects", p.id, "url", v)} />
@@ -97,7 +133,9 @@ export function Editor() {
 
       <SectionTitle onAdd={() => addItem("skills")}>{L.sections.skills}</SectionTitle>
       {resume.skills.map((s) => (
-        <Card key={s.id} onRemove={() => removeItem("skills", s.id)}>
+        <Card key={s.id} onRemove={() => removeItem("skills", s.id)}
+          breakBefore={(s as any).breakBefore}
+          onToggleBreak={(v) => patch("skills", s.id, "breakBefore", v)}>
           <div className="grid grid-cols-2 gap-x-3">
             <Field label={L.fields.skillName} value={s.name} onChange={(v) => patch("skills", s.id, "name", v)} />
             <Field label={L.fields.level} value={s.level} onChange={(v) => patch("skills", s.id, "level", v)} />
@@ -109,7 +147,9 @@ export function Editor() {
 
       <SectionTitle onAdd={() => addItem("awards")}>{L.sections.awards}</SectionTitle>
       {resume.awards.map((a) => (
-        <Card key={a.id} onRemove={() => removeItem("awards", a.id)}>
+        <Card key={a.id} onRemove={() => removeItem("awards", a.id)}
+          breakBefore={(a as any).breakBefore}
+          onToggleBreak={(v) => patch("awards", a.id, "breakBefore", v)}>
           <div className="grid grid-cols-2 gap-x-3">
             <Field label={L.fields.awardTitle} value={a.title} onChange={(v) => patch("awards", a.id, "title", v)} />
             <Field label={L.fields.date} value={a.date} onChange={(v) => patch("awards", a.id, "date", v)} />
@@ -121,7 +161,9 @@ export function Editor() {
 
       <SectionTitle onAdd={() => addItem("languages")}>{L.sections.languages}</SectionTitle>
       {resume.languages.map((l) => (
-        <Card key={l.id} onRemove={() => removeItem("languages", l.id)}>
+        <Card key={l.id} onRemove={() => removeItem("languages", l.id)}
+          breakBefore={(l as any).breakBefore}
+          onToggleBreak={(v) => patch("languages", l.id, "breakBefore", v)}>
           <div className="grid grid-cols-2 gap-x-3">
             <Field label={L.fields.language} value={l.language} onChange={(v) => patch("languages", l.id, "language", v)} />
             <Field label={L.fields.fluency} value={l.fluency} onChange={(v) => patch("languages", l.id, "fluency", v)} />

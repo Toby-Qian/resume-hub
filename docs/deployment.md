@@ -3,16 +3,15 @@
 ## 本地开发
 
 ```bash
-# 1. 拉取模板数据（可选，仓库自带 data/templates.json）
+# 1. （可选）重新拉取模板数据 — 仓库已附 data/templates.json
 cd scraper
 pip install -r requirements.txt
-# 带 token 可大幅提升限额（GitHub Search API 未登录仅 10 req/min）
+# Search API 未登录仅 10 req/min，带 token 5000 req/h
 export GITHUB_TOKEN=ghp_xxx        # Windows PowerShell: $env:GITHUB_TOKEN="ghp_xxx"
 python fetch_templates.py
-# 将结果复制给 web：
 cp ../data/templates.json ../web/data/templates.json
 
-# 2. 运行 web
+# 2. 跑 web
 cd ../web
 npm install
 npm run dev                        # http://localhost:3000
@@ -28,47 +27,34 @@ npm run start                      # http://localhost:3000
 
 ## 部署到 Vercel（推荐）
 
+走 Vercel GUI，不需要写 workflow：
+
+1. 打开 [vercel.com/new](https://vercel.com/new) → Import `Toby-Qian/resume-hub`。
+2. **Root Directory** 设为 `web`（仓库没有根 `package.json`，这是关键）。
+3. Framework Preset 会自动识别为 **Next.js**，其它保持默认。
+4. Deploy。
+
+之后每次 push 到 `main` 自动发布，PR 会生成 preview URL。无需任何环境变量。
+
+也可用 CLI：
+
 ```bash
 npm i -g vercel
 cd web
-vercel                             # 首次会询问项目设置
+vercel                             # 首次交互式设置，选根目录为当前
 vercel --prod
 ```
 
-Vercel 自动识别 Next.js，无需额外配置。
+## 模板数据周更（已在本仓库）
 
-## 部署到 GitHub Pages（静态导出）
+本仓库已启用 `.github/workflows/refresh-templates.yml`：
 
-在 `web/next.config.mjs` 中加 `output: 'export'`，然后：
+- **触发**：每周一 UTC 06:00（北京周一 14:00），或 Actions 面板手动触发。
+- **认证**：用 Actions 内置 `GITHUB_TOKEN`（5000 req/h），无需配 secret。
+- **行为**：跑 `scraper/fetch_templates.py` → 同步到 `web/data/templates.json` → 有 diff 时以 `github-actions[bot]` 身份 commit `"chore(data): weekly template refresh"` 并 push 到 main。
+- **首次需要做一件事**：仓库 Settings → Actions → General → Workflow permissions 勾 **Read and write permissions**，否则 push 会被 403。
 
-```bash
-npm run build
-# 产物在 web/out，推送到 gh-pages 分支
-```
-
-## 定期更新模板数据
-
-在仓库根目录加一个 GitHub Actions（示例）：
-
-```yaml
-# .github/workflows/refresh-templates.yml
-on:
-  schedule: [{ cron: "0 3 * * 0" }]  # 每周日 03:00 UTC
-  workflow_dispatch:
-jobs:
-  refresh:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with: { python-version: "3.11" }
-      - run: pip install -r scraper/requirements.txt
-      - run: python scraper/fetch_templates.py
-        env: { GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} }
-      - run: cp data/templates.json web/data/templates.json
-      - uses: stefanzweifel/git-auto-commit-action@v5
-        with: { commit_message: "chore: refresh templates" }
-```
+手动触发方式：GitHub 网页 → Actions → "Refresh template data" → Run workflow。
 
 ## 关键功能
 
@@ -81,13 +67,17 @@ jobs:
 | 信息密度 | 右栏紧凑 / 舒适 / 宽松 |
 | 字号 | 右栏滑竿（0.85–1.20） |
 | 中英切换 | 右上角"中 / EN"按钮 |
-| 导出 PDF | 顶栏 `Export PDF`，走浏览器打印（A4、无边距） |
+| 导出 PDF | 顶栏 `Export PDF`，走浏览器打印（A4、无边距）|
+| 自动分页 | 长简历预览有分页线，打印时自动按 A4 分页，不会切断小节 |
+| 手动换页 | 每条目右侧勾"下一节换页"，对应 section 会强制从新页开始 |
 | 导入/导出 JSON | 顶栏两按钮，走 JSON Resume 近似 schema |
 | 示例数据 | 顶栏 `Load sample`，按当前界面语言加载中或英示例 |
-| 模板画廊 | 顶部导航 `Gallery`，500+ GitHub 模板可筛选跳转 |
+| 模板画廊 | 顶部导航 `Gallery`，500+ GitHub 模板可筛选、搜索；LaTeX 卡一键 Overleaf |
+| 移动端 | 窗口 <1024px 自动折叠为 `Editor / Preview / Style` 三 Tab |
 
-## 已知局限 & 后续可做
+## 已知局限
 
-- LaTeX 模板无法在站内直接渲染。目前画廊只给跳转链接；后续可接 Overleaf "import from GitHub" 或搭建 Tectonic 云编译服务。
-- 长简历跨 A4 分页时偶有元素被截断，打印前请人工检查；可后续引入 `react-to-print` 或 Paged.js。
-- 主题字体假定用户本机已装 Inter/Source Han Serif；需要更稳的跨平台表现可改用 Google Fonts 自托管。
+- **PDF 兼容性**：`break-inside: avoid` 在 Chrome / Edge / Firefox 表现都不错，Safari 较弱。导出 PDF 建议用 Chrome / Edge。
+- **LaTeX 渲染**：站内不编译 LaTeX，画廊的 Overleaf 按钮会把整个 GitHub 仓库导入 Overleaf 在线编辑。
+- **字体**：默认主题假定本机装了 Inter / Source Han Serif；没装则回落到系统 UI 字体（PingFang / Microsoft YaHei）。
+- **本地存储**：所有编辑状态存在浏览器 localStorage（key `proj4-resume`），清浏览器数据会丢失。可用顶栏 "Export JSON" 做备份。

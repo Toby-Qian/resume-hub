@@ -1,5 +1,5 @@
 "use client";
-import { TemplateProps, Section, range } from "./shared";
+import { TemplateProps, Section, range, itemCls } from "./shared";
 
 export default function Modern({ resume }: TemplateProps) {
   const b = resume.basics;
@@ -20,7 +20,7 @@ export default function Modern({ resume }: TemplateProps) {
       {resume.work.length > 0 && (
         <Section title="Experience" accent>
           {resume.work.map((w) => (
-            <div key={w.id}>
+            <div key={w.id} className={itemCls(w)}>
               <div className="flex justify-between items-baseline">
                 <div className="font-semibold">{w.position} · <span className="font-normal">{w.company}</span></div>
                 <div className="text-[0.85em] text-gray-500">{range(w.startDate, w.endDate)}</div>
@@ -37,7 +37,7 @@ export default function Modern({ resume }: TemplateProps) {
       {resume.projects.length > 0 && (
         <Section title="Projects" accent>
           {resume.projects.map((p) => (
-            <div key={p.id}>
+            <div key={p.id} className={itemCls(p)}>
               <div className="flex justify-between items-baseline">
                 <div className="font-semibold">{p.name}</div>
                 <div className="text-[0.85em] text-gray-500">{range(p.startDate, p.endDate)}</div>
@@ -59,7 +59,7 @@ export default function Modern({ resume }: TemplateProps) {
       {resume.education.length > 0 && (
         <Section title="Education" accent>
           {resume.education.map((e) => (
-            <div key={e.id}>
+            <div key={e.id} className={itemCls(e)}>
               <div className="flex justify-between items-baseline">
                 <div className="font-semibold">{e.institution}</div>
                 <div className="text-[0.85em] text-gray-500">{range(e.startDate, e.endDate)}</div>
@@ -76,7 +76,7 @@ export default function Modern({ resume }: TemplateProps) {
       {resume.skills.length > 0 && (
         <Section title="Skills" accent>
           {resume.skills.map((s) => (
-            <div key={s.id} className="text-[0.92em]">
+            <div key={s.id} className={itemCls(s, "text-[0.92em]")}>
               <span className="font-semibold">{s.name}</span>
               {s.level && <span className="text-gray-500"> · {s.level}</span>}
               {s.keywords.length > 0 && <span className="text-gray-700"> — {s.keywords.join(", ")}</span>}
@@ -88,7 +88,7 @@ export default function Modern({ resume }: TemplateProps) {
       {resume.awards.length > 0 && (
         <Section title="Awards" accent>
           {resume.awards.map((a) => (
-            <div key={a.id} className="text-[0.92em]">
+            <div key={a.id} className={itemCls(a, "text-[0.92em]")}>
               <span className="font-semibold">{a.title}</span>
               <span className="text-gray-500"> · {a.awarder} · {a.date}</span>
               {a.summary && <div className="text-gray-700">{a.summary}</div>}
@@ -101,7 +101,7 @@ export default function Modern({ resume }: TemplateProps) {
         <Section title="Languages" accent>
           <div className="flex flex-wrap gap-x-6 gap-y-1 text-[0.92em]">
             {resume.languages.map((l) => (
-              <div key={l.id}><span className="font-semibold">{l.language}</span> · <span className="text-gray-600">{l.fluency}</span></div>
+              <div key={l.id} className={itemCls(l)}><span className="font-semibold">{l.language}</span> · <span className="text-gray-600">{l.fluency}</span></div>
             ))}
           </div>
         </Section>

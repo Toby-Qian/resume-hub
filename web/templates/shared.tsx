@@ -8,9 +8,24 @@ export const fmtDate = (s?: string) => s || "";
 export const range = (a?: string, b?: string) =>
   [fmtDate(a), fmtDate(b)].filter(Boolean).join(" — ");
 
-export function Section({ title, children, accent = false }: { title: string; children: React.ReactNode; accent?: boolean }) {
+/** Produces CSS classes for an individual resume item div.
+ *  Always adds `resume-item` (so CSS break-inside: avoid applies),
+ *  and conditionally adds `page-break-before` when the item has breakBefore=true. */
+export const itemCls = (item: any, extra = "") =>
+  `resume-item ${item?.breakBefore ? "page-break-before" : ""} ${extra}`.trim();
+
+/**
+ * Section: if items inside have `breakBefore`, the auto-generated CSS class
+ * `page-break-before` on the item will push it to a new page. Templates
+ * typically don't need to pass `breakBefore` on Section itself — but it is
+ * available for explicit "this entire section on a new page" use.
+ */
+export function Section({ title, children, accent = false, breakBefore = false }: { title: string; children: React.ReactNode; accent?: boolean; breakBefore?: boolean }) {
   return (
-    <section style={{ marginBottom: "var(--gap)" }}>
+    <section
+      className={`resume-section ${breakBefore ? "page-break-before" : ""}`}
+      style={{ marginBottom: "var(--gap)" }}
+    >
       <h2
         className="font-semibold tracking-wide uppercase text-[0.82em] mb-2 pb-1 border-b"
         style={{ color: accent ? "var(--resume-accent)" : "#111827", borderColor: "#e5e7eb" }}
@@ -19,5 +34,15 @@ export function Section({ title, children, accent = false }: { title: string; ch
       </h2>
       <div className="space-y-3">{children}</div>
     </section>
+  );
+}
+
+/** Wrapper for individual entries (one job, one project) so a page break never
+ *  splits a single item. Also used to mark per-item breakBefore. */
+export function Item({ children, breakBefore = false, className = "" }: { children: React.ReactNode; breakBefore?: boolean; className?: string }) {
+  return (
+    <div className={`resume-item ${breakBefore ? "page-break-before" : ""} ${className}`}>
+      {children}
+    </div>
   );
 }

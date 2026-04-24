@@ -13,7 +13,8 @@
 html, body { height: 100%; }
 body { background: #f3f4f6; color: #111827; font-family: var(--resume-font-sans); }
 
-/* A4 paper preview — 794 x 1123 px at 96dpi */
+/* ---------- A4 paper ----------------------------------------------------- */
+/* 794 x 1123 px at 96dpi ≈ 210 x 297 mm                                     */
 .paper {
   width: 794px;
   min-height: 1123px;
@@ -22,15 +23,59 @@ body { background: #f3f4f6; color: #111827; font-family: var(--resume-font-sans)
   font-size: calc(14px * var(--resume-font-scale));
   line-height: 1.55;
   color: #111827;
+  position: relative;
 }
 .paper.density-compact { --pad: 32px; --gap: 10px; }
 .paper.density-comfy   { --pad: 44px; --gap: 14px; }
 .paper.density-spacious{ --pad: 56px; --gap: 20px; }
 
+/* Multi-page hint: faint dashed line every 1123px so the user can tell where
+   print will split. Pure visual — browser still drives actual page breaks. */
+.paper.paper-flow {
+  min-height: 1123px;
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent 0,
+    transparent 1122px,
+    rgba(148, 163, 184, 0.55) 1122px,
+    rgba(148, 163, 184, 0.55) 1123px
+  );
+  background-size: 100% 1123px;
+  background-repeat: repeat-y;
+}
+
+/* ---------- Pagination hints for print & preview ------------------------- */
+.resume-section, .resume-item { break-inside: avoid; page-break-inside: avoid; }
+/* Every direct child of a Section content wrapper is treated as an item. All
+   6 built-in templates render items inside Section's `.space-y-3` / `.space-y-2`
+   flex column, so this catches them without per-template wiring. */
+.resume-section > div > * { break-inside: avoid; page-break-inside: avoid; }
+.resume-section h1,
+.resume-section h2,
+.resume-section h3 { break-after: avoid; page-break-after: avoid; }
+.page-break-before { break-before: page; page-break-before: always; }
+
+/* ---------- Mobile responsive tweaks ------------------------------------- */
+/* On phones we let the .paper keep its A4 width and allow horizontal scroll
+   inside the preview pane — trying to shrink-to-fit tends to look bad and
+   the user can still export PDF correctly (print uses A4 directly). */
+.pane-preview { overflow-x: auto; }
+
+/* ---------- Print -------------------------------------------------------- */
 @media print {
   @page { size: A4; margin: 0; }
   html, body { background: white; }
   .no-print { display: none !important; }
-  .paper { box-shadow: none; width: 100%; min-height: auto; }
-  .print-area, .print-area * { visibility: visible; }
+  /* On mobile, the active pane toggle may have hidden preview; force it visible. */
+  .pane { display: block !important; }
+  .pane-editor, .pane-style { display: none !important; }
+  .paper {
+    box-shadow: none;
+    width: 100%;
+    min-height: auto;
+    transform: none;
+    background-image: none;
+    margin: 0;
+  }
+  .resume-section { break-inside: avoid !important; }
 }

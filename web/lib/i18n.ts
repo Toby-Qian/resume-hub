@@ -4,7 +4,7 @@ export const T = {
   zh: {
     appTitle: "简历聚合 & 编辑器",
     appSub: "聚合 500+ GitHub 模板 · 在线编辑 · 一键切换主题 · 导出 PDF",
-    tabs: { editor: "编辑", gallery: "模板画廊", settings: "样式" },
+    tabs: { editor: "编辑", gallery: "模板画廊", settings: "样式", preview: "预览" },
     sections: {
       basics: "基本信息", work: "工作经历", education: "教育背景",
       projects: "项目经历", skills: "技能", awards: "荣誉", languages: "语言",
@@ -34,16 +34,39 @@ export const T = {
       sub: "爬取自 GitHub 的开源简历模板，点击跳转查看",
       filterStack: "技术栈", filterLang: "语言", all: "全部", zh: "中文", en: "英文", mixed: "中英混合",
       stars: "星标", view: "查看",
+      search: "搜索仓库名 / 描述…",
+      empty: "没有匹配的模板",
+      clearFilters: "清除筛选",
+      loadMore: "加载更多",
+      showing: "已显示 {shown} / {total}",
+      openInOverleaf: "在 Overleaf 打开",
+      openOnGithub: "在 GitHub 打开",
     },
     templates: {
       modern: "现代", classic: "经典", minimal: "极简",
       "cn-formal": "中式正统", "cn-creative": "中式创意", "en-academic": "学术",
     },
+    toast: {
+      imported: "已导入简历",
+      importError: "JSON 解析失败，请检查格式",
+      exported: "JSON 已下载",
+      reset: "已清空",
+      sampleLoaded: "已加载示例数据",
+    },
+    form: {
+      required: "此项必填",
+      invalidEmail: "邮箱格式不正确",
+      breakBefore: "下一节换页",
+      confirmReset: "确定要清空全部内容吗？",
+    },
+    preview: {
+      pageHint: "灰色分隔线为 A4 分页边界，打印/导出 PDF 时会自动换页",
+    },
   },
   en: {
     appTitle: "Resume Hub & Editor",
     appSub: "500+ GitHub templates · live editor · theme switcher · PDF export",
-    tabs: { editor: "Editor", gallery: "Gallery", settings: "Style" },
+    tabs: { editor: "Editor", gallery: "Gallery", settings: "Style", preview: "Preview" },
     sections: {
       basics: "Basics", work: "Work", education: "Education",
       projects: "Projects", skills: "Skills", awards: "Awards", languages: "Languages",
@@ -73,10 +96,33 @@ export const T = {
       sub: "Open-source templates scraped from GitHub — click through to view",
       filterStack: "Stack", filterLang: "Lang", all: "All", zh: "Chinese", en: "English", mixed: "Mixed",
       stars: "stars", view: "Open",
+      search: "Search name / description…",
+      empty: "No templates match the current filters",
+      clearFilters: "Clear filters",
+      loadMore: "Load more",
+      showing: "Showing {shown} / {total}",
+      openInOverleaf: "Open in Overleaf",
+      openOnGithub: "Open on GitHub",
     },
     templates: {
       modern: "Modern", classic: "Classic", minimal: "Minimal",
       "cn-formal": "CN Formal", "cn-creative": "CN Creative", "en-academic": "Academic",
+    },
+    toast: {
+      imported: "Resume imported",
+      importError: "Invalid JSON — please check the file",
+      exported: "JSON downloaded",
+      reset: "Resume cleared",
+      sampleLoaded: "Sample data loaded",
+    },
+    form: {
+      required: "Required",
+      invalidEmail: "Invalid email format",
+      breakBefore: "Start on new page",
+      confirmReset: "Clear all content?",
+    },
+    preview: {
+      pageHint: "Grey lines mark A4 page boundaries — print / PDF export will split automatically",
     },
   },
 } as const;

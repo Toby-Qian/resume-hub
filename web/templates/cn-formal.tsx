@@ -1,5 +1,5 @@
 "use client";
-import { TemplateProps, range } from "./shared";
+import { TemplateProps, range, itemCls } from "./shared";
 
 export default function CNFormal({ resume }: TemplateProps) {
   const b = resume.basics;
@@ -26,7 +26,7 @@ export default function CNFormal({ resume }: TemplateProps) {
         <>
           <H>教育背景</H>
           {resume.education.map((e) => (
-            <div key={e.id} className="mb-2 text-[0.95em]">
+            <div key={e.id} className={itemCls(e, "mb-2 text-[0.95em]")}>
               <div className="flex justify-between">
                 <div><b>{e.institution}</b> · {e.studyType} · {e.area}</div>
                 <div className="text-gray-500">{range(e.startDate, e.endDate)}</div>
@@ -42,7 +42,7 @@ export default function CNFormal({ resume }: TemplateProps) {
         <>
           <H>工作经历</H>
           {resume.work.map((w) => (
-            <div key={w.id} className="mb-3 text-[0.95em]">
+            <div key={w.id} className={itemCls(w, "mb-3 text-[0.95em]")}>
               <div className="flex justify-between">
                 <div><b>{w.company}</b> · {w.position}{w.location && ` · ${w.location}`}</div>
                 <div className="text-gray-500">{range(w.startDate, w.endDate)}</div>
@@ -59,7 +59,7 @@ export default function CNFormal({ resume }: TemplateProps) {
         <>
           <H>项目经历</H>
           {resume.projects.map((p) => (
-            <div key={p.id} className="mb-3 text-[0.95em]">
+            <div key={p.id} className={itemCls(p, "mb-3 text-[0.95em]")}>
               <div className="flex justify-between">
                 <div><b>{p.name}</b>{p.keywords && p.keywords.length > 0 && <span className="text-gray-500"> · {p.keywords.join("/")}</span>}</div>
                 <div className="text-gray-500">{range(p.startDate, p.endDate)}</div>
@@ -78,7 +78,7 @@ export default function CNFormal({ resume }: TemplateProps) {
           <H>专业技能</H>
           <ul className="list-disc ml-5 text-[0.95em]">
             {resume.skills.map((s) => (
-              <li key={s.id}><b>{s.name}</b>{s.level && `（${s.level}）`}：{s.keywords.join("、")}</li>
+              <li key={s.id} className={itemCls(s)}><b>{s.name}</b>{s.level && `（${s.level}）`}：{s.keywords.join("、")}</li>
             ))}
           </ul>
         </>
@@ -89,7 +89,7 @@ export default function CNFormal({ resume }: TemplateProps) {
           <H>荣誉奖项</H>
           <ul className="list-disc ml-5 text-[0.95em]">
             {resume.awards.map((a) => (
-              <li key={a.id}><b>{a.title}</b> · {a.awarder} · {a.date}{a.summary && ` — ${a.summary}`}</li>
+              <li key={a.id} className={itemCls(a)}><b>{a.title}</b> · {a.awarder} · {a.date}{a.summary && ` — ${a.summary}`}</li>
             ))}
           </ul>
         </>
