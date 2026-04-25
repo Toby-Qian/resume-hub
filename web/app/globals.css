@@ -258,21 +258,6 @@ body { background: #f3f4f6; color: #111827; font-family: var(--resume-font-sans)
 }
 .resume-note.hovered .note-image { border-color: #f59e0b; }
 
-/* ---- Image-note text-wrap obstacles -----------------------------------
- * Real CSS float + shape-outside placeholders rendered inside .paper
- * before the template content so the surrounding text reflows around
- * an image note. The actual `<img>` is still position:absolute inside
- * NotesLayer; the obstacle is invisible but reserves the space.       */
-.image-obstacle {
-  visibility: hidden;
-  pointer-events: none;
-  /* `clear: both` makes each obstacle start on a fresh line so its
-   * margin-top is interpreted as the gap below the previous obstacle. */
-  clear: both;
-}
-.image-obstacle--left  { float: left; }
-.image-obstacle--right { float: right; }
-
 .resume-note .note-resize {
   position: absolute;
   right: -4px;

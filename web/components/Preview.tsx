@@ -243,11 +243,6 @@ export function Preview() {
             transformOrigin: "top left",
           }}
         >
-          {/* Reflow obstacles for image notes. Rendered FIRST so the
-              template's text content (rendered after) flows around the
-              shape-outside region. Sorted by y so each `clear: both`
-              obstacle's margin-top is the gap below the previous one.  */}
-          <ImageObstacles notes={resume.notes ?? []} pageW={pageW} />
           <Tpl resume={resume} />
           <NotesLayer />
           {/* Page break indicators (screen only). Skipped entirely during
@@ -303,68 +298,6 @@ export function Preview() {
       </div>
       {showHelp && <HelpOverlay lang={lang} onClose={() => setShowHelp(false)} />}
     </div>
-  );
-}
-
-/**
- * Invisible float placeholders that reserve space at each image-note's
- * bounding box. Browser's CSS float + `shape-outside: inset(0)` causes
- * the surrounding text in `.paper` to wrap around the obstacle.
- *
- * Strategy:
- *   - Sort image notes by y so we can express each obstacle's
- *     vertical offset as `marginTop = y - prevBottom` with
- *     `clear: both` to start each on a fresh line.
- *   - Choose float side based on which half of the page the image is on.
- *   - Push horizontally with marginLeft (left-floated) or marginRight
- *     (right-floated) so the empty space sits at the image's actual x.
- *
- * Limitations: two images at the same vertical band on opposite sides
- * isn't perfect (one of them has to clear the other), but this covers
- * 95% of practical layouts (one image floated next to a paragraph).
- */
-function ImageObstacles({ notes, pageW }: { notes: Array<any>; pageW: number }) {
-  const imgs = notes
-    .filter((n) => n.kind === "image")
-    .map((n) => ({
-      id: n.id,
-      x: n.x,
-      y: n.y,
-      w: n.width,
-      h: n.height ?? Math.round(n.width * 0.75),
-    }))
-    .sort((a, b) => a.y - b.y);
-
-  if (imgs.length === 0) return null;
-  const GAP = 12; // breathing room between image and text
-  let prevBottom = 0;
-  return (
-    <>
-      {imgs.map((img) => {
-        const isLeft = img.x + img.w / 2 < pageW / 2;
-        const marginTop = Math.max(0, img.y - prevBottom);
-        prevBottom = img.y + img.h;
-        const style: React.CSSProperties = {
-          width: img.w + GAP,
-          height: img.h + GAP,
-          marginTop,
-          shapeOutside: "inset(0)",
-        };
-        if (isLeft) {
-          style.marginLeft = img.x;
-        } else {
-          style.marginRight = Math.max(0, pageW - img.x - img.w);
-        }
-        return (
-          <div
-            key={`obs-${img.id}`}
-            aria-hidden
-            className={`image-obstacle image-obstacle--${isLeft ? "left" : "right"}`}
-            style={style}
-          />
-        );
-      })}
-    </>
   );
 }
 
