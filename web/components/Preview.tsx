@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useStore, normalizeMargin } from "@/lib/store";
 import { templates } from "@/templates";
 import { t } from "@/lib/i18n";
@@ -7,7 +7,16 @@ import { NotesLayer } from "./NotesLayer";
 import { toast } from "@/lib/toast";
 
 export function Preview() {
-  const { resume, template, theme, lang, addNote, addImageNote, pageSetup } = useStore();
+  const { resume, template, theme, lang, addNote, addImageNote, pageSetup, hiddenSections } = useStore();
+  // Apply visibility toggles by zeroing hidden section arrays. Templates
+  // already gate sections on `array.length > 0`, so this hides them
+  // without per-template changes.
+  const renderedResume = useMemo(() => {
+    if (!hiddenSections || hiddenSections.length === 0) return resume;
+    const r: any = { ...resume };
+    for (const k of hiddenSections) r[k] = [];
+    return r as typeof resume;
+  }, [resume, hiddenSections]);
   const L = t(lang);
   const Tpl = templates[template];
   const imgRef = useRef<HTMLInputElement>(null);
@@ -243,7 +252,7 @@ export function Preview() {
             transformOrigin: "top left",
           }}
         >
-          <Tpl resume={resume} />
+          <Tpl resume={renderedResume} />
           <NotesLayer />
           {/* Page break indicators (screen only). Skipped entirely during
               print so Edge's print engine doesn't traverse them. We also

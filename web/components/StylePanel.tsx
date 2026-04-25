@@ -1,7 +1,13 @@
 "use client";
 import { useStore, defaultTheme, ThemeTokens, normalizeMargin } from "@/lib/store";
+import type { SectionKey } from "@/lib/schema";
 import { t } from "@/lib/i18n";
 import { templateList } from "@/templates";
+
+const SECTION_KEYS: SectionKey[] = ["work", "education", "projects", "skills", "awards", "languages"];
+const SECTION_ICONS: Record<SectionKey, string> = {
+  work: "💼", education: "🎓", projects: "🚀", skills: "🛠", awards: "🏆", languages: "🌐",
+};
 
 const MARGIN_PRESETS: { mm: number; key: string }[] = [
   { mm: 0,  key: "marginNone" },
@@ -43,7 +49,8 @@ function isMatchingPreset(theme: ThemeTokens, p: Preset) {
 }
 
 export function StylePanel() {
-  const { template, setTemplate, theme, setTheme, lang, pageSetup, setPageSetup } = useStore();
+  const { template, setTemplate, theme, setTheme, lang, pageSetup, setPageSetup,
+          hiddenSections, toggleSectionVisibility } = useStore();
   const L = t(lang);
   const S = (L as any).style ?? {};
   const E = (L as any).exportMenu ?? {};
@@ -204,6 +211,41 @@ export function StylePanel() {
         </div>
         <input type="range" min={0.85} max={1.2} step={0.01} value={theme.fontScale}
           onChange={(e) => setTheme({ fontScale: Number(e.target.value) })} className="w-full" />
+      </div>
+
+      {/* Section visibility toggles — hide a section from the rendered
+          resume without losing its data. Implemented by zeroing the
+          array before passing to Tpl (see Preview.tsx).               */}
+      <div>
+        <div className="text-xs font-semibold uppercase text-gray-500 mb-2">
+          {S.visibility ?? "节区可见性"}
+        </div>
+        <div className="space-y-1">
+          {SECTION_KEYS.map((k) => {
+            const visible = !hiddenSections.includes(k);
+            return (
+              <button
+                key={k}
+                type="button"
+                onClick={() => toggleSectionVisibility(k)}
+                className={`w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg border text-xs transition ${
+                  visible
+                    ? "border-gray-200 bg-white hover:bg-gray-50 text-gray-700"
+                    : "border-gray-200 bg-gray-100/70 text-gray-400"
+                }`}
+                title={visible ? (S.hideSection ?? "隐藏") : (S.showSection ?? "显示")}
+              >
+                <span className="flex items-center gap-2">
+                  <span className="text-base leading-none">{SECTION_ICONS[k]}</span>
+                  <span>{L.sections[k]}</span>
+                </span>
+                <span className={`text-[0.85em] ${visible ? "text-emerald-500" : "text-gray-400"}`}>
+                  {visible ? "👁" : "✕"}
+                </span>
+              </button>
+            );
+          })}
+        </div>
       </div>
     </div>
   );

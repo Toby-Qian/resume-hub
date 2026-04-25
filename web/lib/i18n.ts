@@ -74,6 +74,9 @@ export const T = {
       reset: "重置",
       resetTheme: "重置为默认配色",
       custom: "自定义",
+      visibility: "节区可见性",
+      hideSection: "隐藏此节",
+      showSection: "显示此节",
     },
     completeness: {
       label: "完成度",
@@ -201,6 +204,9 @@ export const T = {
       reset: "Reset",
       resetTheme: "Reset theme to default",
       custom: "Custom",
+      visibility: "Section visibility",
+      hideSection: "Hide section",
+      showSection: "Show section",
     },
     completeness: {
       label: "Completeness",

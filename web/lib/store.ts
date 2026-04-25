@@ -68,6 +68,12 @@ interface State {
   lang: UILang;
   pageSetup: PageSetup;
   setPageSetup: (p: Partial<PageSetup>) => void;
+  /** Sections the user has chosen to hide from the rendered resume.
+   *  Implemented by zeroing the corresponding array before passing to
+   *  the template, so the template's existing `length > 0` guards
+   *  hide the section automatically. */
+  hiddenSections: SectionKey[];
+  toggleSectionVisibility: (k: SectionKey) => void;
   past: Resume[];
   future: Resume[];
   /** When true, subsequent mutations do NOT push new history entries.
@@ -139,6 +145,13 @@ export const useStore = create<State>()(
         lang: "zh",
         pageSetup: defaultPageSetup,
         setPageSetup: (p) => set({ pageSetup: { ...get().pageSetup, ...p } }),
+        hiddenSections: [],
+        toggleSectionVisibility: (k) => {
+          const cur = get().hiddenSections;
+          set({
+            hiddenSections: cur.includes(k) ? cur.filter((x) => x !== k) : [...cur, k],
+          });
+        },
         past: [],
         future: [],
         _batch: false,
@@ -256,6 +269,7 @@ export const useStore = create<State>()(
         theme: s.theme,
         lang: s.lang,
         pageSetup: s.pageSetup,
+        hiddenSections: s.hiddenSections,
       }) as any,
     }
   )
