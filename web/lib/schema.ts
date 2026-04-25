@@ -93,6 +93,9 @@ export interface ResumeNote {
   color?: string;           // hex
   bg?: string;              // hex / transparent
   align?: "left" | "center" | "right";
+  /** When true, the note ignores drag/resize/keyboard nudges — it only
+   *  responds to selection and to the lock toggle itself. */
+  locked?: boolean;
 }
 
 export interface Resume {

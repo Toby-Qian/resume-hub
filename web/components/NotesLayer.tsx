@@ -1,7 +1,13 @@
 "use client";
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
 import { useStore } from "@/lib/store";
 import type { ResumeNote } from "@/lib/schema";
+
+/* A4 width @ 96dpi — kept in sync with `.paper { width: 794px }` in globals.css. */
+const PAPER_W = 794;
+const SNAP = 6; // px threshold
+
+interface Guide { kind: "v" | "h"; pos: number }
 
 export function NotesLayer() {
   const notes = useStore((s) => s.resume.notes) || [];
@@ -11,10 +17,12 @@ export function NotesLayer() {
   const removeNote = useStore((s) => s.removeNote);
   const updateNote = useStore((s) => s.updateNote);
 
+  // Guides currently visible during a drag/resize (computed by NoteBox).
+  const [guides, setGuides] = useState<Guide[]>([]);
+
   // ---- Global interactions bound to whichever note is selected ---------
   useEffect(() => {
     if (notes.length === 0) return;
-    // Click outside any note → deselect
     const onDocDown = (e: MouseEvent) => {
       const tgt = e.target as HTMLElement | null;
       if (!tgt) return;
@@ -28,26 +36,29 @@ export function NotesLayer() {
   }, [notes.length]);
 
   useEffect(() => {
-    // Keyboard shortcuts while a note is selected (but not while the user is
-    // typing inside its contentEditable body).
     const onKey = (e: KeyboardEvent) => {
       const sId = useStore.getState().selectedNoteId;
       if (!sId) return;
       const tgt = e.target as HTMLElement | null;
       const isEditingText = !!(tgt && (tgt.isContentEditable || tgt.tagName === "INPUT" || tgt.tagName === "TEXTAREA"));
-      // Delete / Backspace on selection (when not typing)
+      const n = (useStore.getState().resume.notes || []).find((x) => x.id === sId);
+      if (!n) return;
+      // Locked notes ignore destructive / move shortcuts (lock guards the user).
+      const locked = !!n.locked;
       if (!isEditingText && (e.key === "Delete" || e.key === "Backspace")) {
+        if (locked) return;
         e.preventDefault(); removeNote(sId); return;
       }
-      // Ctrl/Cmd+D duplicate
       if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "d" && !isEditingText) {
         e.preventDefault(); duplicateNote(sId); return;
       }
-      // Arrow keys nudge (Shift = 10px). Work even while typing? No — respect typing.
+      // L = toggle lock (mirrors common design-tool convention)
+      if (!isEditingText && e.key.toLowerCase() === "l" && !e.ctrlKey && !e.metaKey && !e.altKey) {
+        e.preventDefault(); updateNote(sId, { locked: !locked }); return;
+      }
       if (!isEditingText && e.key.startsWith("Arrow")) {
+        if (locked) return;
         const step = e.shiftKey ? 10 : 1;
-        const n = (useStore.getState().resume.notes || []).find((x) => x.id === sId);
-        if (!n) return;
         e.preventDefault();
         const patch: Partial<ResumeNote> = {};
         if (e.key === "ArrowLeft") patch.x = Math.max(0, n.x - step);
@@ -65,17 +76,55 @@ export function NotesLayer() {
   return (
     <>
       {notes.map((n) => (
-        <NoteBox key={n.id} note={n} selected={selectedId === n.id} onSelect={() => selectNote(n.id)} />
+        <NoteBox
+          key={n.id}
+          note={n}
+          allNotes={notes}
+          selected={selectedId === n.id}
+          onSelect={() => selectNote(n.id)}
+          setGuides={setGuides}
+        />
+      ))}
+      {guides.map((g, i) => (
+        <div
+          key={`${g.kind}-${g.pos}-${i}`}
+          className="alignment-guide no-print"
+          style={
+            g.kind === "v"
+              ? { left: g.pos, top: 0, bottom: 0, width: 1 }
+              : { top: g.pos, left: 0, right: 0, height: 1 }
+          }
+        />
       ))}
     </>
   );
 }
 
-function NoteBox({ note, selected, onSelect }: { note: ResumeNote; selected: boolean; onSelect: () => void }) {
+/** Pick the snap with smallest delta within SNAP px from a list of candidates. */
+function pickSnap(value: number, candidates: number[]): { snap: number | null; delta: number } {
+  let best: number | null = null;
+  let bestDelta = SNAP + 1;
+  for (const c of candidates) {
+    const d = Math.abs(value - c);
+    if (d < bestDelta) { bestDelta = d; best = c; }
+  }
+  return { snap: best, delta: bestDelta };
+}
+
+function NoteBox({
+  note, allNotes, selected, onSelect, setGuides,
+}: {
+  note: ResumeNote;
+  allNotes: ResumeNote[];
+  selected: boolean;
+  onSelect: () => void;
+  setGuides: (g: Guide[]) => void;
+}) {
   const { updateNote, removeNote, beginBatch, endBatch, duplicateNote, reorderNote } = useStore();
   const bodyRef = useRef<HTMLDivElement>(null);
   const editing = useRef(false);
   const isImage = note.kind === "image";
+  const locked = !!note.locked;
 
   useEffect(() => {
     if (!bodyRef.current || editing.current || isImage) return;
@@ -84,25 +133,76 @@ function NoteBox({ note, selected, onSelect }: { note: ResumeNote; selected: boo
     }
   }, [note.text, isImage]);
 
-  // ---- Drag (attachable to any element that should initiate move) -------
-  const dragState = useRef<{ sx: number; sy: number; ox: number; oy: number } | null>(null);
+  // ---- Drag (with snap) -------------------------------------------------
+  const dragState = useRef<{ sx: number; sy: number; ox: number; oy: number; w: number; h: number } | null>(null);
   const startDrag = (e: React.MouseEvent) => {
-    if (e.button !== 0) return;
+    if (e.button !== 0 || locked) return;
     e.preventDefault();
     e.stopPropagation();
     onSelect();
     beginBatch();
-    dragState.current = { sx: e.clientX, sy: e.clientY, ox: note.x, oy: note.y };
+    const h = (note.height ?? bodyRef.current?.offsetHeight ?? 40);
+    dragState.current = { sx: e.clientX, sy: e.clientY, ox: note.x, oy: note.y, w: note.width, h };
+
+    // Build snap candidates ONCE per gesture (other notes' edges + paper edges + paper centerline).
+    const others = allNotes.filter((n) => n.id !== note.id);
+    const xCandidates = [0, PAPER_W / 2, PAPER_W];
+    const yCandidates = [0];
+    others.forEach((o) => {
+      const oh = o.height ?? 40;
+      xCandidates.push(o.x, o.x + o.width / 2, o.x + o.width);
+      yCandidates.push(o.y, o.y + oh / 2, o.y + oh);
+    });
+
     const onMove = (ev: MouseEvent) => {
       if (!dragState.current) return;
-      updateNote(note.id, {
-        x: Math.max(0, Math.round(dragState.current.ox + (ev.clientX - dragState.current.sx))),
-        y: Math.max(0, Math.round(dragState.current.oy + (ev.clientY - dragState.current.sy))),
-      });
+      let nx = Math.round(dragState.current.ox + (ev.clientX - dragState.current.sx));
+      let ny = Math.round(dragState.current.oy + (ev.clientY - dragState.current.sy));
+      const w = dragState.current.w;
+      const h = dragState.current.h;
+
+      const guides: Guide[] = [];
+      // Try snapping any of {left, center, right} to xCandidates
+      const xCandidatesForLeft = [
+        { val: nx,           snap: pickSnap(nx, xCandidates) },
+        { val: nx + w / 2,   snap: pickSnap(nx + w / 2, xCandidates) },
+        { val: nx + w,       snap: pickSnap(nx + w, xCandidates) },
+      ];
+      const bestX = xCandidatesForLeft
+        .filter((c) => c.snap.snap !== null)
+        .sort((a, b) => a.snap.delta - b.snap.delta)[0];
+      if (bestX && bestX.snap.snap !== null) {
+        const adjust = bestX.snap.snap - bestX.val;
+        nx += adjust;
+        guides.push({ kind: "v", pos: bestX.snap.snap });
+      }
+      const xCandidatesForTop = [
+        { val: ny,           snap: pickSnap(ny, yCandidates) },
+        { val: ny + h / 2,   snap: pickSnap(ny + h / 2, yCandidates) },
+        { val: ny + h,       snap: pickSnap(ny + h, yCandidates) },
+      ];
+      const bestY = xCandidatesForTop
+        .filter((c) => c.snap.snap !== null)
+        .sort((a, b) => a.snap.delta - b.snap.delta)[0];
+      if (bestY && bestY.snap.snap !== null) {
+        const adjust = bestY.snap.snap - bestY.val;
+        ny += adjust;
+        guides.push({ kind: "h", pos: bestY.snap.snap });
+      }
+      // Holding Shift bypasses snapping for fine-tuning.
+      if (ev.shiftKey) {
+        nx = Math.round(dragState.current.ox + (ev.clientX - dragState.current.sx));
+        ny = Math.round(dragState.current.oy + (ev.clientY - dragState.current.sy));
+        setGuides([]);
+      } else {
+        setGuides(guides);
+      }
+      updateNote(note.id, { x: Math.max(0, nx), y: Math.max(0, ny) });
     };
     const onUp = () => {
       dragState.current = null;
       endBatch();
+      setGuides([]);
       window.removeEventListener("mousemove", onMove);
       window.removeEventListener("mouseup", onUp);
     };
@@ -113,7 +213,7 @@ function NoteBox({ note, selected, onSelect }: { note: ResumeNote; selected: boo
   // ---- Resize ------------------------------------------------------------
   const resizeState = useRef<{ sx: number; sy: number; w: number; h: number } | null>(null);
   const onResizeDown = (e: React.MouseEvent) => {
-    if (e.button !== 0) return;
+    if (e.button !== 0 || locked) return;
     e.preventDefault();
     e.stopPropagation();
     onSelect();
@@ -144,8 +244,6 @@ function NoteBox({ note, selected, onSelect }: { note: ResumeNote; selected: boo
     if (v !== note.text) updateNote(note.id, { text: v });
   };
 
-  // Alt+mousedown anywhere on a text note's body also drags (so users can
-  // move the note without having to aim at the 4px border).
   const onBodyMouseDown = (e: React.MouseEvent) => {
     if (e.altKey) startDrag(e);
   };
@@ -155,7 +253,7 @@ function NoteBox({ note, selected, onSelect }: { note: ResumeNote; selected: boo
 
   return (
     <div
-      className={`resume-note ${selected ? "selected" : ""} ${isImage ? "is-image" : "is-text"}`}
+      className={`resume-note ${selected ? "selected" : ""} ${locked ? "locked" : ""} ${isImage ? "is-image" : "is-text"}`}
       style={{
         position: "absolute",
         left: note.x,
@@ -164,15 +262,14 @@ function NoteBox({ note, selected, onSelect }: { note: ResumeNote; selected: boo
         zIndex: selected ? 20 : 5,
       }}
       onMouseDown={(e) => {
-        // Clicking on the frame (not body, not controls) selects + optionally starts drag.
         if ((e.target as HTMLElement).closest(".note-body,.note-chrome,.note-resize,.note-image")) return;
         startDrag(e);
       }}
     >
       <div className="note-chrome no-print">
         <button type="button" className="note-handle" onMouseDown={startDrag}
-          title="拖动 / drag" aria-label="drag note">⋮⋮</button>
-        {!isImage && (
+          title={locked ? "已锁定 / locked" : "拖动 / drag"} aria-label="drag note">⋮⋮</button>
+        {!isImage && !locked && (
           <>
             <button type="button" className="note-btn"
               onClick={() => updateNote(note.id, { bold: !note.bold })}
@@ -203,18 +300,29 @@ function NoteBox({ note, selected, onSelect }: { note: ResumeNote; selected: boo
           </>
         )}
         <span className="note-sep" />
-        <button type="button" className="note-btn"
-          onClick={() => reorderNote(note.id, "front")}
-          title="置顶 / bring to front">⇡</button>
-        <button type="button" className="note-btn"
-          onClick={() => reorderNote(note.id, "back")}
-          title="置底 / send to back">⇣</button>
-        <button type="button" className="note-btn"
-          onClick={() => duplicateNote(note.id)}
-          title="复制 / duplicate (Ctrl+D)">⎘</button>
-        <button type="button" className="note-btn note-del"
-          onClick={() => removeNote(note.id)}
-          title="删除 / delete (Del)" aria-label="delete note">×</button>
+        {!locked && (
+          <>
+            <button type="button" className="note-btn"
+              onClick={() => reorderNote(note.id, "front")}
+              title="置顶 / bring to front">⇡</button>
+            <button type="button" className="note-btn"
+              onClick={() => reorderNote(note.id, "back")}
+              title="置底 / send to back">⇣</button>
+            <button type="button" className="note-btn"
+              onClick={() => duplicateNote(note.id)}
+              title="复制 / duplicate (Ctrl+D)">⎘</button>
+          </>
+        )}
+        <button type="button" className={`note-btn ${locked ? "note-locked-on" : ""}`}
+          onClick={() => updateNote(note.id, { locked: !locked })}
+          title={locked ? "解锁 / unlock (L)" : "锁定 / lock (L)"}>
+          {locked ? "🔒" : "🔓"}
+        </button>
+        {!locked && (
+          <button type="button" className="note-btn note-del"
+            onClick={() => removeNote(note.id)}
+            title="删除 / delete (Del)" aria-label="delete note">×</button>
+        )}
       </div>
 
       {isImage ? (
@@ -231,13 +339,13 @@ function NoteBox({ note, selected, onSelect }: { note: ResumeNote; selected: boo
             objectFit: "cover",
             display: "block",
             userSelect: "none",
-            cursor: "move",
+            cursor: locked ? "default" : "move",
           }}
         />
       ) : (
         <div
           ref={bodyRef}
-          contentEditable
+          contentEditable={!locked}
           suppressContentEditableWarning
           spellCheck={false}
           className={`note-body ${isEmpty ? "empty" : ""}`}
@@ -250,6 +358,7 @@ function NoteBox({ note, selected, onSelect }: { note: ResumeNote; selected: boo
             background: note.bg ?? "transparent",
             textAlign: note.align ?? "left",
             minHeight: fontSize * 1.5,
+            cursor: locked ? "default" : undefined,
           }}
           onMouseDown={onBodyMouseDown}
           onFocus={() => { editing.current = true; onSelect(); }}
@@ -257,9 +366,11 @@ function NoteBox({ note, selected, onSelect }: { note: ResumeNote; selected: boo
         />
       )}
 
-      <button type="button" className="note-resize no-print"
-        onMouseDown={onResizeDown}
-        title="拖动调整大小 / drag to resize" aria-label="resize note" />
+      {!locked && (
+        <button type="button" className="note-resize no-print"
+          onMouseDown={onResizeDown}
+          title="拖动调整大小 / drag to resize" aria-label="resize note" />
+      )}
     </div>
   );
 }

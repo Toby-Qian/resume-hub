@@ -241,7 +241,31 @@ body { background: #f3f4f6; color: #111827; font-family: var(--resume-font-sans)
 .resume-note:hover .note-resize,
 .resume-note.selected .note-resize { opacity: 1; }
 
+/* ---- Locked notes: muted chrome, no resize, default cursor -------------- */
+.resume-note.locked .note-handle { cursor: not-allowed; opacity: 0.55; }
+.resume-note.locked .note-resize { display: none; }
+.resume-note.locked.selected .note-body,
+.resume-note.locked:hover .note-body {
+  outline: 1px dashed #94a3b8;
+  outline-offset: 2px;
+  box-shadow: none;
+}
+.resume-note .note-btn.note-locked-on {
+  background: #fde68a;
+  border-color: #f59e0b;
+}
+
+/* ---- Smart alignment guides shown during drag --------------------------- */
+.alignment-guide {
+  position: absolute;
+  background: #ec4899; /* pink-500 */
+  pointer-events: none;
+  z-index: 18;
+  box-shadow: 0 0 0 0.5px rgba(236, 72, 153, 0.5);
+}
+
 @media print {
+  .alignment-guide { display: none !important; }
   .resume-note .note-body {
     border-color: transparent !important;
     background: transparent !important;
