@@ -305,10 +305,8 @@ body { background: #f3f4f6; color: #111827; font-family: var(--resume-font-sans)
   min-height: calc(1123px * var(--zoom, 1));
 }
 
-@media print {
-  .paper-zoom-wrap { width: auto !important; min-height: 0 !important; }
-  .paper-zoom-wrap > .paper { transform: none !important; }
-}
+/* Print rules for .paper-zoom-wrap live in the consolidated @media print
+   block lower in the file (search "Force a clean block chain"). */
 
 /* ---- Smart alignment guides shown during drag --------------------------- */
 .alignment-guide {
@@ -334,18 +332,38 @@ body { background: #f3f4f6; color: #111827; font-family: var(--resume-font-sans)
 
 /* ---------- Print -------------------------------------------------------- */
 @media print {
-  html, body { background: white; }
+  html, body { background: white; margin: 0 !important; padding: 0 !important; }
   .no-print { display: none !important; }
   /* On mobile, the active pane toggle may have hidden preview; force it visible. */
   .pane { display: block !important; }
   .pane-editor, .pane-style { display: none !important; }
+
+  /* Break the on-screen flex layout so .paper isn't a flex item with
+     auto-width (which sizes to content's intrinsic width — making the
+     paper visually shrink to ~60% in print). Force a clean block chain
+     all the way down so `.paper { width: 100% }` resolves to the full
+     printable page area. */
+  .pane-preview {
+    display: block !important;
+    width: 100% !important;
+    overflow: visible !important;
+    height: auto !important;
+  }
+  .paper-zoom-wrap {
+    display: block !important;
+    width: 100% !important;
+    height: auto !important;
+    min-height: 0 !important;
+    margin: 0 !important;
+  }
+  .paper-zoom-wrap > .paper { transform: none !important; }
   .paper {
-    box-shadow: none;
-    width: 100%;
-    min-height: auto;
-    transform: none;
-    background-image: none;
-    margin: 0;
+    box-shadow: none !important;
+    width: 100% !important;
+    min-height: auto !important;
+    transform: none !important;
+    background-image: none !important;
+    margin: 0 !important;
   }
   .resume-section { break-inside: avoid !important; }
 
