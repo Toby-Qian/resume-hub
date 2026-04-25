@@ -1,10 +1,11 @@
 "use client";
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
 import { useStore } from "@/lib/store";
 import { t } from "@/lib/i18n";
 import { toast } from "@/lib/toast";
 import { ExportMenu } from "./ExportMenu";
 import { Completeness } from "./Completeness";
+import { ConfirmModal } from "./ConfirmModal";
 
 export function Toolbar() {
   const { lang, setLang, loadSample, reset, resume, setResume, undo, redo, past, future } = useStore();
@@ -51,11 +52,10 @@ export function Toolbar() {
     a.click(); URL.revokeObjectURL(url);
     toast.success(L.toast.exported);
   };
-  const onReset = () => {
-    if (confirm(L.form.confirmReset)) {
-      reset();
-      toast.info(L.toast.reset);
-    }
+  const [resetOpen, setResetOpen] = useState(false);
+  const doReset = () => {
+    reset();
+    toast.info(L.toast.reset);
   };
   const onLoadSample = () => {
     loadSample(lang);
@@ -96,7 +96,7 @@ export function Toolbar() {
       <Btn onClick={onLoadSample} icon="✨">{L.actions.loadSample}</Btn>
       <Btn onClick={() => fileRef.current?.click()} icon="↑">{L.actions.importJson}</Btn>
       <Btn onClick={onExport} icon="↓">{L.actions.exportJson}</Btn>
-      <Btn onClick={onReset} icon="✕">{L.actions.reset}</Btn>
+      <Btn onClick={() => setResetOpen(true)} icon="✕">{L.actions.reset}</Btn>
       <ExportMenu />
       <div className="ml-auto inline-flex items-center bg-gray-100 rounded-lg p-0.5">
         <button onClick={() => setLang("zh")}
@@ -111,6 +111,16 @@ export function Toolbar() {
           e.target.value = "";
         }} />
     </div>
+    <ConfirmModal
+      open={resetOpen}
+      title={(L.actions as any).reset ?? "清空"}
+      message={(L.form as any).confirmReset}
+      confirmLabel={(L.actions as any).reset ?? "清空"}
+      cancelLabel={(L.form as any).cancel ?? "取消"}
+      tone="danger"
+      onConfirm={doReset}
+      onClose={() => setResetOpen(false)}
+    />
     </div>
   );
 }

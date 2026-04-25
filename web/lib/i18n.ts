@@ -79,6 +79,11 @@ export const T = {
       showSection: "显示此节",
       hoverHint: "悬停可预览",
     },
+    footer: {
+      privacy: "所有内容仅保存在你的浏览器本地，不会上传到任何服务器。",
+      github: "在 GitHub 查看源码",
+      disclaimer: "早期版本 · 建议定期导出 JSON 备份",
+    },
     empty: {
       title: "从这里开始",
       sub: "选一个起点 — 也可以直接在下方填写",
@@ -119,7 +124,8 @@ export const T = {
       required: "此项必填",
       invalidEmail: "邮箱格式不正确",
       breakBefore: "下一节换页",
-      confirmReset: "确定要清空全部内容吗？",
+      confirmReset: "这将抹掉所有已填内容（基本信息、工作经历、项目等），此操作仅可通过 Ctrl+Z 撤销。建议先「导出 JSON」备份。",
+      cancel: "取消",
       avatarTooLarge: "图片过大（请小于 800KB），或改用 URL。",
     },
     preview: {
@@ -220,6 +226,11 @@ export const T = {
       showSection: "Show section",
       hoverHint: "Hover to preview",
     },
+    footer: {
+      privacy: "Everything you type stays in your browser's local storage — nothing is uploaded.",
+      github: "View source on GitHub",
+      disclaimer: "Early build · Export JSON regularly as a backup",
+    },
     empty: {
       title: "Start here",
       sub: "Pick a jump-off — or just fill in the form below",
@@ -260,7 +271,8 @@ export const T = {
       required: "Required",
       invalidEmail: "Invalid email format",
       breakBefore: "Start on new page",
-      confirmReset: "Clear all content?",
+      confirmReset: "This will erase all entered content (basics, work, projects, …). Undo only works via Ctrl+Z. Consider exporting JSON first as a backup.",
+      cancel: "Cancel",
       avatarTooLarge: "Image too large (< 800KB), or use a URL instead.",
     },
     preview: {

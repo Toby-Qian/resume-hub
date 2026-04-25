@@ -8,6 +8,7 @@ import { StylePanel } from "@/components/StylePanel";
 import { Gallery } from "@/components/Gallery";
 import { Toolbar } from "@/components/Toolbar";
 import { EmptyState } from "@/components/EmptyState";
+import { Footer } from "@/components/Footer";
 
 type Tab = "editor" | "gallery";
 type Pane = "editor" | "preview" | "style";
@@ -109,6 +110,7 @@ export default function Home() {
           </div>
         </>
       )}
+      <Footer />
     </div>
   );
 }
