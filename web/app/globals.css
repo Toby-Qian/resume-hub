@@ -251,12 +251,61 @@ body { background: #f3f4f6; color: #111827; font-family: var(--resume-font-sans)
   background: white;
   cursor: pointer;
 }
+/* ---- Image notes: "sticker on top" treatment --------------------------- */
+/* Goal: an image dropped on the resume should *claim* its space — a
+   white polaroid frame, hard drop shadow, and a slight tilt push the
+   image visibly above the document so the underlying text feels
+   knocked-back instead of awkwardly half-covered.                     */
+.resume-note.is-image {
+  /* Subtle alternating tilt by id-hash — done via :nth-child for variety. */
+  filter: drop-shadow(0 6px 14px rgba(15, 23, 42, 0.18))
+          drop-shadow(0 2px 4px rgba(15, 23, 42, 0.10));
+  transition: transform 0.18s ease, filter 0.18s ease;
+}
+.resume-note.is-image:nth-of-type(odd)  { transform: rotate(-1.4deg); }
+.resume-note.is-image:nth-of-type(even) { transform: rotate( 1.1deg); }
+.resume-note.is-image:hover,
+.resume-note.is-image.selected {
+  filter: drop-shadow(0 12px 24px rgba(15, 23, 42, 0.28))
+          drop-shadow(0 4px 6px rgba(15, 23, 42, 0.14));
+}
+.resume-note.is-image.selected {
+  transform: rotate(0deg) scale(1.02);
+  z-index: 30;
+}
 .resume-note .note-image {
-  border: 1px dashed transparent;
-  border-radius: 3px;
+  /* Polaroid frame: thick white border + thin outer ring + small bottom
+     "caption" gap so it reads as a physical photo on top of paper.   */
+  border: 8px solid #ffffff;
+  border-bottom-width: 28px;
+  border-radius: 2px;
+  background: #fff;
+  box-shadow:
+    inset 0 0 0 1px rgba(15, 23, 42, 0.06),
+    0 0 0 1px rgba(15, 23, 42, 0.04);
   transition: border-color 0.15s;
 }
-.resume-note.hovered .note-image { border-color: #f59e0b; }
+.resume-note.is-image.locked .note-image {
+  border-color: #f5f5f4;
+}
+.resume-note.hovered .note-image,
+.resume-note.is-image.selected .note-image {
+  border-color: #ffffff;
+  box-shadow:
+    inset 0 0 0 1px rgba(245, 158, 11, 0.55),
+    0 0 0 2px rgba(245, 158, 11, 0.35);
+}
+
+@media print {
+  /* In print we still want the sticker feel but no rotation jitter
+     (and no editor-only ring/shadow tints).                           */
+  .resume-note.is-image  { transform: none !important; filter: drop-shadow(0 4px 10px rgba(15,23,42,0.22)); }
+  .resume-note .note-image {
+    border: 6px solid #ffffff !important;
+    border-bottom-width: 22px !important;
+    box-shadow: inset 0 0 0 1px rgba(15,23,42,0.06) !important;
+  }
+}
 
 .resume-note .note-resize {
   position: absolute;
