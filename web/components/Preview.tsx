@@ -12,7 +12,10 @@ export function Preview() {
   const Tpl = templates[template];
   const imgRef = useRef<HTMLInputElement>(null);
   const paperRef = useRef<HTMLDivElement>(null);
+  const wrapRef = useRef<HTMLDivElement>(null);
   const [showHelp, setShowHelp] = useState(false);
+  const [zoom, setZoom] = useState(1); // 0.4 ~ 1.5
+  const setZoomClamped = (z: number) => setZoom(Math.max(0.4, Math.min(1.5, z)));
 
   const onPickImage = async (f: File) => {
     if (f.size > 800 * 1024) { toast.error(L.form.avatarTooLarge); return; }
@@ -53,6 +56,50 @@ export function Preview() {
     return () => window.removeEventListener("paste", onPaste);
   }, [addImageNote, L.form.avatarTooLarge, L.preview]);
 
+  // After zoom or content change, sync the wrapper's height so that the
+  // surrounding layout reserves space for the post-scale paper footprint
+  // (CSS transform doesn't affect layout flow).
+  const [paperH, setPaperH] = useState(1123);
+  useEffect(() => {
+    const el = paperRef.current;
+    if (!el) return;
+    const ro = new ResizeObserver(() => setPaperH(el.scrollHeight || el.offsetHeight || 1123));
+    ro.observe(el);
+    setPaperH(el.scrollHeight || el.offsetHeight || 1123);
+    return () => ro.disconnect();
+  }, []);
+
+  // ---- Ctrl+wheel zoom on the paper area --------------------------------
+  useEffect(() => {
+    const el = wrapRef.current;
+    if (!el) return;
+    const onWheel = (e: WheelEvent) => {
+      if (!(e.ctrlKey || e.metaKey)) return;
+      e.preventDefault();
+      // deltaY > 0 = wheel down = zoom out
+      const factor = e.deltaY > 0 ? 0.92 : 1.08;
+      setZoom((z) => Math.max(0.4, Math.min(1.5, z * factor)));
+    };
+    // {passive:false} so we can preventDefault the page scroll.
+    el.addEventListener("wheel", onWheel, { passive: false });
+    return () => el.removeEventListener("wheel", onWheel);
+  }, []);
+
+  // Ctrl+0 reset, Ctrl+= zoom in, Ctrl+- zoom out (when not editing text)
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (!(e.ctrlKey || e.metaKey)) return;
+      const tgt = e.target as HTMLElement | null;
+      const editing = !!(tgt && (tgt.isContentEditable || tgt.tagName === "INPUT" || tgt.tagName === "TEXTAREA"));
+      if (editing) return;
+      if (e.key === "0") { e.preventDefault(); setZoom(1); }
+      else if (e.key === "=" || e.key === "+") { e.preventDefault(); setZoomClamped(zoom * 1.1); }
+      else if (e.key === "-") { e.preventDefault(); setZoomClamped(zoom / 1.1); }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [zoom]);
+
   // ---- ? to toggle keyboard help, Esc to close --------------------------
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -91,6 +138,16 @@ export function Preview() {
         <input ref={imgRef} type="file" accept="image/*" className="hidden"
           onChange={(e) => { const f = e.target.files?.[0]; if (f) onPickImage(f); e.target.value = ""; }} />
         <span className="w-px h-4 bg-gray-200 mx-1" />
+        <button type="button" onClick={() => setZoomClamped(zoom / 1.1)}
+          className="text-xs w-6 h-6 rounded-full border border-gray-300 bg-white text-gray-600 hover:bg-gray-100 transition flex items-center justify-center"
+          title={(L.preview as any).zoomOutHint ?? "缩小 (Ctrl+-)"} aria-label="zoom out">−</button>
+        <button type="button" onClick={() => setZoom(1)}
+          className="text-[0.65rem] px-2 h-6 rounded-full border border-gray-300 bg-white text-gray-700 hover:bg-gray-100 transition font-mono w-12 text-center"
+          title={(L.preview as any).zoomResetHint ?? "重置 (Ctrl+0)"}>{Math.round(zoom * 100)}%</button>
+        <button type="button" onClick={() => setZoomClamped(zoom * 1.1)}
+          className="text-xs w-6 h-6 rounded-full border border-gray-300 bg-white text-gray-600 hover:bg-gray-100 transition flex items-center justify-center"
+          title={(L.preview as any).zoomInHint ?? "放大 (Ctrl++)"} aria-label="zoom in">+</button>
+        <span className="w-px h-4 bg-gray-200 mx-1" />
         <button
           type="button"
           onClick={() => setShowHelp((v) => !v)}
@@ -102,18 +159,29 @@ export function Preview() {
         </button>
       </div>
       <div
-        ref={paperRef}
-        className={`paper paper-flow print-area density-${theme.density}`}
+        ref={wrapRef}
+        className="paper-zoom-wrap"
         style={{
-          ["--resume-accent" as any]: theme.accent,
-          ["--resume-font-sans" as any]: theme.fontSans,
-          ["--resume-font-serif" as any]: theme.fontSerif,
-          ["--resume-font-scale" as any]: String(theme.fontScale),
-          fontFamily: "var(--resume-font-sans)",
+          width: 794 * zoom,
+          height: paperH * zoom,
         }}
       >
-        <Tpl resume={resume} />
-        <NotesLayer />
+        <div
+          ref={paperRef}
+          className={`paper paper-flow print-area density-${theme.density}`}
+          style={{
+            ["--resume-accent" as any]: theme.accent,
+            ["--resume-font-sans" as any]: theme.fontSans,
+            ["--resume-font-serif" as any]: theme.fontSerif,
+            ["--resume-font-scale" as any]: String(theme.fontScale),
+            fontFamily: "var(--resume-font-sans)",
+            transform: `scale(${zoom})`,
+            transformOrigin: "top left",
+          }}
+        >
+          <Tpl resume={resume} />
+          <NotesLayer />
+        </div>
       </div>
       <div className="text-[0.7rem] text-gray-400 mt-2 mb-4 px-4 text-center max-w-[794px] no-print space-y-0.5">
         <div>{(L.preview as any).editHint ?? "点击任意文字即可在预览中直接编辑；悬停文本区块左侧可拖动整段位置"}</div>
@@ -132,8 +200,12 @@ function HelpOverlay({ lang, onClose }: { lang: "zh" | "en"; onClose: () => void
     { group: zh ? "全局" : "Global",     keys: "Ctrl+Z",        desc: zh ? "撤销" : "Undo" },
     { group: zh ? "全局" : "Global",     keys: "Ctrl+Shift+Z",  desc: zh ? "重做" : "Redo" },
     { group: zh ? "全局" : "Global",     keys: "Ctrl+V",        desc: zh ? "粘贴剪贴板里的图片到简历画布" : "Paste image from clipboard onto the paper" },
+    { group: zh ? "全局" : "Global",     keys: "Ctrl + 滚轮",   desc: zh ? "缩放预览画布（40% – 150%）" : "Zoom the preview canvas (40% – 150%)" },
+    { group: zh ? "全局" : "Global",     keys: "Ctrl+0",        desc: zh ? "重置缩放为 100%" : "Reset zoom to 100%" },
+    { group: zh ? "全局" : "Global",     keys: "Ctrl++ / Ctrl+-", desc: zh ? "放大 / 缩小" : "Zoom in / out" },
     { group: zh ? "全局" : "Global",     keys: "?",             desc: zh ? "显示 / 隐藏此面板" : "Toggle this panel" },
     { group: zh ? "全局" : "Global",     keys: "Esc",           desc: zh ? "关闭面板" : "Close this panel" },
+    { group: zh ? "编辑器" : "Editor",   keys: zh ? "拖动 ⋮⋮" : "Drag ⋮⋮", desc: zh ? "调整工作 / 教育 / 项目等条目顺序" : "Reorder Work / Education / Projects entries" },
     { group: zh ? "选中文本框/图片" : "When a note is selected", keys: "拖动 / Drag", desc: zh ? "移动（自动吸附其它元素与页面中线，按 Shift 暂时不吸附）" : "Move with smart snapping (hold Shift to disable snap)" },
     { group: zh ? "选中文本框/图片" : "When a note is selected", keys: "Alt+拖动 / Alt+drag", desc: zh ? "在文本框正文上也能拖动" : "Drag from inside a text body" },
     { group: zh ? "选中文本框/图片" : "When a note is selected", keys: "↑ ↓ ← →",     desc: zh ? "微移 1px（按住 Shift 改为 10px）" : "Nudge 1px (Shift = 10px)" },

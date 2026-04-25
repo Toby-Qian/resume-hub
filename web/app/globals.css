@@ -255,6 +255,26 @@ body { background: #f3f4f6; color: #111827; font-family: var(--resume-font-sans)
   border-color: #f59e0b;
 }
 
+/* ---- Canvas zoom wrapper -----------------------------------------------
+ * The .paper element scales via CSS transform (so Notes' absolute
+ * coordinates remain in their original A4 space and behave consistently).
+ * The wrapper claims the post-scale footprint so surrounding layout
+ * adjusts correctly. */
+.paper-zoom-wrap {
+  position: relative;
+  display: block;
+  /* Height is auto-driven by the inner .paper after scaling — but because
+   * `transform` doesn't affect layout, we manually reserve via min-height
+   * computed from .paper's measured height + scale. Done in JS for now;
+   * for the static A4 a CSS aspect-ratio works as a fallback. */
+  min-height: calc(1123px * var(--zoom, 1));
+}
+
+@media print {
+  .paper-zoom-wrap { width: auto !important; min-height: 0 !important; }
+  .paper-zoom-wrap > .paper { transform: none !important; }
+}
+
 /* ---- Smart alignment guides shown during drag --------------------------- */
 .alignment-guide {
   position: absolute;

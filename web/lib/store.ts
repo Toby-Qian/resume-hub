@@ -47,6 +47,7 @@ interface State {
   update: <K extends keyof Resume>(key: K, value: Resume[K]) => void;
   addItem: (section: SectionKey) => void;
   removeItem: (section: SectionKey, id: string) => void;
+  reorderItem: (section: SectionKey, fromId: string, toId: string) => void;
   addNote: () => void;
   addImageNote: (src: string) => void;
   updateNote: (id: string, patch: Partial<ResumeNote>) => void;
@@ -117,6 +118,16 @@ export const useStore = create<State>()(
           mutate({ ...get().resume, [section]: [...(get().resume[section] as any[]), blankItem(section)] } as Resume),
         removeItem: (section, id) =>
           mutate({ ...get().resume, [section]: (get().resume[section] as any[]).filter((x) => x.id !== id) } as Resume),
+        reorderItem: (section, fromId, toId) => {
+          if (fromId === toId) return;
+          const list = (get().resume[section] as any[]).slice();
+          const fromIdx = list.findIndex((x) => x.id === fromId);
+          const toIdx = list.findIndex((x) => x.id === toId);
+          if (fromIdx < 0 || toIdx < 0) return;
+          const [item] = list.splice(fromIdx, 1);
+          list.splice(toIdx, 0, item);
+          mutate({ ...get().resume, [section]: list } as Resume);
+        },
 
         addNote: () => {
           const r = get().resume;

@@ -94,6 +94,10 @@ export const T = {
       pasteHint: "Ctrl+V 直接把剪贴板的图片粘到画布上 · 按 ? 查看全部快捷键",
       pastedImage: "已粘贴图片",
       helpHint: "查看快捷键 (?)",
+      zoomInHint: "放大 (Ctrl++)",
+      zoomOutHint: "缩小 (Ctrl+-)",
+      zoomResetHint: "重置缩放 (Ctrl+0)",
+      zoomHint: "Ctrl + 滚轮 缩放 / Ctrl+0 重置",
     },
   },
   en: {
@@ -189,6 +193,10 @@ export const T = {
       pasteHint: "Ctrl+V pastes a clipboard image straight onto the paper · press ? for all shortcuts",
       pastedImage: "Image pasted",
       helpHint: "Show shortcuts (?)",
+      zoomInHint: "Zoom in (Ctrl++)",
+      zoomOutHint: "Zoom out (Ctrl+-)",
+      zoomResetHint: "Reset zoom (Ctrl+0)",
+      zoomHint: "Ctrl + wheel to zoom · Ctrl+0 to reset",
     },
   },
 } as const;

@@ -6,7 +6,7 @@ import { Field } from "./Field";
 import { toast } from "@/lib/toast";
 
 export function Editor() {
-  const { resume, update, addItem, removeItem, lang } = useStore();
+  const { resume, update, addItem, removeItem, reorderItem, lang } = useStore();
   const L = t(lang);
 
   const patch = <K extends SectionKey>(section: K, id: string, field: string, value: any) => {
@@ -15,6 +15,81 @@ export function Editor() {
   };
   const patchBasics = (field: string, value: any) =>
     update("basics", { ...resume.basics, [field]: value });
+
+  /** Render a sortable card. Uses native HTML5 drag-and-drop; the small ⋮⋮
+   *  handle on the left is the only draggable region so accidental selection
+   *  inside an input never starts a drag. */
+  const SortableCard = ({
+    section, id, breakBefore, onToggleBreak, onRemove, children,
+  }: {
+    section: SectionKey;
+    id: string;
+    breakBefore?: boolean;
+    onToggleBreak?: (v: boolean) => void;
+    onRemove: () => void;
+    children: React.ReactNode;
+  }) => {
+    const onDragStart = (e: React.DragEvent) => {
+      e.dataTransfer.setData("text/x-resume-item", `${section}:${id}`);
+      e.dataTransfer.effectAllowed = "move";
+      (e.currentTarget as HTMLElement).classList.add("opacity-50");
+    };
+    const onDragEnd = (e: React.DragEvent) => {
+      (e.currentTarget as HTMLElement).classList.remove("opacity-50");
+    };
+    const onDragOver = (e: React.DragEvent) => {
+      const data = e.dataTransfer.types.includes("text/x-resume-item");
+      if (!data) return;
+      e.preventDefault();
+      e.dataTransfer.dropEffect = "move";
+      (e.currentTarget as HTMLElement).classList.add("ring-2", "ring-amber-400");
+    };
+    const onDragLeave = (e: React.DragEvent) => {
+      (e.currentTarget as HTMLElement).classList.remove("ring-2", "ring-amber-400");
+    };
+    const onDrop = (e: React.DragEvent) => {
+      e.preventDefault();
+      (e.currentTarget as HTMLElement).classList.remove("ring-2", "ring-amber-400");
+      const raw = e.dataTransfer.getData("text/x-resume-item");
+      if (!raw) return;
+      const [srcSection, srcId] = raw.split(":");
+      if (srcSection !== section) return;
+      reorderItem(section as SectionKey, srcId, id);
+    };
+    return (
+      <div
+        className="border border-gray-200 rounded p-3 mb-3 bg-gray-50 relative transition-shadow"
+        onDragOver={onDragOver}
+        onDragLeave={onDragLeave}
+        onDrop={onDrop}
+      >
+        <div className="flex justify-between items-center mb-1">
+          <div className="flex items-center gap-2">
+            <span
+              draggable
+              onDragStart={onDragStart}
+              onDragEnd={onDragEnd}
+              className="text-gray-400 hover:text-amber-600 cursor-grab active:cursor-grabbing select-none text-sm leading-none px-1"
+              title={(L.actions as any).reorderHint ?? "拖动以排序 / drag to reorder"}
+            >⋮⋮</span>
+            {onToggleBreak ? (
+              <label className="flex items-center gap-1 text-[0.7rem] text-gray-600 cursor-pointer select-none">
+                <input
+                  type="checkbox"
+                  className="accent-blue-600"
+                  checked={!!breakBefore}
+                  onChange={(e) => onToggleBreak(e.target.checked)}
+                />
+                ⤓ {L.form.breakBefore}
+              </label>
+            ) : null}
+          </div>
+          <RemoveBtn onClick={onRemove} />
+        </div>
+        {children}
+      </div>
+    );
+  };
 
   const RemoveBtn = ({ onClick }: { onClick: () => void }) => (
     <button onClick={onClick} className="text-xs text-red-500 hover:underline">✕ {L.actions.remove}</button>
@@ -30,38 +105,6 @@ export function Editor() {
   );
   const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const validateEmail = (v: string) => (!v || emailRe.test(v) ? null : L.form.invalidEmail);
-
-  const Card = ({
-    children,
-    onRemove,
-    breakBefore,
-    onToggleBreak,
-  }: {
-    children: React.ReactNode;
-    onRemove: () => void;
-    breakBefore?: boolean;
-    onToggleBreak?: (v: boolean) => void;
-  }) => (
-    <div className="border border-gray-200 rounded p-3 mb-3 bg-gray-50">
-      <div className="flex justify-between items-center mb-1">
-        {onToggleBreak ? (
-          <label className="flex items-center gap-1 text-[0.7rem] text-gray-600 cursor-pointer select-none">
-            <input
-              type="checkbox"
-              className="accent-blue-600"
-              checked={!!breakBefore}
-              onChange={(e) => onToggleBreak(e.target.checked)}
-            />
-            ⤓ {L.form.breakBefore}
-          </label>
-        ) : (
-          <span />
-        )}
-        <RemoveBtn onClick={onRemove} />
-      </div>
-      {children}
-    </div>
-  );
 
   return (
     <div className="space-y-1">
@@ -194,7 +237,8 @@ export function Editor() {
 
       <SectionTitle onAdd={() => addItem("work")}>{L.sections.work}</SectionTitle>
       {resume.work.map((w) => (
-        <Card key={w.id} onRemove={() => removeItem("work", w.id)}
+        <SortableCard key={w.id} section="work" id={w.id}
+          onRemove={() => removeItem("work", w.id)}
           breakBefore={(w as any).breakBefore}
           onToggleBreak={(v) => patch("work", w.id, "breakBefore", v)}>
           <div className="grid grid-cols-2 gap-x-3">
@@ -206,12 +250,13 @@ export function Editor() {
           <Field label={L.fields.location} value={w.location || ""} onChange={(v) => patch("work", w.id, "location", v)} />
           <Field textarea rows={4} label={L.fields.highlights} value={(w.highlights || []).join("\n")}
             onChange={(v) => patch("work", w.id, "highlights", v.split("\n"))} />
-        </Card>
+        </SortableCard>
       ))}
 
       <SectionTitle onAdd={() => addItem("education")}>{L.sections.education}</SectionTitle>
       {resume.education.map((e) => (
-        <Card key={e.id} onRemove={() => removeItem("education", e.id)}
+        <SortableCard key={e.id} section="education" id={e.id}
+          onRemove={() => removeItem("education", e.id)}
           breakBefore={(e as any).breakBefore}
           onToggleBreak={(v) => patch("education", e.id, "breakBefore", v)}>
           <div className="grid grid-cols-2 gap-x-3">
@@ -224,12 +269,13 @@ export function Editor() {
           </div>
           <Field label={L.fields.courses} value={(e.courses || []).join(", ")}
             onChange={(v) => patch("education", e.id, "courses", v.split(",").map((x) => x.trim()).filter(Boolean))} />
-        </Card>
+        </SortableCard>
       ))}
 
       <SectionTitle onAdd={() => addItem("projects")}>{L.sections.projects}</SectionTitle>
       {resume.projects.map((p) => (
-        <Card key={p.id} onRemove={() => removeItem("projects", p.id)}
+        <SortableCard key={p.id} section="projects" id={p.id}
+          onRemove={() => removeItem("projects", p.id)}
           breakBefore={(p as any).breakBefore}
           onToggleBreak={(v) => patch("projects", p.id, "breakBefore", v)}>
           <div className="grid grid-cols-2 gap-x-3">
@@ -243,12 +289,13 @@ export function Editor() {
             onChange={(v) => patch("projects", p.id, "highlights", v.split("\n"))} />
           <Field label={L.fields.keywords} value={(p.keywords || []).join(", ")}
             onChange={(v) => patch("projects", p.id, "keywords", v.split(",").map((x) => x.trim()).filter(Boolean))} />
-        </Card>
+        </SortableCard>
       ))}
 
       <SectionTitle onAdd={() => addItem("skills")}>{L.sections.skills}</SectionTitle>
       {resume.skills.map((s) => (
-        <Card key={s.id} onRemove={() => removeItem("skills", s.id)}
+        <SortableCard key={s.id} section="skills" id={s.id}
+          onRemove={() => removeItem("skills", s.id)}
           breakBefore={(s as any).breakBefore}
           onToggleBreak={(v) => patch("skills", s.id, "breakBefore", v)}>
           <div className="grid grid-cols-2 gap-x-3">
@@ -257,12 +304,13 @@ export function Editor() {
           </div>
           <Field label={L.fields.keywords} value={s.keywords.join(", ")}
             onChange={(v) => patch("skills", s.id, "keywords", v.split(",").map((x) => x.trim()).filter(Boolean))} />
-        </Card>
+        </SortableCard>
       ))}
 
       <SectionTitle onAdd={() => addItem("awards")}>{L.sections.awards}</SectionTitle>
       {resume.awards.map((a) => (
-        <Card key={a.id} onRemove={() => removeItem("awards", a.id)}
+        <SortableCard key={a.id} section="awards" id={a.id}
+          onRemove={() => removeItem("awards", a.id)}
           breakBefore={(a as any).breakBefore}
           onToggleBreak={(v) => patch("awards", a.id, "breakBefore", v)}>
           <div className="grid grid-cols-2 gap-x-3">
@@ -271,19 +319,20 @@ export function Editor() {
             <Field label={L.fields.awarder} value={a.awarder} onChange={(v) => patch("awards", a.id, "awarder", v)} />
           </div>
           <Field label={L.fields.summary} value={a.summary || ""} onChange={(v) => patch("awards", a.id, "summary", v)} />
-        </Card>
+        </SortableCard>
       ))}
 
       <SectionTitle onAdd={() => addItem("languages")}>{L.sections.languages}</SectionTitle>
       {resume.languages.map((l) => (
-        <Card key={l.id} onRemove={() => removeItem("languages", l.id)}
+        <SortableCard key={l.id} section="languages" id={l.id}
+          onRemove={() => removeItem("languages", l.id)}
           breakBefore={(l as any).breakBefore}
           onToggleBreak={(v) => patch("languages", l.id, "breakBefore", v)}>
           <div className="grid grid-cols-2 gap-x-3">
             <Field label={L.fields.language} value={l.language} onChange={(v) => patch("languages", l.id, "language", v)} />
             <Field label={L.fields.fluency} value={l.fluency} onChange={(v) => patch("languages", l.id, "fluency", v)} />
           </div>
-        </Card>
+        </SortableCard>
       ))}
     </div>
   );
