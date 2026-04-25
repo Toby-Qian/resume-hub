@@ -18,6 +18,151 @@ const SECTION_ICONS: Record<string, string> = {
   languages: "🌐",
 };
 
+/* -------------------------------------------------------------------------
+ * IMPORTANT: these sub-components live at module scope, NOT inside Editor().
+ * If they were defined inside Editor, every render would create new function
+ * references → React would treat each <SortableCard /> element as a new
+ * component type and unmount + remount the entire subtree on every keystroke.
+ * That symptom: typing in any field made the editor jump back to the top
+ * (focus + scroll lost). Keeping them outside fixes that.                  */
+
+const RemoveBtn = ({ onClick, label }: { onClick: () => void; label: string }) => (
+  <button onClick={onClick}
+    className="text-[0.7rem] text-gray-400 hover:text-rose-600 transition-colors opacity-0 group-hover:opacity-100"
+    title={label}>
+    ✕
+  </button>
+);
+
+const AddBtn = ({ onClick, label }: { onClick: () => void; label: string }) => (
+  <button onClick={(e) => { e.stopPropagation(); onClick(); }}
+    className="text-xs px-2.5 py-1 rounded-lg bg-blue-600 text-white hover:bg-blue-700 shadow-sm transition-all hover:-translate-y-px flex items-center gap-1">
+    <span className="text-[0.9em]">+</span> {label}
+  </button>
+);
+
+interface SortableCardProps {
+  section: SectionKey;
+  id: string;
+  breakBefore?: boolean;
+  onToggleBreak?: (v: boolean) => void;
+  onRemove: () => void;
+  onReorder: (section: SectionKey, fromId: string, toId: string) => void;
+  reorderHint: string;
+  breakLabel: string;
+  removeLabel: string;
+  children: React.ReactNode;
+}
+
+const SortableCard = ({
+  section, id, breakBefore, onToggleBreak, onRemove, onReorder,
+  reorderHint, breakLabel, removeLabel, children,
+}: SortableCardProps) => {
+  const onDragStart = (e: React.DragEvent) => {
+    e.dataTransfer.setData("text/x-resume-item", `${section}:${id}`);
+    e.dataTransfer.effectAllowed = "move";
+    (e.currentTarget as HTMLElement).classList.add("opacity-50");
+  };
+  const onDragEnd = (e: React.DragEvent) => {
+    (e.currentTarget as HTMLElement).classList.remove("opacity-50");
+  };
+  const onDragOver = (e: React.DragEvent) => {
+    if (!e.dataTransfer.types.includes("text/x-resume-item")) return;
+    e.preventDefault();
+    e.dataTransfer.dropEffect = "move";
+    (e.currentTarget as HTMLElement).classList.add("ring-2", "ring-amber-400");
+  };
+  const onDragLeave = (e: React.DragEvent) => {
+    (e.currentTarget as HTMLElement).classList.remove("ring-2", "ring-amber-400");
+  };
+  const onDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    (e.currentTarget as HTMLElement).classList.remove("ring-2", "ring-amber-400");
+    const raw = e.dataTransfer.getData("text/x-resume-item");
+    if (!raw) return;
+    const [srcSection, srcId] = raw.split(":");
+    if (srcSection !== section) return;
+    onReorder(section, srcId, id);
+  };
+  return (
+    <div
+      className="group relative border border-gray-200/80 rounded-xl p-3 mb-2.5 bg-gradient-to-br from-gray-50/70 to-white hover:border-gray-300 hover:shadow-sm transition-all"
+      onDragOver={onDragOver}
+      onDragLeave={onDragLeave}
+      onDrop={onDrop}
+    >
+      <div className="flex justify-between items-center mb-1.5">
+        <div className="flex items-center gap-2">
+          <span
+            draggable
+            onDragStart={onDragStart}
+            onDragEnd={onDragEnd}
+            className="text-gray-300 group-hover:text-amber-500 hover:!text-amber-600 cursor-grab active:cursor-grabbing select-none text-sm leading-none px-1 transition-colors"
+            title={reorderHint}
+          >⋮⋮</span>
+          {onToggleBreak ? (
+            <label className="flex items-center gap-1 text-[0.7rem] text-gray-500 hover:text-gray-700 cursor-pointer select-none transition-colors">
+              <input
+                type="checkbox"
+                className="accent-blue-600 w-3 h-3"
+                checked={!!breakBefore}
+                onChange={(e) => onToggleBreak(e.target.checked)}
+              />
+              ⤓ {breakLabel}
+            </label>
+          ) : null}
+        </div>
+        <RemoveBtn onClick={onRemove} label={removeLabel} />
+      </div>
+      {children}
+    </div>
+  );
+};
+
+interface SectionTitleProps {
+  children: React.ReactNode;
+  onAdd?: () => void;
+  sectionKey?: string;
+  count?: number;
+  open: boolean;
+  onToggle?: () => void;
+  addLabel: string;
+}
+
+const SectionTitle = ({ children, onAdd, sectionKey, count, open, onToggle, addLabel }: SectionTitleProps) => {
+  const collapsible = !!sectionKey;
+  const icon = sectionKey ? SECTION_ICONS[sectionKey] : null;
+  return (
+    <button
+      type="button"
+      onClick={() => collapsible && onToggle?.()}
+      className={`w-full flex justify-between items-center mt-4 mb-2 px-2 py-1.5 rounded-lg transition-colors ${
+        collapsible ? "hover:bg-gray-50 cursor-pointer" : "cursor-default"
+      }`}
+    >
+      <div className="flex items-center gap-2">
+        {icon && <span className="text-base leading-none">{icon}</span>}
+        <h3 className="text-[0.78rem] font-semibold text-gray-700 uppercase tracking-wider">
+          {children}
+        </h3>
+        {typeof count === "number" && count > 0 && (
+          <span className="text-[0.65rem] font-mono px-1.5 py-px rounded-full bg-gray-100 text-gray-500 min-w-[1.25rem] text-center">
+            {count}
+          </span>
+        )}
+      </div>
+      <div className="flex items-center gap-2">
+        {onAdd && open && <AddBtn onClick={onAdd} label={addLabel} />}
+        {collapsible && (
+          <span className={`text-gray-400 text-xs transition-transform duration-200 ${open ? "rotate-180" : ""}`}>
+            ▾
+          </span>
+        )}
+      </div>
+    </button>
+  );
+};
+
 export function Editor() {
   const { resume, update, addItem, removeItem, reorderItem, lang } = useStore();
   const L = t(lang);
@@ -33,140 +178,17 @@ export function Editor() {
   const patchBasics = (field: string, value: any) =>
     update("basics", { ...resume.basics, [field]: value });
 
-  /** Render a sortable card. Uses native HTML5 drag-and-drop; the small ⋮⋮
-   *  handle on the left is the only draggable region so accidental selection
-   *  inside an input never starts a drag. */
-  const SortableCard = ({
-    section, id, breakBefore, onToggleBreak, onRemove, children,
-  }: {
-    section: SectionKey;
-    id: string;
-    breakBefore?: boolean;
-    onToggleBreak?: (v: boolean) => void;
-    onRemove: () => void;
-    children: React.ReactNode;
-  }) => {
-    const onDragStart = (e: React.DragEvent) => {
-      e.dataTransfer.setData("text/x-resume-item", `${section}:${id}`);
-      e.dataTransfer.effectAllowed = "move";
-      (e.currentTarget as HTMLElement).classList.add("opacity-50");
-    };
-    const onDragEnd = (e: React.DragEvent) => {
-      (e.currentTarget as HTMLElement).classList.remove("opacity-50");
-    };
-    const onDragOver = (e: React.DragEvent) => {
-      const data = e.dataTransfer.types.includes("text/x-resume-item");
-      if (!data) return;
-      e.preventDefault();
-      e.dataTransfer.dropEffect = "move";
-      (e.currentTarget as HTMLElement).classList.add("ring-2", "ring-amber-400");
-    };
-    const onDragLeave = (e: React.DragEvent) => {
-      (e.currentTarget as HTMLElement).classList.remove("ring-2", "ring-amber-400");
-    };
-    const onDrop = (e: React.DragEvent) => {
-      e.preventDefault();
-      (e.currentTarget as HTMLElement).classList.remove("ring-2", "ring-amber-400");
-      const raw = e.dataTransfer.getData("text/x-resume-item");
-      if (!raw) return;
-      const [srcSection, srcId] = raw.split(":");
-      if (srcSection !== section) return;
-      reorderItem(section as SectionKey, srcId, id);
-    };
-    return (
-      <div
-        className="group relative border border-gray-200/80 rounded-xl p-3 mb-2.5 bg-gradient-to-br from-gray-50/70 to-white hover:border-gray-300 hover:shadow-sm transition-all"
-        onDragOver={onDragOver}
-        onDragLeave={onDragLeave}
-        onDrop={onDrop}
-      >
-        <div className="flex justify-between items-center mb-1.5">
-          <div className="flex items-center gap-2">
-            <span
-              draggable
-              onDragStart={onDragStart}
-              onDragEnd={onDragEnd}
-              className="text-gray-300 group-hover:text-amber-500 hover:!text-amber-600 cursor-grab active:cursor-grabbing select-none text-sm leading-none px-1 transition-colors"
-              title={(L.actions as any).reorderHint ?? "拖动以排序 / drag to reorder"}
-            >⋮⋮</span>
-            {onToggleBreak ? (
-              <label className="flex items-center gap-1 text-[0.7rem] text-gray-500 hover:text-gray-700 cursor-pointer select-none transition-colors">
-                <input
-                  type="checkbox"
-                  className="accent-blue-600 w-3 h-3"
-                  checked={!!breakBefore}
-                  onChange={(e) => onToggleBreak(e.target.checked)}
-                />
-                ⤓ {L.form.breakBefore}
-              </label>
-            ) : null}
-          </div>
-          <RemoveBtn onClick={onRemove} />
-        </div>
-        {children}
-      </div>
-    );
-  };
-
-  const RemoveBtn = ({ onClick }: { onClick: () => void }) => (
-    <button onClick={onClick}
-      className="text-[0.7rem] text-gray-400 hover:text-rose-600 transition-colors opacity-0 group-hover:opacity-100"
-      title={L.actions.remove}>
-      ✕
-    </button>
-  );
-  const AddBtn = ({ onClick }: { onClick: () => void }) => (
-    <button onClick={(e) => { e.stopPropagation(); onClick(); }}
-      className="text-xs px-2.5 py-1 rounded-lg bg-blue-600 text-white hover:bg-blue-700 shadow-sm transition-all hover:-translate-y-px flex items-center gap-1">
-      <span className="text-[0.9em]">+</span> {L.actions.add}
-    </button>
-  );
-  /** Collapsible section header: icon + title + count + add-button + chevron. */
-  const SectionTitle = ({ children, onAdd, sectionKey, count }: {
-    children: React.ReactNode;
-    onAdd?: () => void;
-    sectionKey?: string;
-    count?: number;
-  }) => {
-    const collapsible = !!sectionKey;
-    const open = !collapsible || isOpen(sectionKey!);
-    const icon = sectionKey ? SECTION_ICONS[sectionKey] : null;
-    return (
-      <button
-        type="button"
-        onClick={() => collapsible && toggle(sectionKey!)}
-        className={`w-full flex justify-between items-center mt-4 mb-2 px-2 py-1.5 rounded-lg transition-colors ${
-          collapsible ? "hover:bg-gray-50 cursor-pointer" : "cursor-default"
-        }`}
-      >
-        <div className="flex items-center gap-2">
-          {icon && <span className="text-base leading-none">{icon}</span>}
-          <h3 className="text-[0.78rem] font-semibold text-gray-700 uppercase tracking-wider">
-            {children}
-          </h3>
-          {typeof count === "number" && count > 0 && (
-            <span className="text-[0.65rem] font-mono px-1.5 py-px rounded-full bg-gray-100 text-gray-500 min-w-[1.25rem] text-center">
-              {count}
-            </span>
-          )}
-        </div>
-        <div className="flex items-center gap-2">
-          {onAdd && open && <AddBtn onClick={onAdd} />}
-          {collapsible && (
-            <span className={`text-gray-400 text-xs transition-transform duration-200 ${open ? "rotate-180" : ""}`}>
-              ▾
-            </span>
-          )}
-        </div>
-      </button>
-    );
-  };
+  // Stable strings to pass into module-scope sub-components.
+  const reorderHint = (L.actions as any).reorderHint ?? "拖动以排序 / drag to reorder";
+  const breakLabel  = L.form.breakBefore;
+  const removeLabel = L.actions.remove;
+  const addLabel    = L.actions.add;
   const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const validateEmail = (v: string) => (!v || emailRe.test(v) ? null : L.form.invalidEmail);
 
   return (
     <div className="space-y-1">
-      <SectionTitle sectionKey="basics">{L.sections.basics}</SectionTitle>
+      <SectionTitle sectionKey="basics" open={isOpen("basics")} onToggle={() => toggle("basics")} addLabel={addLabel}>{L.sections.basics}</SectionTitle>
       {isOpen("basics") && <>
       <div className="grid grid-cols-2 gap-x-3">
         <Field label={L.fields.name} value={resume.basics.name} onChange={(v) => patchBasics("name", v)}
@@ -298,12 +320,13 @@ export function Editor() {
 
       </>}
 
-      <SectionTitle sectionKey="work" count={resume.work.length} onAdd={() => addItem("work")}>{L.sections.work}</SectionTitle>
+      <SectionTitle sectionKey="work" count={resume.work.length} open={isOpen("work")} onToggle={() => toggle("work")} addLabel={addLabel} onAdd={() => addItem("work")}>{L.sections.work}</SectionTitle>
       {isOpen("work") && resume.work.map((w) => (
         <SortableCard key={w.id} section="work" id={w.id}
           onRemove={() => removeItem("work", w.id)}
           breakBefore={(w as any).breakBefore}
-          onToggleBreak={(v) => patch("work", w.id, "breakBefore", v)}>
+          onToggleBreak={(v) => patch("work", w.id, "breakBefore", v)}
+          onReorder={reorderItem} reorderHint={reorderHint} breakLabel={breakLabel} removeLabel={removeLabel}>
           <div className="grid grid-cols-2 gap-x-3">
             <Field label={L.fields.company} value={w.company} onChange={(v) => patch("work", w.id, "company", v)} />
             <Field label={L.fields.position} value={w.position} onChange={(v) => patch("work", w.id, "position", v)} />
@@ -316,12 +339,13 @@ export function Editor() {
         </SortableCard>
       ))}
 
-      <SectionTitle sectionKey="education" count={resume.education.length} onAdd={() => addItem("education")}>{L.sections.education}</SectionTitle>
+      <SectionTitle sectionKey="education" count={resume.education.length} open={isOpen("education")} onToggle={() => toggle("education")} addLabel={addLabel} onAdd={() => addItem("education")}>{L.sections.education}</SectionTitle>
       {isOpen("education") && resume.education.map((e) => (
         <SortableCard key={e.id} section="education" id={e.id}
           onRemove={() => removeItem("education", e.id)}
           breakBefore={(e as any).breakBefore}
-          onToggleBreak={(v) => patch("education", e.id, "breakBefore", v)}>
+          onToggleBreak={(v) => patch("education", e.id, "breakBefore", v)}
+          onReorder={reorderItem} reorderHint={reorderHint} breakLabel={breakLabel} removeLabel={removeLabel}>
           <div className="grid grid-cols-2 gap-x-3">
             <Field label={L.fields.institution} value={e.institution} onChange={(v) => patch("education", e.id, "institution", v)} />
             <Field label={L.fields.studyType} value={e.studyType} onChange={(v) => patch("education", e.id, "studyType", v)} />
@@ -335,12 +359,13 @@ export function Editor() {
         </SortableCard>
       ))}
 
-      <SectionTitle sectionKey="projects" count={resume.projects.length} onAdd={() => addItem("projects")}>{L.sections.projects}</SectionTitle>
+      <SectionTitle sectionKey="projects" count={resume.projects.length} open={isOpen("projects")} onToggle={() => toggle("projects")} addLabel={addLabel} onAdd={() => addItem("projects")}>{L.sections.projects}</SectionTitle>
       {isOpen("projects") && resume.projects.map((p) => (
         <SortableCard key={p.id} section="projects" id={p.id}
           onRemove={() => removeItem("projects", p.id)}
           breakBefore={(p as any).breakBefore}
-          onToggleBreak={(v) => patch("projects", p.id, "breakBefore", v)}>
+          onToggleBreak={(v) => patch("projects", p.id, "breakBefore", v)}
+          onReorder={reorderItem} reorderHint={reorderHint} breakLabel={breakLabel} removeLabel={removeLabel}>
           <div className="grid grid-cols-2 gap-x-3">
             <Field label={L.fields.projectName} value={p.name} onChange={(v) => patch("projects", p.id, "name", v)} />
             <Field label={L.fields.url} value={p.url || ""} onChange={(v) => patch("projects", p.id, "url", v)} />
@@ -355,12 +380,13 @@ export function Editor() {
         </SortableCard>
       ))}
 
-      <SectionTitle sectionKey="skills" count={resume.skills.length} onAdd={() => addItem("skills")}>{L.sections.skills}</SectionTitle>
+      <SectionTitle sectionKey="skills" count={resume.skills.length} open={isOpen("skills")} onToggle={() => toggle("skills")} addLabel={addLabel} onAdd={() => addItem("skills")}>{L.sections.skills}</SectionTitle>
       {isOpen("skills") && resume.skills.map((s) => (
         <SortableCard key={s.id} section="skills" id={s.id}
           onRemove={() => removeItem("skills", s.id)}
           breakBefore={(s as any).breakBefore}
-          onToggleBreak={(v) => patch("skills", s.id, "breakBefore", v)}>
+          onToggleBreak={(v) => patch("skills", s.id, "breakBefore", v)}
+          onReorder={reorderItem} reorderHint={reorderHint} breakLabel={breakLabel} removeLabel={removeLabel}>
           <div className="grid grid-cols-2 gap-x-3">
             <Field label={L.fields.skillName} value={s.name} onChange={(v) => patch("skills", s.id, "name", v)} />
             <Field label={L.fields.level} value={s.level} onChange={(v) => patch("skills", s.id, "level", v)} />
@@ -370,12 +396,13 @@ export function Editor() {
         </SortableCard>
       ))}
 
-      <SectionTitle sectionKey="awards" count={resume.awards.length} onAdd={() => addItem("awards")}>{L.sections.awards}</SectionTitle>
+      <SectionTitle sectionKey="awards" count={resume.awards.length} open={isOpen("awards")} onToggle={() => toggle("awards")} addLabel={addLabel} onAdd={() => addItem("awards")}>{L.sections.awards}</SectionTitle>
       {isOpen("awards") && resume.awards.map((a) => (
         <SortableCard key={a.id} section="awards" id={a.id}
           onRemove={() => removeItem("awards", a.id)}
           breakBefore={(a as any).breakBefore}
-          onToggleBreak={(v) => patch("awards", a.id, "breakBefore", v)}>
+          onToggleBreak={(v) => patch("awards", a.id, "breakBefore", v)}
+          onReorder={reorderItem} reorderHint={reorderHint} breakLabel={breakLabel} removeLabel={removeLabel}>
           <div className="grid grid-cols-2 gap-x-3">
             <Field label={L.fields.awardTitle} value={a.title} onChange={(v) => patch("awards", a.id, "title", v)} />
             <DateField label={L.fields.date} value={a.date} onChange={(v) => patch("awards", a.id, "date", v)} />
@@ -385,12 +412,13 @@ export function Editor() {
         </SortableCard>
       ))}
 
-      <SectionTitle sectionKey="languages" count={resume.languages.length} onAdd={() => addItem("languages")}>{L.sections.languages}</SectionTitle>
+      <SectionTitle sectionKey="languages" count={resume.languages.length} open={isOpen("languages")} onToggle={() => toggle("languages")} addLabel={addLabel} onAdd={() => addItem("languages")}>{L.sections.languages}</SectionTitle>
       {isOpen("languages") && resume.languages.map((l) => (
         <SortableCard key={l.id} section="languages" id={l.id}
           onRemove={() => removeItem("languages", l.id)}
           breakBefore={(l as any).breakBefore}
-          onToggleBreak={(v) => patch("languages", l.id, "breakBefore", v)}>
+          onToggleBreak={(v) => patch("languages", l.id, "breakBefore", v)}
+          onReorder={reorderItem} reorderHint={reorderHint} breakLabel={breakLabel} removeLabel={removeLabel}>
           <div className="grid grid-cols-2 gap-x-3">
             <Field label={L.fields.language} value={l.language} onChange={(v) => patch("languages", l.id, "language", v)} />
             <Field label={L.fields.fluency} value={l.fluency} onChange={(v) => patch("languages", l.id, "fluency", v)} />
