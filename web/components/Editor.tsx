@@ -4,7 +4,9 @@ import { useStore } from "@/lib/store";
 import { SectionKey, Resume } from "@/lib/schema";
 import { t } from "@/lib/i18n";
 import { Field } from "./Field";
+import { DateField } from "./DateField";
 import { toast } from "@/lib/toast";
+import { compressToDataURL } from "@/lib/imageCompress";
 
 const SECTION_ICONS: Record<string, string> = {
   basics: "👤",
@@ -203,16 +205,18 @@ export function Editor() {
           type="file"
           accept="image/*"
           className="text-[0.7rem]"
-          onChange={(e) => {
+          onChange={async (e) => {
             const f = e.target.files?.[0];
             if (!f) return;
-            if (f.size > 800_000) {
+            try {
+              const dataUrl = await compressToDataURL(f, { maxBytes: 700 * 1024, maxDim: 800 });
+              patchBasics("avatar", dataUrl);
+              if (f.size > 700 * 1024) {
+                toast.success((L.toast as any).imageCompressed ?? "已自动压缩图片");
+              }
+            } catch {
               toast.error(L.form.avatarTooLarge);
-              return;
             }
-            const r = new FileReader();
-            r.onload = () => patchBasics("avatar", String(r.result));
-            r.readAsDataURL(f);
             e.target.value = "";
           }}
         />
@@ -303,8 +307,8 @@ export function Editor() {
           <div className="grid grid-cols-2 gap-x-3">
             <Field label={L.fields.company} value={w.company} onChange={(v) => patch("work", w.id, "company", v)} />
             <Field label={L.fields.position} value={w.position} onChange={(v) => patch("work", w.id, "position", v)} />
-            <Field label={L.fields.startDate} value={w.startDate} onChange={(v) => patch("work", w.id, "startDate", v)} />
-            <Field label={L.fields.endDate} value={w.endDate} onChange={(v) => patch("work", w.id, "endDate", v)} />
+            <DateField label={L.fields.startDate} value={w.startDate} onChange={(v) => patch("work", w.id, "startDate", v)} />
+            <DateField label={L.fields.endDate} value={w.endDate} allowPresent onChange={(v) => patch("work", w.id, "endDate", v)} />
           </div>
           <Field label={L.fields.location} value={w.location || ""} onChange={(v) => patch("work", w.id, "location", v)} />
           <Field textarea rows={4} label={L.fields.highlights} value={(w.highlights || []).join("\n")}
@@ -323,8 +327,8 @@ export function Editor() {
             <Field label={L.fields.studyType} value={e.studyType} onChange={(v) => patch("education", e.id, "studyType", v)} />
             <Field label={L.fields.area} value={e.area} onChange={(v) => patch("education", e.id, "area", v)} />
             <Field label={L.fields.score} value={e.score || ""} onChange={(v) => patch("education", e.id, "score", v)} />
-            <Field label={L.fields.startDate} value={e.startDate} onChange={(v) => patch("education", e.id, "startDate", v)} />
-            <Field label={L.fields.endDate} value={e.endDate} onChange={(v) => patch("education", e.id, "endDate", v)} />
+            <DateField label={L.fields.startDate} value={e.startDate} onChange={(v) => patch("education", e.id, "startDate", v)} />
+            <DateField label={L.fields.endDate} value={e.endDate} allowPresent onChange={(v) => patch("education", e.id, "endDate", v)} />
           </div>
           <Field label={L.fields.courses} value={(e.courses || []).join(", ")}
             onChange={(v) => patch("education", e.id, "courses", v.split(",").map((x) => x.trim()).filter(Boolean))} />
@@ -340,8 +344,8 @@ export function Editor() {
           <div className="grid grid-cols-2 gap-x-3">
             <Field label={L.fields.projectName} value={p.name} onChange={(v) => patch("projects", p.id, "name", v)} />
             <Field label={L.fields.url} value={p.url || ""} onChange={(v) => patch("projects", p.id, "url", v)} />
-            <Field label={L.fields.startDate} value={p.startDate || ""} onChange={(v) => patch("projects", p.id, "startDate", v)} />
-            <Field label={L.fields.endDate} value={p.endDate || ""} onChange={(v) => patch("projects", p.id, "endDate", v)} />
+            <DateField label={L.fields.startDate} value={p.startDate || ""} onChange={(v) => patch("projects", p.id, "startDate", v)} />
+            <DateField label={L.fields.endDate} value={p.endDate || ""} allowPresent onChange={(v) => patch("projects", p.id, "endDate", v)} />
           </div>
           <Field label={L.fields.description} value={p.description} onChange={(v) => patch("projects", p.id, "description", v)} />
           <Field textarea rows={3} label={L.fields.highlights} value={(p.highlights || []).join("\n")}
@@ -374,7 +378,7 @@ export function Editor() {
           onToggleBreak={(v) => patch("awards", a.id, "breakBefore", v)}>
           <div className="grid grid-cols-2 gap-x-3">
             <Field label={L.fields.awardTitle} value={a.title} onChange={(v) => patch("awards", a.id, "title", v)} />
-            <Field label={L.fields.date} value={a.date} onChange={(v) => patch("awards", a.id, "date", v)} />
+            <DateField label={L.fields.date} value={a.date} onChange={(v) => patch("awards", a.id, "date", v)} />
             <Field label={L.fields.awarder} value={a.awarder} onChange={(v) => patch("awards", a.id, "awarder", v)} />
           </div>
           <Field label={L.fields.summary} value={a.summary || ""} onChange={(v) => patch("awards", a.id, "summary", v)} />

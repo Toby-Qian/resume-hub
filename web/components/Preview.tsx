@@ -5,6 +5,7 @@ import { templates } from "@/templates";
 import { t } from "@/lib/i18n";
 import { NotesLayer } from "./NotesLayer";
 import { toast } from "@/lib/toast";
+import { compressToDataURL } from "@/lib/imageCompress";
 
 export function Preview() {
   const { resume, template, theme, lang, addNote, addImageNote, pageSetup, hiddenSections } = useStore();
@@ -77,10 +78,16 @@ export function Preview() {
   }, [zoom]);
 
   const onPickImage = async (f: File) => {
-    if (f.size > 800 * 1024) { toast.error(L.form.avatarTooLarge); return; }
-    const reader = new FileReader();
-    reader.onload = () => addImageNote(reader.result as string);
-    reader.readAsDataURL(f);
+    try {
+      const dataUrl = await compressToDataURL(f);
+      addImageNote(dataUrl);
+      // Quietly let the user know if we compressed (helps debug "image looks soft").
+      if (f.size > 700 * 1024) {
+        toast.success((L.toast as any).imageCompressed ?? `已自动压缩图片 (${(f.size / 1024 / 1024).toFixed(1)} MB → 已优化)`);
+      }
+    } catch {
+      toast.error(L.form.avatarTooLarge);
+    }
   };
 
   // ---- Clipboard image paste anywhere on the paper ----------------------
@@ -96,17 +103,16 @@ export function Preview() {
         if (it.kind === "file" && it.type.startsWith("image/")) {
           const file = it.getAsFile();
           if (!file) continue;
-          if (file.size > 800 * 1024) {
-            toast.error(L.form.avatarTooLarge);
-            return;
-          }
-          const reader = new FileReader();
-          reader.onload = () => {
-            addImageNote(reader.result as string);
-            toast.success((L.preview as any).pastedImage ?? "已粘贴图片");
-          };
-          reader.readAsDataURL(file);
           e.preventDefault();
+          (async () => {
+            try {
+              const dataUrl = await compressToDataURL(file);
+              addImageNote(dataUrl);
+              toast.success((L.preview as any).pastedImage ?? "已粘贴图片");
+            } catch {
+              toast.error(L.form.avatarTooLarge);
+            }
+          })();
           return;
         }
       }

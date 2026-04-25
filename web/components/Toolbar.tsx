@@ -14,12 +14,16 @@ export function Toolbar() {
   // Ctrl/Cmd+Z undo, Ctrl/Cmd+Shift+Z or Ctrl+Y redo — but only when the
   // event is NOT originating from a contentEditable / input (so typing Ctrl+Z
   // inside a field still works as native browser undo there).
+  // Ctrl/Cmd+S: ALWAYS export to PDF (preventDefault swallows the browser's
+  // "save page as" dialog even while a field is focused — that's the expected
+  // behavior for a resume editor).
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (!(e.ctrlKey || e.metaKey)) return;
+      const k = e.key.toLowerCase();
+      if (k === "s") { e.preventDefault(); window.print(); return; }
       const tgt = e.target as HTMLElement | null;
       if (tgt && (tgt.isContentEditable || tgt.tagName === "INPUT" || tgt.tagName === "TEXTAREA")) return;
-      const k = e.key.toLowerCase();
       if (k === "z" && !e.shiftKey) { e.preventDefault(); useStore.getState().undo(); }
       else if ((k === "z" && e.shiftKey) || k === "y") { e.preventDefault(); useStore.getState().redo(); }
     };

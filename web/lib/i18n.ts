@@ -77,6 +77,16 @@ export const T = {
       visibility: "节区可见性",
       hideSection: "隐藏此节",
       showSection: "显示此节",
+      hoverHint: "悬停可预览",
+    },
+    empty: {
+      title: "从这里开始",
+      sub: "选一个起点 — 也可以直接在下方填写",
+      loadSample: "加载示例数据",
+      loadSampleSub: "用一份完整简历做参考",
+      importJson: "导入 JSON",
+      importJsonSub: "JSON Resume 规范 / 之前导出的文件",
+      galleryHint: "或在顶部「模板画廊」浏览 500+ GitHub 模板",
     },
     completeness: {
       label: "完成度",
@@ -103,6 +113,7 @@ export const T = {
       exported: "JSON 已下载",
       reset: "已清空",
       sampleLoaded: "已加载示例数据",
+      imageCompressed: "已自动压缩图片",
     },
     form: {
       required: "此项必填",
@@ -207,6 +218,16 @@ export const T = {
       visibility: "Section visibility",
       hideSection: "Hide section",
       showSection: "Show section",
+      hoverHint: "Hover to preview",
+    },
+    empty: {
+      title: "Start here",
+      sub: "Pick a jump-off — or just fill in the form below",
+      loadSample: "Load sample data",
+      loadSampleSub: "Use a complete resume as reference",
+      importJson: "Import JSON",
+      importJsonSub: "JSON Resume schema / a file you exported before",
+      galleryHint: "Or browse 500+ GitHub templates in the top \"Gallery\" tab",
     },
     completeness: {
       label: "Completeness",
@@ -233,6 +254,7 @@ export const T = {
       exported: "JSON downloaded",
       reset: "Resume cleared",
       sampleLoaded: "Sample data loaded",
+      imageCompressed: "Image auto-compressed",
     },
     form: {
       required: "Required",

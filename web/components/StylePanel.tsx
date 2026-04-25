@@ -2,7 +2,7 @@
 import { useStore, defaultTheme, ThemeTokens, normalizeMargin } from "@/lib/store";
 import type { SectionKey } from "@/lib/schema";
 import { t } from "@/lib/i18n";
-import { templateList } from "@/templates";
+import { TemplateGrid } from "./TemplatePreview";
 
 const SECTION_KEYS: SectionKey[] = ["work", "education", "projects", "skills", "awards", "languages"];
 const SECTION_ICONS: Record<SectionKey, string> = {
@@ -49,7 +49,7 @@ function isMatchingPreset(theme: ThemeTokens, p: Preset) {
 }
 
 export function StylePanel() {
-  const { template, setTemplate, theme, setTheme, lang, pageSetup, setPageSetup,
+  const { theme, setTheme, lang, pageSetup, setPageSetup,
           hiddenSections, toggleSectionVisibility } = useStore();
   const L = t(lang);
   const S = (L as any).style ?? {};
@@ -62,20 +62,11 @@ export function StylePanel() {
   return (
     <div className="space-y-5 text-sm">
       <div>
-        <div className="text-xs font-semibold uppercase text-gray-500 mb-2">Template</div>
-        <div className="grid grid-cols-2 gap-2">
-          {templateList.map((id) => (
-            <button
-              key={id}
-              onClick={() => setTemplate(id)}
-              className={`text-left px-3 py-2 rounded border text-xs ${
-                template === id ? "border-blue-600 bg-blue-50 text-blue-700" : "border-gray-300 hover:border-gray-400"
-              }`}
-            >
-              {L.templates[id]}
-            </button>
-          ))}
+        <div className="flex items-center justify-between mb-2">
+          <div className="text-xs font-semibold uppercase text-gray-500">Template</div>
+          <span className="text-[0.6rem] text-gray-400">{S.hoverHint ?? "悬停可预览"}</span>
         </div>
+        <TemplateGrid />
       </div>
 
       {/* Theme presets — accent + sans + serif in one click */}

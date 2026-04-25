@@ -7,6 +7,7 @@ import { Preview } from "@/components/Preview";
 import { StylePanel } from "@/components/StylePanel";
 import { Gallery } from "@/components/Gallery";
 import { Toolbar } from "@/components/Toolbar";
+import { EmptyState } from "@/components/EmptyState";
 
 type Tab = "editor" | "gallery";
 type Pane = "editor" | "preview" | "style";
@@ -82,7 +83,10 @@ export default function Home() {
               <div className="sticky top-0 z-10 bg-white/95 backdrop-blur-sm border-b border-gray-100 px-4 pt-4 pb-3 rounded-t-2xl">
                 <Toolbar />
               </div>
-              <div className="px-4 pb-4 pt-2"><Editor /></div>
+              <div className="px-4 pb-4 pt-3">
+                <EmptyState />
+                <Editor />
+              </div>
             </aside>
             <main
               className={`pane pane-preview flex justify-center lg:overflow-auto lg:h-[calc(100vh-100px)] ${
