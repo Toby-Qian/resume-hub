@@ -31,7 +31,9 @@ export const defaultTheme: ThemeTokens = {
 export type UILang = "zh" | "en";
 
 export type PageSize = "A4" | "Letter";
-export type PageMargin = "none" | "narrow" | "normal" | "wide";
+/** Page margin in millimetres (0–30). Was a string preset in earlier
+ *  versions ("none" | "narrow" | "normal" | "wide") — see normalizeMargin. */
+export type PageMargin = number;
 
 export interface PageSetup {
   size: PageSize;
@@ -43,10 +45,19 @@ export interface PageSetup {
 
 export const defaultPageSetup: PageSetup = {
   size: "A4",
-  margin: "none",
+  margin: 0,
   showPageNumbers: false,
   showFooter: false,
 };
+
+/** Map legacy string values for `pageSetup.margin` to mm.                    */
+export function normalizeMargin(m: any): number {
+  if (typeof m === "number") return Math.max(0, Math.min(30, m));
+  if (m === "wide") return 20;
+  if (m === "normal") return 15;
+  if (m === "narrow") return 10;
+  return 0; // "none" / unknown
+}
 
 const HISTORY_LIMIT = 80;
 

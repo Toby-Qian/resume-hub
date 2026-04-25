@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
-import { useStore } from "@/lib/store";
+import { useStore, normalizeMargin } from "@/lib/store";
 import { templates } from "@/templates";
 import { t } from "@/lib/i18n";
 import { NotesLayer } from "./NotesLayer";
@@ -20,13 +20,7 @@ export function Preview() {
   // ---- Page geometry (A4 / Letter) -------------------------------------
   const pageW = pageSetup.size === "Letter" ? 816 : 794;
   const pageH = pageSetup.size === "Letter" ? 1056 : 1123;
-  const marginMM = pageSetup.margin === "wide"
-    ? 20
-    : pageSetup.margin === "normal"
-    ? 15
-    : pageSetup.margin === "narrow"
-    ? 10
-    : 0;
+  const marginMM = normalizeMargin(pageSetup.margin);
 
   // ---- Inject @page rules via a managed <style> in <head> ---------------
   // Doing this in JSX as an inline <style> means React re-writes the rule
