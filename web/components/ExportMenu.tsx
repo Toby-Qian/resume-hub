@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
-import { useStore, PageSize, normalizeMargin } from "@/lib/store";
+import { useStore, PageSize } from "@/lib/store";
 import { t } from "@/lib/i18n";
 
 /** A4 / Letter dropdown for the print/export action.
@@ -31,15 +31,6 @@ export function ExportMenu() {
     { id: "A4", label: "A4 · 210×297mm" },
     { id: "Letter", label: "Letter · 8.5×11in" },
   ];
-  const marginPresets: { mm: number; label: string }[] = [
-    { mm: 0,  label: E.marginNone   ?? "无" },
-    { mm: 10, label: E.marginNarrow ?? "窄" },
-    { mm: 15, label: E.marginNormal ?? "中" },
-    { mm: 20, label: E.marginWide   ?? "宽" },
-  ];
-  const currentMargin = normalizeMargin(pageSetup.margin);
-  const setMargin = (mm: number) =>
-    setPageSetup({ margin: Math.max(0, Math.min(30, Math.round(mm))) });
 
   return (
     <div ref={wrapRef} className="relative inline-flex">
@@ -88,48 +79,10 @@ export function ExportMenu() {
             </div>
           </div>
 
-          {/* Margin — preset chips + numeric input + slider */}
-          <div className="mb-3">
-            <div className="flex items-center justify-between mb-1">
-              <div className="text-gray-500">{E.margin ?? "页边距"}</div>
-              <div className="flex items-center gap-1">
-                <input
-                  type="number"
-                  min={0}
-                  max={30}
-                  step={1}
-                  value={currentMargin}
-                  onChange={(e) => setMargin(Number(e.target.value))}
-                  className="w-12 text-center text-[0.7rem] border border-gray-200 rounded px-1 py-0.5 font-mono focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100"
-                />
-                <span className="text-[0.65rem] text-gray-400 font-mono">mm</span>
-              </div>
-            </div>
-            <input
-              type="range"
-              min={0}
-              max={30}
-              step={1}
-              value={currentMargin}
-              onChange={(e) => setMargin(Number(e.target.value))}
-              className="w-full accent-blue-600 mb-1.5"
-            />
-            <div className="flex gap-1">
-              {marginPresets.map((m) => (
-                <button key={m.mm}
-                  onClick={() => setMargin(m.mm)}
-                  className={`flex-1 px-1 py-1 rounded border text-[0.7rem] transition ${
-                    currentMargin === m.mm
-                      ? "border-blue-500 bg-blue-50 text-blue-700"
-                      : "border-gray-200 hover:bg-gray-50 text-gray-600"
-                  }`}
-                  title={`${m.mm}mm`}
-                >
-                  {m.label}
-                  <span className="ml-1 text-[0.6rem] text-gray-400 font-mono">{m.mm}</span>
-                </button>
-              ))}
-            </div>
+          {/* Margin moved to the right-side Style panel (under Density)
+              so the user can adjust it while looking at the live preview. */}
+          <div className="mb-3 px-2 py-1.5 rounded bg-gray-50 text-[0.7rem] text-gray-500 leading-relaxed">
+            {E.marginMoved ?? "页边距已移到右侧「样式 → 页边距」面板，调整时实时预览。"}
           </div>
 
           {/* Toggles */}

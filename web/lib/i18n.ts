@@ -92,6 +92,7 @@ export const T = {
       pageNumbers: "显示页码",
       footer: "页脚显示姓名+邮箱",
       tip: "提示：在浏览器打印对话框里把「页边距」设为「无」并勾选「背景图形」，可获得最贴近预览的效果。",
+      marginMoved: "页边距已移到右侧「样式 → 页边距」面板，调整时实时预览。",
     },
     toast: {
       imported: "已导入简历",
@@ -218,6 +219,7 @@ export const T = {
       pageNumbers: "Show page numbers",
       footer: "Footer with name + email",
       tip: "Tip: in the browser's print dialog, set Margins to None and enable Background graphics for the closest match to preview.",
+      marginMoved: "Page margin has moved to the right Style panel — adjusts live in the preview.",
     },
     toast: {
       imported: "Resume imported",

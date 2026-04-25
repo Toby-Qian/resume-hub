@@ -1,7 +1,14 @@
 "use client";
-import { useStore, defaultTheme, ThemeTokens } from "@/lib/store";
+import { useStore, defaultTheme, ThemeTokens, normalizeMargin } from "@/lib/store";
 import { t } from "@/lib/i18n";
 import { templateList } from "@/templates";
+
+const MARGIN_PRESETS: { mm: number; key: string }[] = [
+  { mm: 0,  key: "marginNone" },
+  { mm: 10, key: "marginNarrow" },
+  { mm: 15, key: "marginNormal" },
+  { mm: 20, key: "marginWide" },
+];
 
 const PRESETS = ["#2563eb", "#dc2626", "#059669", "#7c3aed", "#ea580c", "#0891b2", "#111827"];
 const SANS = [
@@ -36,10 +43,14 @@ function isMatchingPreset(theme: ThemeTokens, p: Preset) {
 }
 
 export function StylePanel() {
-  const { template, setTemplate, theme, setTheme, lang } = useStore();
+  const { template, setTemplate, theme, setTheme, lang, pageSetup, setPageSetup } = useStore();
   const L = t(lang);
   const S = (L as any).style ?? {};
+  const E = (L as any).exportMenu ?? {};
   const onResetTheme = () => setTheme({ ...defaultTheme });
+  const currentMargin = normalizeMargin(pageSetup.margin);
+  const setMargin = (mm: number) =>
+    setPageSetup({ margin: Math.max(0, Math.min(30, Math.round(mm))) });
 
   return (
     <div className="space-y-5 text-sm">
@@ -136,6 +147,52 @@ export function StylePanel() {
             <button key={d} onClick={() => setTheme({ density: d })}
               className={`text-xs py-1.5 rounded border ${theme.density === d ? "border-blue-600 bg-blue-50 text-blue-700" : "border-gray-300"}`}>
               {L.theme[`density_${d}` as const]}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Page margin (live-previewed via padding on .paper) */}
+      <div>
+        <div className="flex items-center justify-between mb-2">
+          <div className="text-xs font-semibold uppercase text-gray-500">
+            {E.margin ?? "页边距"}
+          </div>
+          <div className="flex items-center gap-1">
+            <input
+              type="number"
+              min={0}
+              max={30}
+              step={1}
+              value={currentMargin}
+              onChange={(e) => setMargin(Number(e.target.value))}
+              className="w-12 text-center text-[0.7rem] border border-gray-200 rounded px-1 py-0.5 font-mono focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100"
+            />
+            <span className="text-[0.65rem] text-gray-400 font-mono">mm</span>
+          </div>
+        </div>
+        <input
+          type="range"
+          min={0}
+          max={30}
+          step={1}
+          value={currentMargin}
+          onChange={(e) => setMargin(Number(e.target.value))}
+          className="w-full accent-blue-600 mb-1.5"
+        />
+        <div className="grid grid-cols-4 gap-1">
+          {MARGIN_PRESETS.map((m) => (
+            <button key={m.mm}
+              onClick={() => setMargin(m.mm)}
+              className={`px-1 py-1 rounded border text-[0.7rem] transition ${
+                currentMargin === m.mm
+                  ? "border-blue-500 bg-blue-50 text-blue-700"
+                  : "border-gray-200 hover:bg-gray-50 text-gray-600"
+              }`}
+              title={`${m.mm}mm`}
+            >
+              {E[m.key] ?? m.mm}
+              <span className="ml-1 text-[0.6rem] text-gray-400 font-mono">{m.mm}</span>
             </button>
           ))}
         </div>

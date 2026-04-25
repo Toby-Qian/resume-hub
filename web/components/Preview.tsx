@@ -35,9 +35,12 @@ export function Preview() {
       el.id = ID;
       document.head.appendChild(el);
     }
+    // We render the user's margin as padding on .paper itself (so it shows
+    // in the live preview and on the PDF identically). Therefore the
+    // physical @page margin stays 0 to avoid double-counting.
     el.textContent =
-      `@page { size: ${pageSetup.size === "Letter" ? "letter" : "A4"}; margin: ${marginMM}mm; }`;
-  }, [pageSetup.size, marginMM]);
+      `@page { size: ${pageSetup.size === "Letter" ? "letter" : "A4"}; margin: 0; }`;
+  }, [pageSetup.size]);
 
   // ---- Reset zoom + hide screen-only chrome during print ----------------
   // Edge / Chromium can stall in print preview when the source DOM has a
@@ -233,7 +236,9 @@ export function Preview() {
             ["--resume-font-sans" as any]: theme.fontSans,
             ["--resume-font-serif" as any]: theme.fontSerif,
             ["--resume-font-scale" as any]: String(theme.fontScale),
+            ["--resume-page-margin" as any]: `${marginMM}mm`,
             fontFamily: "var(--resume-font-sans)",
+            padding: marginMM > 0 ? `${marginMM}mm` : undefined,
             transform: `scale(${zoom})`,
             transformOrigin: "top left",
           }}
