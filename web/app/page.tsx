@@ -23,16 +23,25 @@ export default function Home() {
 
   return (
     <div className="min-h-screen">
-      <header className="border-b bg-white no-print sticky top-0 z-40">
+      <header className="no-print sticky top-0 z-40 bg-white/80 backdrop-blur-md border-b border-gray-200/70">
         <div className="max-w-[1600px] mx-auto px-4 py-3 flex items-center gap-4 flex-wrap">
-          <div>
-            <div className="text-base font-bold">{L.appTitle}</div>
-            <div className="text-[0.7rem] sm:text-xs text-gray-500 hidden sm:block">{L.appSub}</div>
+          <div className="flex items-center gap-2.5">
+            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-indigo-600 grid place-items-center text-white text-sm font-bold shadow-sm">
+              R
+            </div>
+            <div className="leading-tight">
+              <div className="text-[0.95rem] font-semibold text-gray-900">{L.appTitle}</div>
+              <div className="text-[0.7rem] text-gray-500 hidden sm:block">{L.appSub}</div>
+            </div>
           </div>
-          <nav className="ml-auto flex gap-1">
+          <nav className="ml-auto flex gap-0.5 bg-gray-100/80 rounded-full p-0.5">
             {(["editor", "gallery"] as Tab[]).map((x) => (
               <button key={x} onClick={() => setTab(x)}
-                className={`px-3 py-1.5 text-sm rounded ${tab === x ? "bg-gray-900 text-white" : "text-gray-700 hover:bg-gray-100"}`}>
+                className={`px-3.5 py-1.5 text-sm rounded-full transition-all ${
+                  tab === x
+                    ? "bg-white text-gray-900 shadow-sm font-medium"
+                    : "text-gray-600 hover:text-gray-900"
+                }`}>
                 {L.tabs[x]}
               </button>
             ))}
@@ -45,16 +54,18 @@ export default function Home() {
       ) : (
         <>
           {/* Mobile pane switcher: visible below lg */}
-          <div className="lg:hidden sticky top-[57px] z-30 bg-white border-b no-print">
-            <div className="max-w-[1600px] mx-auto px-4 py-2 flex gap-1">
+          <div className="lg:hidden sticky top-[57px] z-30 bg-white/85 backdrop-blur-md border-b border-gray-200/70 no-print">
+            <div className="max-w-[1600px] mx-auto px-4 py-2 flex gap-0.5 bg-gray-100/80 rounded-full p-0.5 my-2">
               {([
                 ["editor", L.tabs.editor],
                 ["preview", L.tabs.preview],
                 ["style", L.tabs.settings],
               ] as [Pane, string][]).map(([p, label]) => (
                 <button key={p} onClick={() => setPane(p)}
-                  className={`flex-1 px-3 py-1.5 text-xs rounded ${
-                    pane === p ? "bg-blue-600 text-white" : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                  className={`flex-1 px-3 py-1.5 text-xs rounded-full transition-all ${
+                    pane === p
+                      ? "bg-white text-gray-900 shadow-sm font-medium"
+                      : "text-gray-600 hover:text-gray-900"
                   }`}>
                   {label}
                 </button>
@@ -62,14 +73,16 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="max-w-[1600px] mx-auto grid grid-cols-1 lg:grid-cols-[320px_1fr_280px] gap-4 p-4">
+          <div className="max-w-[1600px] mx-auto grid grid-cols-1 lg:grid-cols-[340px_1fr_300px] gap-4 p-4">
             <aside
-              className={`pane pane-editor bg-white rounded-lg border p-4 lg:h-[calc(100vh-100px)] lg:overflow-y-auto no-print ${
+              className={`pane pane-editor bg-white rounded-2xl border border-gray-200/70 shadow-sm lg:h-[calc(100vh-100px)] lg:overflow-y-auto no-print ${
                 pane === "editor" ? "block" : "hidden lg:block"
               }`}
             >
-              <Toolbar />
-              <div className="mt-4"><Editor /></div>
+              <div className="sticky top-0 z-10 bg-white/95 backdrop-blur-sm border-b border-gray-100 px-4 pt-4 pb-3 rounded-t-2xl">
+                <Toolbar />
+              </div>
+              <div className="px-4 pb-4 pt-2"><Editor /></div>
             </aside>
             <main
               className={`pane pane-preview flex justify-center lg:overflow-auto lg:h-[calc(100vh-100px)] ${
@@ -79,11 +92,14 @@ export default function Home() {
               <Preview />
             </main>
             <aside
-              className={`pane pane-style bg-white rounded-lg border p-4 lg:h-[calc(100vh-100px)] lg:overflow-y-auto no-print ${
+              className={`pane pane-style bg-white rounded-2xl border border-gray-200/70 shadow-sm p-4 lg:h-[calc(100vh-100px)] lg:overflow-y-auto no-print ${
                 pane === "style" ? "block" : "hidden lg:block"
               }`}
             >
-              <div className="text-xs font-semibold uppercase text-gray-500 mb-3">{L.tabs.settings}</div>
+              <div className="flex items-center gap-2 mb-3">
+                <span className="w-1 h-4 rounded-full bg-gradient-to-b from-blue-500 to-indigo-600" />
+                <div className="text-xs font-semibold uppercase tracking-wider text-gray-700">{L.tabs.settings}</div>
+              </div>
               <StylePanel />
             </aside>
           </div>

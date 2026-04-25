@@ -30,6 +30,24 @@ export const defaultTheme: ThemeTokens = {
 
 export type UILang = "zh" | "en";
 
+export type PageSize = "A4" | "Letter";
+export type PageMargin = "none" | "narrow" | "normal" | "wide";
+
+export interface PageSetup {
+  size: PageSize;
+  margin: PageMargin;
+  showPageNumbers: boolean;
+  /** When true, footer carries "Name · email" line on every printed page. */
+  showFooter: boolean;
+}
+
+export const defaultPageSetup: PageSetup = {
+  size: "A4",
+  margin: "none",
+  showPageNumbers: false,
+  showFooter: false,
+};
+
 const HISTORY_LIMIT = 80;
 
 interface State {
@@ -37,6 +55,8 @@ interface State {
   template: TemplateId;
   theme: ThemeTokens;
   lang: UILang;
+  pageSetup: PageSetup;
+  setPageSetup: (p: Partial<PageSetup>) => void;
   past: Resume[];
   future: Resume[];
   /** When true, subsequent mutations do NOT push new history entries.
@@ -106,6 +126,8 @@ export const useStore = create<State>()(
         template: "cn-formal",
         theme: defaultTheme,
         lang: "zh",
+        pageSetup: defaultPageSetup,
+        setPageSetup: (p) => set({ pageSetup: { ...get().pageSetup, ...p } }),
         past: [],
         future: [],
         _batch: false,
@@ -222,6 +244,7 @@ export const useStore = create<State>()(
         template: s.template,
         theme: s.theme,
         lang: s.lang,
+        pageSetup: s.pageSetup,
       }) as any,
     }
   )

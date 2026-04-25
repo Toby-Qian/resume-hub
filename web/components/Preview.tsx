@@ -7,7 +7,7 @@ import { NotesLayer } from "./NotesLayer";
 import { toast } from "@/lib/toast";
 
 export function Preview() {
-  const { resume, template, theme, lang, addNote, addImageNote } = useStore();
+  const { resume, template, theme, lang, addNote, addImageNote, pageSetup } = useStore();
   const L = t(lang);
   const Tpl = templates[template];
   const imgRef = useRef<HTMLInputElement>(null);
@@ -16,6 +16,17 @@ export function Preview() {
   const [showHelp, setShowHelp] = useState(false);
   const [zoom, setZoom] = useState(1); // 0.4 ~ 1.5
   const setZoomClamped = (z: number) => setZoom(Math.max(0.4, Math.min(1.5, z)));
+
+  // ---- Page geometry (A4 / Letter) -------------------------------------
+  const pageW = pageSetup.size === "Letter" ? 816 : 794;
+  const pageH = pageSetup.size === "Letter" ? 1056 : 1123;
+  const marginMM = pageSetup.margin === "wide"
+    ? 20
+    : pageSetup.margin === "normal"
+    ? 15
+    : pageSetup.margin === "narrow"
+    ? 10
+    : 0;
 
   const onPickImage = async (f: File) => {
     if (f.size > 800 * 1024) { toast.error(L.form.avatarTooLarge); return; }
@@ -59,15 +70,17 @@ export function Preview() {
   // After zoom or content change, sync the wrapper's height so that the
   // surrounding layout reserves space for the post-scale paper footprint
   // (CSS transform doesn't affect layout flow).
-  const [paperH, setPaperH] = useState(1123);
+  const [paperHpx, setPaperHpx] = useState(pageH);
   useEffect(() => {
     const el = paperRef.current;
     if (!el) return;
-    const ro = new ResizeObserver(() => setPaperH(el.scrollHeight || el.offsetHeight || 1123));
+    const measure = () => setPaperHpx(el.scrollHeight || el.offsetHeight || pageH);
+    const ro = new ResizeObserver(measure);
     ro.observe(el);
-    setPaperH(el.scrollHeight || el.offsetHeight || 1123);
+    measure();
     return () => ro.disconnect();
-  }, []);
+  }, [pageH]);
+  const totalPages = Math.max(1, Math.ceil(paperHpx / pageH));
 
   // ---- Ctrl+wheel zoom on the paper area --------------------------------
   useEffect(() => {
@@ -148,6 +161,16 @@ export function Preview() {
           className="text-xs w-6 h-6 rounded-full border border-gray-300 bg-white text-gray-600 hover:bg-gray-100 transition flex items-center justify-center"
           title={(L.preview as any).zoomInHint ?? "放大 (Ctrl++)"} aria-label="zoom in">+</button>
         <span className="w-px h-4 bg-gray-200 mx-1" />
+        <span
+          className="text-[0.65rem] px-2 h-6 rounded-full border border-gray-200 bg-gray-50 text-gray-600 font-mono flex items-center gap-1"
+          title={(L.preview as any).pageCountHint ?? "当前页数（按 A4 / Letter 计算）"}
+        >
+          <span className="text-gray-400">📄</span>
+          <span>
+            {((L.preview as any).pages ?? "{m} 页").replace("{m}", String(totalPages))}
+          </span>
+        </span>
+        <span className="w-px h-4 bg-gray-200 mx-1" />
         <button
           type="button"
           onClick={() => setShowHelp((v) => !v)}
@@ -162,13 +185,13 @@ export function Preview() {
         ref={wrapRef}
         className="paper-zoom-wrap"
         style={{
-          width: 794 * zoom,
-          height: paperH * zoom,
+          width: pageW * zoom,
+          height: paperHpx * zoom,
         }}
       >
         <div
           ref={paperRef}
-          className={`paper paper-flow print-area density-${theme.density}`}
+          className={`paper paper-flow print-area density-${theme.density} ${pageSetup.size === "Letter" ? "paper-letter" : ""}`}
           style={{
             ["--resume-accent" as any]: theme.accent,
             ["--resume-font-sans" as any]: theme.fontSans,
@@ -181,8 +204,55 @@ export function Preview() {
         >
           <Tpl resume={resume} />
           <NotesLayer />
+          {/* Page break indicators (screen only) ------------------------- */}
+          <div
+            className="page-break-overlay"
+            style={{ top: 0 }}
+            aria-hidden
+          >
+            <span className="page-break-label page-break-label--page1">
+              {(L.preview as any).pageLabel?.replace("{n}", "1").replace("{m}", String(totalPages)) ?? `Page 1 / ${totalPages}`}
+            </span>
+          </div>
+          {Array.from({ length: Math.max(0, totalPages - 1) }).map((_, i) => (
+            <div
+              key={i}
+              className="page-break-overlay"
+              style={{ top: pageH * (i + 1) }}
+              aria-hidden
+            >
+              <span className="page-break-label">
+                {(L.preview as any).pageLabel?.replace("{n}", String(i + 2)).replace("{m}", String(totalPages)) ?? `Page ${i + 2} / ${totalPages}`}
+              </span>
+            </div>
+          ))}
         </div>
       </div>
+
+      {/* Print-only running footer (page numbers + name/email).
+          Lives outside the .paper so position:fixed repeats per page.       */}
+      {(pageSetup.showPageNumbers || pageSetup.showFooter) && (
+        <div className="print-footer" aria-hidden>
+          {pageSetup.showFooter && (
+            <>
+              {resume.basics.name && <span className="pf-name">{resume.basics.name}</span>}
+              {resume.basics.email && <><span className="pf-sep">·</span><span>{resume.basics.email}</span></>}
+              {pageSetup.showPageNumbers && <span className="pf-sep">·</span>}
+            </>
+          )}
+          {pageSetup.showPageNumbers && <span className="pf-pages" />}
+        </div>
+      )}
+
+      {/* Dynamic @page rules so the print dialog uses the right paper +
+          margins. Browsers parse @page from any global stylesheet, including
+          a <style> we render at runtime.                                    */}
+      <style>{`
+        @page {
+          size: ${pageSetup.size === "Letter" ? "letter" : "A4"};
+          margin: ${marginMM}mm;
+        }
+      `}</style>
       <div className="text-[0.7rem] text-gray-400 mt-2 mb-4 px-4 text-center max-w-[794px] no-print space-y-0.5">
         <div>{(L.preview as any).editHint ?? "点击任意文字即可在预览中直接编辑；悬停文本区块左侧可拖动整段位置"}</div>
         <div>{(L.preview as any).noteHint ?? "文本框 / 图片：点击选中，拖动或 Alt+拖移动，方向键微移，Delete 删除，Ctrl+D 复制"}</div>

@@ -1,13 +1,28 @@
 "use client";
+import { useState } from "react";
 import { useStore } from "@/lib/store";
 import { SectionKey, Resume } from "@/lib/schema";
 import { t } from "@/lib/i18n";
 import { Field } from "./Field";
 import { toast } from "@/lib/toast";
 
+const SECTION_ICONS: Record<string, string> = {
+  basics: "👤",
+  work: "💼",
+  education: "🎓",
+  projects: "🚀",
+  skills: "🛠",
+  awards: "🏆",
+  languages: "🌐",
+};
+
 export function Editor() {
   const { resume, update, addItem, removeItem, reorderItem, lang } = useStore();
   const L = t(lang);
+  // Collapsible state per section (open by default).
+  const [collapsed, setCollapsed] = useState<Record<string, boolean>>({});
+  const isOpen = (key: string) => !collapsed[key];
+  const toggle = (key: string) => setCollapsed((c) => ({ ...c, [key]: !c[key] }));
 
   const patch = <K extends SectionKey>(section: K, id: string, field: string, value: any) => {
     const list = resume[section] as any[];
@@ -58,25 +73,25 @@ export function Editor() {
     };
     return (
       <div
-        className="border border-gray-200 rounded p-3 mb-3 bg-gray-50 relative transition-shadow"
+        className="group relative border border-gray-200/80 rounded-xl p-3 mb-2.5 bg-gradient-to-br from-gray-50/70 to-white hover:border-gray-300 hover:shadow-sm transition-all"
         onDragOver={onDragOver}
         onDragLeave={onDragLeave}
         onDrop={onDrop}
       >
-        <div className="flex justify-between items-center mb-1">
+        <div className="flex justify-between items-center mb-1.5">
           <div className="flex items-center gap-2">
             <span
               draggable
               onDragStart={onDragStart}
               onDragEnd={onDragEnd}
-              className="text-gray-400 hover:text-amber-600 cursor-grab active:cursor-grabbing select-none text-sm leading-none px-1"
+              className="text-gray-300 group-hover:text-amber-500 hover:!text-amber-600 cursor-grab active:cursor-grabbing select-none text-sm leading-none px-1 transition-colors"
               title={(L.actions as any).reorderHint ?? "拖动以排序 / drag to reorder"}
             >⋮⋮</span>
             {onToggleBreak ? (
-              <label className="flex items-center gap-1 text-[0.7rem] text-gray-600 cursor-pointer select-none">
+              <label className="flex items-center gap-1 text-[0.7rem] text-gray-500 hover:text-gray-700 cursor-pointer select-none transition-colors">
                 <input
                   type="checkbox"
-                  className="accent-blue-600"
+                  className="accent-blue-600 w-3 h-3"
                   checked={!!breakBefore}
                   onChange={(e) => onToggleBreak(e.target.checked)}
                 />
@@ -92,23 +107,65 @@ export function Editor() {
   };
 
   const RemoveBtn = ({ onClick }: { onClick: () => void }) => (
-    <button onClick={onClick} className="text-xs text-red-500 hover:underline">✕ {L.actions.remove}</button>
+    <button onClick={onClick}
+      className="text-[0.7rem] text-gray-400 hover:text-rose-600 transition-colors opacity-0 group-hover:opacity-100"
+      title={L.actions.remove}>
+      ✕
+    </button>
   );
   const AddBtn = ({ onClick }: { onClick: () => void }) => (
-    <button onClick={onClick} className="text-xs px-2 py-1 rounded bg-blue-600 text-white hover:bg-blue-700">+ {L.actions.add}</button>
+    <button onClick={(e) => { e.stopPropagation(); onClick(); }}
+      className="text-xs px-2.5 py-1 rounded-lg bg-blue-600 text-white hover:bg-blue-700 shadow-sm transition-all hover:-translate-y-px flex items-center gap-1">
+      <span className="text-[0.9em]">+</span> {L.actions.add}
+    </button>
   );
-  const SectionTitle = ({ children, onAdd }: { children: React.ReactNode; onAdd?: () => void }) => (
-    <div className="flex justify-between items-center mt-6 mb-2">
-      <h3 className="text-sm font-semibold text-gray-800 uppercase tracking-wider">{children}</h3>
-      {onAdd && <AddBtn onClick={onAdd} />}
-    </div>
-  );
+  /** Collapsible section header: icon + title + count + add-button + chevron. */
+  const SectionTitle = ({ children, onAdd, sectionKey, count }: {
+    children: React.ReactNode;
+    onAdd?: () => void;
+    sectionKey?: string;
+    count?: number;
+  }) => {
+    const collapsible = !!sectionKey;
+    const open = !collapsible || isOpen(sectionKey!);
+    const icon = sectionKey ? SECTION_ICONS[sectionKey] : null;
+    return (
+      <button
+        type="button"
+        onClick={() => collapsible && toggle(sectionKey!)}
+        className={`w-full flex justify-between items-center mt-4 mb-2 px-2 py-1.5 rounded-lg transition-colors ${
+          collapsible ? "hover:bg-gray-50 cursor-pointer" : "cursor-default"
+        }`}
+      >
+        <div className="flex items-center gap-2">
+          {icon && <span className="text-base leading-none">{icon}</span>}
+          <h3 className="text-[0.78rem] font-semibold text-gray-700 uppercase tracking-wider">
+            {children}
+          </h3>
+          {typeof count === "number" && count > 0 && (
+            <span className="text-[0.65rem] font-mono px-1.5 py-px rounded-full bg-gray-100 text-gray-500 min-w-[1.25rem] text-center">
+              {count}
+            </span>
+          )}
+        </div>
+        <div className="flex items-center gap-2">
+          {onAdd && open && <AddBtn onClick={onAdd} />}
+          {collapsible && (
+            <span className={`text-gray-400 text-xs transition-transform duration-200 ${open ? "rotate-180" : ""}`}>
+              ▾
+            </span>
+          )}
+        </div>
+      </button>
+    );
+  };
   const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const validateEmail = (v: string) => (!v || emailRe.test(v) ? null : L.form.invalidEmail);
 
   return (
     <div className="space-y-1">
-      <SectionTitle>{L.sections.basics}</SectionTitle>
+      <SectionTitle sectionKey="basics">{L.sections.basics}</SectionTitle>
+      {isOpen("basics") && <>
       <div className="grid grid-cols-2 gap-x-3">
         <Field label={L.fields.name} value={resume.basics.name} onChange={(v) => patchBasics("name", v)}
           required requiredMessage={L.form.required} />
@@ -235,8 +292,10 @@ export function Editor() {
         </div>
       )}
 
-      <SectionTitle onAdd={() => addItem("work")}>{L.sections.work}</SectionTitle>
-      {resume.work.map((w) => (
+      </>}
+
+      <SectionTitle sectionKey="work" count={resume.work.length} onAdd={() => addItem("work")}>{L.sections.work}</SectionTitle>
+      {isOpen("work") && resume.work.map((w) => (
         <SortableCard key={w.id} section="work" id={w.id}
           onRemove={() => removeItem("work", w.id)}
           breakBefore={(w as any).breakBefore}
@@ -253,8 +312,8 @@ export function Editor() {
         </SortableCard>
       ))}
 
-      <SectionTitle onAdd={() => addItem("education")}>{L.sections.education}</SectionTitle>
-      {resume.education.map((e) => (
+      <SectionTitle sectionKey="education" count={resume.education.length} onAdd={() => addItem("education")}>{L.sections.education}</SectionTitle>
+      {isOpen("education") && resume.education.map((e) => (
         <SortableCard key={e.id} section="education" id={e.id}
           onRemove={() => removeItem("education", e.id)}
           breakBefore={(e as any).breakBefore}
@@ -272,8 +331,8 @@ export function Editor() {
         </SortableCard>
       ))}
 
-      <SectionTitle onAdd={() => addItem("projects")}>{L.sections.projects}</SectionTitle>
-      {resume.projects.map((p) => (
+      <SectionTitle sectionKey="projects" count={resume.projects.length} onAdd={() => addItem("projects")}>{L.sections.projects}</SectionTitle>
+      {isOpen("projects") && resume.projects.map((p) => (
         <SortableCard key={p.id} section="projects" id={p.id}
           onRemove={() => removeItem("projects", p.id)}
           breakBefore={(p as any).breakBefore}
@@ -292,8 +351,8 @@ export function Editor() {
         </SortableCard>
       ))}
 
-      <SectionTitle onAdd={() => addItem("skills")}>{L.sections.skills}</SectionTitle>
-      {resume.skills.map((s) => (
+      <SectionTitle sectionKey="skills" count={resume.skills.length} onAdd={() => addItem("skills")}>{L.sections.skills}</SectionTitle>
+      {isOpen("skills") && resume.skills.map((s) => (
         <SortableCard key={s.id} section="skills" id={s.id}
           onRemove={() => removeItem("skills", s.id)}
           breakBefore={(s as any).breakBefore}
@@ -307,8 +366,8 @@ export function Editor() {
         </SortableCard>
       ))}
 
-      <SectionTitle onAdd={() => addItem("awards")}>{L.sections.awards}</SectionTitle>
-      {resume.awards.map((a) => (
+      <SectionTitle sectionKey="awards" count={resume.awards.length} onAdd={() => addItem("awards")}>{L.sections.awards}</SectionTitle>
+      {isOpen("awards") && resume.awards.map((a) => (
         <SortableCard key={a.id} section="awards" id={a.id}
           onRemove={() => removeItem("awards", a.id)}
           breakBefore={(a as any).breakBefore}
@@ -322,8 +381,8 @@ export function Editor() {
         </SortableCard>
       ))}
 
-      <SectionTitle onAdd={() => addItem("languages")}>{L.sections.languages}</SectionTitle>
-      {resume.languages.map((l) => (
+      <SectionTitle sectionKey="languages" count={resume.languages.length} onAdd={() => addItem("languages")}>{L.sections.languages}</SectionTitle>
+      {isOpen("languages") && resume.languages.map((l) => (
         <SortableCard key={l.id} section="languages" id={l.id}
           onRemove={() => removeItem("languages", l.id)}
           breakBefore={(l as any).breakBefore}

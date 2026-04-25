@@ -24,10 +24,10 @@ export function Field({ label, value, onChange, textarea, placeholder, rows = 3,
   }
   const hasError = !!error;
 
-  const baseCls = "w-full border rounded px-2 py-1.5 text-sm focus:outline-none transition";
+  const baseCls = "w-full border rounded-lg px-2.5 py-1.5 text-sm bg-white focus:outline-none transition-all placeholder:text-gray-300";
   const borderCls = hasError
-    ? "border-rose-400 focus:border-rose-500 bg-rose-50"
-    : "border-gray-300 focus:border-blue-500";
+    ? "border-rose-300 focus:border-rose-400 focus:ring-2 focus:ring-rose-100 bg-rose-50/50"
+    : "border-gray-200 hover:border-gray-300 focus:border-blue-400 focus:ring-2 focus:ring-blue-100";
 
   const common = {
     value: v,

@@ -13,11 +13,14 @@
 html, body { height: 100%; }
 body { background: #f3f4f6; color: #111827; font-family: var(--resume-font-sans); }
 
-/* ---------- A4 paper ----------------------------------------------------- */
-/* 794 x 1123 px at 96dpi ≈ 210 x 297 mm                                     */
+/* ---------- Paper (A4 default; Letter via .paper-letter) ----------------- */
+/* A4:     794 × 1123 px at 96dpi ≈ 210 × 297 mm                             */
+/* Letter: 816 × 1056 px at 96dpi  =  8.5 × 11 in                            */
 .paper {
-  width: 794px;
-  min-height: 1123px;
+  --page-w: 794px;
+  --page-h: 1123px;
+  width: var(--page-w);
+  min-height: var(--page-h);
   background: white;
   box-shadow: 0 4px 24px rgba(0,0,0,0.08);
   font-size: calc(14px * var(--resume-font-scale));
@@ -25,23 +28,55 @@ body { background: #f3f4f6; color: #111827; font-family: var(--resume-font-sans)
   color: #111827;
   position: relative;
 }
+.paper.paper-letter { --page-w: 816px; --page-h: 1056px; }
 .paper.density-compact { --pad: 32px; --gap: 10px; }
 .paper.density-comfy   { --pad: 44px; --gap: 14px; }
 .paper.density-spacious{ --pad: 56px; --gap: 20px; }
 
-/* Multi-page hint: faint dashed line every 1123px so the user can tell where
-   print will split. Pure visual — browser still drives actual page breaks. */
+/* Multi-page hint: paper-flow is the long flowing canvas; .page-break-overlay
+   provides per-page boundary ribbons positioned absolutely on top of it.
+   Pure visual — browser still drives actual page breaks at print time.       */
 .paper.paper-flow {
   min-height: 1123px;
-  background-image: repeating-linear-gradient(
-    to bottom,
-    transparent 0,
-    transparent 1122px,
-    rgba(148, 163, 184, 0.55) 1122px,
-    rgba(148, 163, 184, 0.55) 1123px
-  );
-  background-size: 100% 1123px;
-  background-repeat: repeat-y;
+}
+.page-break-overlay {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 0;
+  pointer-events: none;
+  z-index: 5;
+}
+.page-break-overlay::before {
+  content: "";
+  position: absolute;
+  inset: -1px 0 auto 0;
+  height: 0;
+  border-top: 1px dashed rgba(148, 163, 184, 0.7);
+}
+.page-break-overlay > .page-break-label {
+  position: absolute;
+  right: 14px;
+  top: -10px;
+  font-size: 10px;
+  line-height: 1;
+  padding: 3px 7px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(148, 163, 184, 0.45);
+  color: #64748b;
+  font-family: var(--resume-font-sans);
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+}
+.page-break-overlay > .page-break-label--page1 {
+  top: 6px;
+  right: auto;
+  left: 14px;
+}
+@media print {
+  .page-break-overlay { display: none !important; }
 }
 
 /* ---------- Pagination hints for print & preview ------------------------- */
@@ -299,7 +334,6 @@ body { background: #f3f4f6; color: #111827; font-family: var(--resume-font-sans)
 
 /* ---------- Print -------------------------------------------------------- */
 @media print {
-  @page { size: A4; margin: 0; }
   html, body { background: white; }
   .no-print { display: none !important; }
   /* On mobile, the active pane toggle may have hidden preview; force it visible. */
@@ -314,4 +348,29 @@ body { background: #f3f4f6; color: #111827; font-family: var(--resume-font-sans)
     margin: 0;
   }
   .resume-section { break-inside: avoid !important; }
+
+  /* Print-only running footer: name + email + page numbers. Lives outside
+     the .paper but inside .print-footer. position:fixed bottom anchors it
+     onto every printed page (browser repeats fixed elements per page).    */
+  .print-footer {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 4mm;
+    text-align: center;
+    font-size: 9pt;
+    color: #6b7280;
+    font-family: var(--resume-font-sans);
+    pointer-events: none;
+  }
+  .print-footer .pf-name { margin-right: 8px; }
+  .print-footer .pf-sep { margin: 0 6px; color: #cbd5e1; }
+  .print-footer .pf-pages::after {
+    /* CSS counter pages — supported by Chromium/WebKit print engines. */
+    content: counter(page) " / " counter(pages);
+  }
+}
+@media screen {
+  /* Hide the print-only footer in normal preview. */
+  .print-footer { display: none; }
 }
