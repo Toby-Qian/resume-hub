@@ -28,6 +28,48 @@ export function Preview() {
     ? 10
     : 0;
 
+  // ---- Inject @page rules via a managed <style> in <head> ---------------
+  // Doing this in JSX as an inline <style> means React re-writes the rule
+  // text on every re-render, which Edge's print engine occasionally trips
+  // on (the print dialog can freeze if it opens mid-rewrite). Writing once
+  // per setting change to a stable element in <head> avoids the race.
+  useEffect(() => {
+    const ID = "resume-page-style";
+    let el = document.getElementById(ID) as HTMLStyleElement | null;
+    if (!el) {
+      el = document.createElement("style");
+      el.id = ID;
+      document.head.appendChild(el);
+    }
+    el.textContent =
+      `@page { size: ${pageSetup.size === "Letter" ? "letter" : "A4"}; margin: ${marginMM}mm; }`;
+  }, [pageSetup.size, marginMM]);
+
+  // ---- Reset zoom + hide screen-only chrome during print ----------------
+  // Edge / Chromium can stall in print preview when the source DOM has a
+  // CSS `transform: scale()` on a paginated container. We snapshot the
+  // current zoom, force 1.0 for the duration of printing, and restore
+  // afterwards. Listeners are cheap and only fire around print events.
+  const [printing, setPrinting] = useState(false);
+  useEffect(() => {
+    const savedZoomRef = { current: 1 };
+    const onBefore = () => {
+      savedZoomRef.current = zoom;
+      setPrinting(true);
+      setZoom(1);
+    };
+    const onAfter = () => {
+      setPrinting(false);
+      setZoom(savedZoomRef.current);
+    };
+    window.addEventListener("beforeprint", onBefore);
+    window.addEventListener("afterprint", onAfter);
+    return () => {
+      window.removeEventListener("beforeprint", onBefore);
+      window.removeEventListener("afterprint", onAfter);
+    };
+  }, [zoom]);
+
   const onPickImage = async (f: File) => {
     if (f.size > 800 * 1024) { toast.error(L.form.avatarTooLarge); return; }
     const reader = new FileReader();
@@ -204,28 +246,31 @@ export function Preview() {
         >
           <Tpl resume={resume} />
           <NotesLayer />
-          {/* Page break indicators (screen only) ------------------------- */}
-          <div
-            className="page-break-overlay"
-            style={{ top: 0 }}
-            aria-hidden
-          >
-            <span className="page-break-label page-break-label--page1">
-              {(L.preview as any).pageLabel?.replace("{n}", "1").replace("{m}", String(totalPages)) ?? `Page 1 / ${totalPages}`}
-            </span>
-          </div>
-          {Array.from({ length: Math.max(0, totalPages - 1) }).map((_, i) => (
-            <div
-              key={i}
-              className="page-break-overlay"
-              style={{ top: pageH * (i + 1) }}
-              aria-hidden
-            >
-              <span className="page-break-label">
-                {(L.preview as any).pageLabel?.replace("{n}", String(i + 2)).replace("{m}", String(totalPages)) ?? `Page ${i + 2} / ${totalPages}`}
-              </span>
-            </div>
-          ))}
+          {/* Page break indicators (screen only). Skipped entirely during
+              print so Edge's print engine doesn't traverse them. We also
+              cap to 20 page-break ribbons just in case `paperHpx` ever
+              gets stuck very large.                                      */}
+          {!printing && (
+            <>
+              <div className="page-break-overlay" style={{ top: 0 }} aria-hidden>
+                <span className="page-break-label page-break-label--page1">
+                  {(L.preview as any).pageLabel?.replace("{n}", "1").replace("{m}", String(totalPages)) ?? `Page 1 / ${totalPages}`}
+                </span>
+              </div>
+              {Array.from({ length: Math.min(20, Math.max(0, totalPages - 1)) }).map((_, i) => (
+                <div
+                  key={i}
+                  className="page-break-overlay"
+                  style={{ top: pageH * (i + 1) }}
+                  aria-hidden
+                >
+                  <span className="page-break-label">
+                    {(L.preview as any).pageLabel?.replace("{n}", String(i + 2)).replace("{m}", String(totalPages)) ?? `Page ${i + 2} / ${totalPages}`}
+                  </span>
+                </div>
+              ))}
+            </>
+          )}
         </div>
       </div>
 
@@ -244,15 +289,8 @@ export function Preview() {
         </div>
       )}
 
-      {/* Dynamic @page rules so the print dialog uses the right paper +
-          margins. Browsers parse @page from any global stylesheet, including
-          a <style> we render at runtime.                                    */}
-      <style>{`
-        @page {
-          size: ${pageSetup.size === "Letter" ? "letter" : "A4"};
-          margin: ${marginMM}mm;
-        }
-      `}</style>
+      {/* @page rules are injected once via useEffect to <head> (see above)
+          to avoid Edge's print preview hanging on JSX-driven re-injection. */}
       <div className="text-[0.7rem] text-gray-400 mt-2 mb-4 px-4 text-center max-w-[794px] no-print space-y-0.5">
         <div>{(L.preview as any).editHint ?? "点击任意文字即可在预览中直接编辑；悬停文本区块左侧可拖动整段位置"}</div>
         <div>{(L.preview as any).noteHint ?? "文本框 / 图片：点击选中，拖动或 Alt+拖移动，方向键微移，Delete 删除，Ctrl+D 复制"}</div>
