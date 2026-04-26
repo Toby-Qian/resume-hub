@@ -2,12 +2,12 @@ import type { Resume } from "./schema";
 
 export const sampleEN: Resume = {
   basics: {
-    name: "Alex Chen",
+    name: "Toby Qian",
     label: "Full-Stack Software Engineer",
-    email: "alex.chen@example.com",
+    email: "toby.qian@example.com",
     phone: "+1 555 123 4567",
     location: "San Francisco, CA",
-    website: "https://alexchen.dev",
+    website: "https://tobyqian.dev",
     summary:
       "Full-stack engineer with 5+ years building reliable web platforms. Passionate about developer experience, distributed systems, and mentoring.",
     avatar: "/sample-avatar.jpg",
@@ -60,12 +60,12 @@ export const sampleEN: Resume = {
 
 export const sampleZH: Resume = {
   basics: {
-    name: "陈思远",
+    name: "钱思远",
     label: "全栈软件工程师",
-    email: "siyuan.chen@example.com",
+    email: "siyuan.qian@example.com",
     phone: "138 0000 0000",
     location: "上海",
-    website: "https://siyuan.dev",
+    website: "https://qiansiyuan.dev",
     summary:
       "5 年以上互联网后端与前端经验，专注于高可用系统与开发者体验，善于带新人、推进跨团队协作。",
     avatar: "/sample-avatar.jpg",
