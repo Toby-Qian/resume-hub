@@ -79,13 +79,17 @@ export interface ResumeLanguage {
  *  the .paper top-left, in px at 96dpi A4 scale. */
 export interface ResumeNote {
   id: string;
-  kind?: "text" | "image";  // default "text"
+  kind?: "text" | "image" | "shape";  // default "text"
   text: string;
   src?: string;             // data URL, only when kind === "image"
+  /** Decorative shape geometry. Only used when kind === "shape". */
+  shape?: "line" | "rect" | "circle";
+  borderColor?: string;     // hex (shapes / outline-only blocks)
+  borderWidth?: number;     // px, default 1
   x: number;
   y: number;
   width: number;            // px
-  height?: number;          // px (images), text auto-grows
+  height?: number;          // px (images / shapes), text auto-grows
   fontSize?: number;        // px, default 14
   bold?: boolean;
   italic?: boolean;

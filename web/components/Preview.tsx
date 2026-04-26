@@ -8,7 +8,7 @@ import { toast } from "@/lib/toast";
 import { compressToDataURL } from "@/lib/imageCompress";
 
 export function Preview() {
-  const { resume, template, theme, lang, addNote, addImageNote, pageSetup, hiddenSections } = useStore();
+  const { resume, template, theme, lang, addNote, addImageNote, addShapeNote, pageSetup, hiddenSections } = useStore();
   // Apply visibility toggles by zeroing hidden section arrays. Templates
   // already gate sections on `array.length > 0`, so this hides them
   // without per-template changes.
@@ -204,6 +204,24 @@ export function Preview() {
         </button>
         <input ref={imgRef} type="file" accept="image/*" className="hidden"
           onChange={(e) => { const f = e.target.files?.[0]; if (f) onPickImage(f); e.target.value = ""; }} />
+        <button
+          type="button"
+          onClick={() => addShapeNote("line")}
+          className="text-xs px-2 py-1 rounded-full border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 transition"
+          title={(L.preview as any).addLineHint ?? "插入分隔线"}
+        >─</button>
+        <button
+          type="button"
+          onClick={() => addShapeNote("rect")}
+          className="text-xs px-2 py-1 rounded-full border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 transition"
+          title={(L.preview as any).addRectHint ?? "插入矩形"}
+        >▭</button>
+        <button
+          type="button"
+          onClick={() => addShapeNote("circle")}
+          className="text-xs px-2 py-1 rounded-full border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 transition"
+          title={(L.preview as any).addCircleHint ?? "插入圆"}
+        >○</button>
         <span className="w-px h-4 bg-gray-200 mx-1" />
         <button type="button" onClick={() => setZoomClamped(zoom / 1.1)}
           className="text-xs w-6 h-6 rounded-full border border-gray-300 bg-white text-gray-600 hover:bg-gray-100 transition flex items-center justify-center"

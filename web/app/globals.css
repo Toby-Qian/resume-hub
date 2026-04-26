@@ -308,14 +308,109 @@ body { background: #f3f4f6; color: #111827; font-family: var(--resume-font-sans)
 /* Print rules for .paper-zoom-wrap live in the consolidated @media print
    block lower in the file (search "Force a clean block chain"). */
 
+/* ---- Multi-select halo --------------------------------------------------- */
+.resume-note.multi-selected .note-body,
+.resume-note.multi-selected .note-image,
+.resume-note.multi-selected .note-shape {
+  outline: 2px solid #6366f1; /* indigo-500 */
+  outline-offset: 1px;
+}
+.resume-note.multi-selected.lead .note-body,
+.resume-note.multi-selected.lead .note-image,
+.resume-note.multi-selected.lead .note-shape {
+  outline-color: #4338ca; /* indigo-700 — slightly darker for the lead */
+}
+
+/* ---- Marquee box-select ------------------------------------------------- */
+.marquee-box {
+  background: rgba(99, 102, 241, 0.12);
+  border: 1px dashed #6366f1;
+  border-radius: 2px;
+}
+
+/* ---- Shape elements ---------------------------------------------------- */
+.resume-note.is-shape .note-shape {
+  box-sizing: border-box;
+}
+.resume-note.is-shape:hover .note-shape,
+.resume-note.is-shape.selected .note-shape {
+  box-shadow: 0 0 0 1px rgba(99, 102, 241, 0.5);
+}
+
+/* ---- Floating align toolbar -------------------------------------------- */
+.align-toolbar {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  padding: 4px 6px;
+  background: #1f2937;
+  color: #f9fafb;
+  border-radius: 999px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+  font-size: 12px;
+  white-space: nowrap;
+  user-select: none;
+}
+.align-tb-label {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  margin-right: 2px;
+  background: #4338ca;
+  color: white;
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 600;
+}
+.align-tb-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 6px;
+  background: transparent;
+  border: none;
+  color: #f9fafb;
+  cursor: pointer;
+  transition: background 0.12s;
+}
+.align-tb-btn:hover { background: #374151; }
+.align-tb-btn.align-tb-danger { color: #fca5a5; }
+.align-tb-btn.align-tb-danger:hover { background: #7f1d1d; color: #fff; }
+.align-tb-sep {
+  display: inline-block;
+  width: 1px;
+  height: 14px;
+  background: #4b5563;
+  margin: 0 3px;
+}
+
+@media print {
+  .marquee-box,
+  .align-toolbar { display: none !important; }
+}
+
 /* ---- Smart alignment guides shown during drag --------------------------- */
+/* Dashed pink guides — match PowerPoint's smart-guide aesthetic. The dashes
+   are drawn with a repeating linear-gradient so the 1px line stays crisp at
+   any zoom. */
 .alignment-guide {
   position: absolute;
-  background: #ec4899; /* pink-500 */
   pointer-events: none;
   z-index: 18;
-  box-shadow: 0 0 0 0.5px rgba(236, 72, 153, 0.5);
+  background: repeating-linear-gradient(
+    var(--guide-dir, to bottom),
+    #ec4899 0,
+    #ec4899 4px,
+    transparent 4px,
+    transparent 7px
+  );
 }
+.alignment-guide[style*="height: 1px"] { --guide-dir: to right; }
 
 @media print {
   .alignment-guide { display: none !important; }

@@ -91,8 +91,19 @@ interface State {
   removeNote: (id: string) => void;
   duplicateNote: (id: string) => void;
   reorderNote: (id: string, dir: "front" | "back") => void;
+  addShapeNote: (shape: "line" | "rect" | "circle") => void;
+  /** Multi-selection model. `selectedNoteId` is the *primary* (last-clicked)
+   *  selection — kept around for legacy single-select call sites. The full
+   *  set lives in `selectedNoteIds`. */
   selectedNoteId: string | null;
+  selectedNoteIds: string[];
   selectNote: (id: string | null) => void;
+  selectNotes: (ids: string[]) => void;
+  toggleNoteSelection: (id: string) => void;
+  alignNotes: (kind: "left" | "right" | "top" | "bottom" | "centerH" | "centerV") => void;
+  distributeNotes: (axis: "h" | "v") => void;
+  /** Move every selected note by (dx, dy). Used for group drag. */
+  nudgeSelection: (dx: number, dy: number) => void;
   setTemplate: (t: TemplateId) => void;
   setTheme: (t: Partial<ThemeTokens>) => void;
   setLang: (l: UILang) => void;
@@ -156,7 +167,114 @@ export const useStore = create<State>()(
         future: [],
         _batch: false,
         selectedNoteId: null,
-        selectNote: (id) => set({ selectedNoteId: id }),
+        selectedNoteIds: [],
+        selectNote: (id) =>
+          set({
+            selectedNoteId: id,
+            selectedNoteIds: id ? [id] : [],
+          }),
+        selectNotes: (ids) =>
+          set({
+            selectedNoteIds: ids,
+            selectedNoteId: ids.length ? ids[ids.length - 1] : null,
+          }),
+        toggleNoteSelection: (id) => {
+          const cur = get().selectedNoteIds;
+          const next = cur.includes(id) ? cur.filter((x) => x !== id) : [...cur, id];
+          set({
+            selectedNoteIds: next,
+            selectedNoteId: next.length ? next[next.length - 1] : null,
+          });
+        },
+        addShapeNote: (shape) => {
+          const r = get().resume;
+          const notes = r.notes || [];
+          const offset = (notes.length % 8) * 18;
+          const base = { id: uid(), kind: "shape" as const, text: "", shape, x: 80 + offset, y: 80 + offset };
+          let note: ResumeNote;
+          if (shape === "line") {
+            note = { ...base, width: 240, height: 2, bg: "#111827" };
+          } else if (shape === "circle") {
+            note = { ...base, width: 80, height: 80, borderColor: "#2563eb", borderWidth: 2, bg: "transparent" };
+          } else {
+            note = { ...base, width: 160, height: 100, borderColor: "#2563eb", borderWidth: 2, bg: "transparent" };
+          }
+          mutate({ ...r, notes: [...notes, note] });
+          set({ selectedNoteId: note.id, selectedNoteIds: [note.id] });
+        },
+        alignNotes: (kind) => {
+          const r = get().resume;
+          const ids = get().selectedNoteIds;
+          if (ids.length < 2) return;
+          const notes = r.notes || [];
+          const sel = notes.filter((n) => ids.includes(n.id) && !n.locked);
+          if (sel.length < 2) return;
+          // Compute the union bounding box once.
+          const heightOf = (n: ResumeNote) => n.height ?? (n.kind === "image" ? n.width : 40);
+          const minLeft   = Math.min(...sel.map((n) => n.x));
+          const maxRight  = Math.max(...sel.map((n) => n.x + n.width));
+          const minTop    = Math.min(...sel.map((n) => n.y));
+          const maxBottom = Math.max(...sel.map((n) => n.y + heightOf(n)));
+          const cx = (minLeft + maxRight) / 2;
+          const cy = (minTop + maxBottom) / 2;
+          const updated = notes.map((n) => {
+            if (!ids.includes(n.id) || n.locked) return n;
+            const h = heightOf(n);
+            switch (kind) {
+              case "left":    return { ...n, x: Math.round(minLeft) };
+              case "right":   return { ...n, x: Math.round(maxRight - n.width) };
+              case "top":     return { ...n, y: Math.round(minTop) };
+              case "bottom":  return { ...n, y: Math.round(maxBottom - h) };
+              case "centerH": return { ...n, x: Math.round(cx - n.width / 2) };
+              case "centerV": return { ...n, y: Math.round(cy - h / 2) };
+            }
+            return n;
+          });
+          mutate({ ...r, notes: updated });
+        },
+        distributeNotes: (axis) => {
+          const r = get().resume;
+          const ids = get().selectedNoteIds;
+          if (ids.length < 3) return;
+          const notes = r.notes || [];
+          const sel = notes.filter((n) => ids.includes(n.id) && !n.locked);
+          if (sel.length < 3) return;
+          const heightOf = (n: ResumeNote) => n.height ?? (n.kind === "image" ? n.width : 40);
+          // Sort by their current edge along the chosen axis.
+          const sorted = [...sel].sort((a, b) =>
+            axis === "h" ? (a.x + a.width / 2) - (b.x + b.width / 2)
+                         : (a.y + heightOf(a) / 2) - (b.y + heightOf(b) / 2)
+          );
+          const first = sorted[0];
+          const last = sorted[sorted.length - 1];
+          const firstCenter = axis === "h" ? first.x + first.width / 2 : first.y + heightOf(first) / 2;
+          const lastCenter  = axis === "h" ? last.x + last.width / 2  : last.y + heightOf(last) / 2;
+          const step = (lastCenter - firstCenter) / (sorted.length - 1);
+          const targetById: Record<string, number> = {};
+          sorted.forEach((n, i) => {
+            const center = firstCenter + step * i;
+            targetById[n.id] = axis === "h"
+              ? Math.round(center - n.width / 2)
+              : Math.round(center - heightOf(n) / 2);
+          });
+          const updated = notes.map((n) => {
+            if (!(n.id in targetById)) return n;
+            return axis === "h" ? { ...n, x: targetById[n.id] } : { ...n, y: targetById[n.id] };
+          });
+          mutate({ ...r, notes: updated });
+        },
+        nudgeSelection: (dx, dy) => {
+          if (dx === 0 && dy === 0) return;
+          const r = get().resume;
+          const ids = get().selectedNoteIds;
+          if (ids.length === 0) return;
+          const updated = (r.notes || []).map((n) =>
+            ids.includes(n.id) && !n.locked
+              ? { ...n, x: Math.max(0, n.x + dx), y: Math.max(0, n.y + dy) }
+              : n
+          );
+          mutate({ ...r, notes: updated });
+        },
 
         setResume: (r) => mutate(r),
         update: (key, value) => mutate({ ...get().resume, [key]: value } as Resume),
@@ -195,7 +313,11 @@ export const useStore = create<State>()(
         },
         removeNote: (id) => {
           const r = get().resume;
-          if (get().selectedNoteId === id) set({ selectedNoteId: null });
+          const remaining = get().selectedNoteIds.filter((x) => x !== id);
+          set({
+            selectedNoteIds: remaining,
+            selectedNoteId: remaining.length ? remaining[remaining.length - 1] : null,
+          });
           mutate({ ...r, notes: (r.notes || []).filter((n) => n.id !== id) });
         },
         duplicateNote: (id) => {
@@ -204,7 +326,7 @@ export const useStore = create<State>()(
           if (!src) return;
           const copy: ResumeNote = { ...src, id: uid(), x: src.x + 24, y: src.y + 24 };
           mutate({ ...r, notes: [...(r.notes || []), copy] });
-          set({ selectedNoteId: copy.id });
+          set({ selectedNoteId: copy.id, selectedNoteIds: [copy.id] });
         },
         reorderNote: (id, dir) => {
           const r = get().resume;
