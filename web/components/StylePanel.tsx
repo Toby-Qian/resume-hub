@@ -237,8 +237,33 @@ export function StylePanel() {
 
       {/* Bullet style — controls every <ul> inside .paper ----------------- */}
       <div>
-        <div className="text-xs font-semibold uppercase text-gray-500 mb-2">
-          {(L.theme as any).bullet ?? "项目符号"}
+        <div className="flex items-center justify-between mb-2">
+          <div className="text-xs font-semibold uppercase text-gray-500">
+            {(L.theme as any).bullet ?? "项目符号"}
+          </div>
+          {/* Independent bullet color — falls back to accent when unset. */}
+          <div className="flex items-center gap-1.5">
+            <span className="text-[0.65rem] text-gray-500">
+              {(L.theme as any).bulletColor ?? "颜色"}
+            </span>
+            <input
+              type="color"
+              value={theme.bulletColor ?? theme.accent}
+              onChange={(e) => setTheme({ bulletColor: e.target.value })}
+              className="w-6 h-6 rounded border border-gray-300 cursor-pointer p-0"
+              title={(L.theme as any).bulletColor ?? "项目符号颜色"}
+            />
+            {theme.bulletColor && (
+              <button
+                type="button"
+                onClick={() => setTheme({ bulletColor: undefined })}
+                className="text-[0.65rem] text-gray-400 hover:text-gray-600 underline"
+                title={(L.theme as any).bulletColorReset ?? "跟随主色"}
+              >
+                {(L.theme as any).bulletColorReset ?? "跟随主色"}
+              </button>
+            )}
+          </div>
         </div>
         <div className="grid grid-cols-5 gap-1">
           {([

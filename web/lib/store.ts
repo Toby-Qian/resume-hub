@@ -20,6 +20,9 @@ export interface ThemeTokens {
   fontScale: number;       // 0.9 ~ 1.15
   /** List bullet style applied to all `<ul>` inside .paper. */
   bulletStyle: "disc" | "none" | "dash" | "square" | "circle";
+  /** Hex colour for the bullet marker. When undefined, the marker
+   *  inherits the accent colour (back-compat for older saved resumes). */
+  bulletColor?: string;
   /** Body line-height (CSS unitless). 1.2 ~ 2.0. */
   lineHeight: number;
 }

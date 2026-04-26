@@ -39,6 +39,7 @@ export const T = {
       bullet: "项目符号",
       bulletDisc: "圆点", bulletCircle: "空心", bulletSquare: "方块",
       bulletDash: "破折号", bulletNone: "无",
+      bulletColor: "颜色", bulletColorReset: "跟随主色",
     },
     gallery: {
       title: "GitHub 简历模板画廊",
@@ -190,6 +191,7 @@ export const T = {
       bullet: "Bullet style",
       bulletDisc: "Disc", bulletCircle: "Circle", bulletSquare: "Square",
       bulletDash: "Dash", bulletNone: "None",
+      bulletColor: "Color", bulletColorReset: "Match accent",
     },
     gallery: {
       title: "GitHub Resume Template Gallery",

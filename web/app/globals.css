@@ -51,7 +51,8 @@ body { background: #f3f4f6; color: #111827; font-family: var(--resume-font-sans)
   position: absolute;
   left: 0;
   top: 0;
-  color: var(--resume-accent);
+  /* Falls back to accent if the user hasn't picked a dedicated bullet hue. */
+  color: var(--resume-bullet-color, var(--resume-accent));
   font-weight: 600;
   white-space: pre;
 }

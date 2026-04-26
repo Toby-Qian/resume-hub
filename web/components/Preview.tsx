@@ -281,6 +281,9 @@ export function Preview() {
               : '"\\2022\\00A0"', /* • */
             ["--resume-bullet-indent" as any]:
               (theme.bulletStyle ?? "disc") === "none" ? "0" : "1.25em",
+            // Independent bullet colour (falls back to the accent so legacy
+            // resumes look identical until the user sets one explicitly).
+            ["--resume-bullet-color" as any]: theme.bulletColor ?? theme.accent,
             fontFamily: "var(--resume-font-sans)",
             padding: marginMM > 0 ? `${marginMM}mm` : undefined,
             transform: `scale(${zoom})`,

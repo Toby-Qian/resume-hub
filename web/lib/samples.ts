@@ -10,6 +10,9 @@ export const sampleEN: Resume = {
     website: "https://alexchen.dev",
     summary:
       "Full-stack engineer with 5+ years building reliable web platforms. Passionate about developer experience, distributed systems, and mentoring.",
+    avatar: "/sample-avatar.jpg",
+    showAvatar: true,
+    avatarShape: "portrait",  // 3:4 — overrides each template's per-template shape preference
   },
   work: [
     {
@@ -65,6 +68,9 @@ export const sampleZH: Resume = {
     website: "https://siyuan.dev",
     summary:
       "5 年以上互联网后端与前端经验，专注于高可用系统与开发者体验，善于带新人、推进跨团队协作。",
+    avatar: "/sample-avatar.jpg",
+    showAvatar: true,
+    avatarShape: "portrait",
   },
   work: [
     { id: "w1", company: "某互联网大厂", position: "高级软件工程师",
