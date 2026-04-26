@@ -8,7 +8,10 @@ import { toast } from "@/lib/toast";
 import { compressToDataURL } from "@/lib/imageCompress";
 
 export function Preview() {
-  const { resume, template, theme, lang, addNote, addImageNote, addShapeNote, pageSetup, hiddenSections } = useStore();
+  const { resume, template, theme, lang, addNote, addImageNote, addShapeNote, pageSetup, setPageSetup, hiddenSections } = useStore();
+  // Persisted PageSetups created before `extraPages` existed lack the field.
+  // Coerce to a number so arithmetic / button states behave.
+  const extraPages = Math.max(0, Number((pageSetup as any).extraPages) || 0);
   // Apply visibility toggles by zeroing hidden section arrays. Templates
   // already gate sections on `array.length > 0`, so this hides them
   // without per-template changes.
@@ -134,7 +137,16 @@ export function Preview() {
     measure();
     return () => ro.disconnect();
   }, [pageH]);
-  const totalPages = Math.max(1, Math.ceil(paperHpx / pageH));
+  // Pages required by content alone, then take the larger of (content,
+  // content+extra) so the user-forced pages always show up. Using
+  // (autoPages + extraPages) instead of (1 + extraPages) means: if the
+  // resume already needs 2 pages and the user forces +1, total = 3.
+  const autoPages = Math.max(1, Math.ceil(paperHpx / pageH));
+  const totalPages = Math.max(autoPages, autoPages + 0 + (extraPages || 0));
+  // The min-height to force on the paper so the browser actually grows the
+  // canvas (and the print engine emits the blank pages). When user hasn't
+  // forced extras, leave min-height unset so the natural CSS rule wins.
+  const forcedMinHeightPx = extraPages > 0 ? pageH * (autoPages + extraPages) : undefined;
 
   // ---- Ctrl+wheel zoom on the paper area --------------------------------
   useEffect(() => {
@@ -241,7 +253,34 @@ export function Preview() {
           <span>
             {((L.preview as any).pages ?? "{m} 页").replace("{m}", String(totalPages))}
           </span>
+          {extraPages > 0 && (
+            <span className="ml-1 text-[0.6rem] text-blue-600 font-semibold" title={(L.preview as any).extraPagesHint ?? "其中手动添加的空白页数"}>
+              (+{extraPages})
+            </span>
+          )}
         </span>
+        {/* Manual page add / remove. The "−" button appears only when there
+            are manually-added pages so the bar stays compact otherwise. */}
+        <button
+          type="button"
+          onClick={() => setPageSetup({ extraPages: extraPages + 1 })}
+          className="text-xs h-6 px-2 rounded-full border border-blue-300 bg-blue-50 text-blue-700 hover:bg-blue-100 transition flex items-center gap-1"
+          title={(L.preview as any).addPageHint ?? "在简历末尾追加一张空白页（用于放浮动文本框/图片）"}
+        >
+          <span className="text-blue-600">＋</span>
+          {(L.preview as any).addPage ?? "添加页"}
+        </button>
+        {extraPages > 0 && (
+          <button
+            type="button"
+            onClick={() => setPageSetup({ extraPages: extraPages - 1 })}
+            className="text-xs w-6 h-6 rounded-full border border-gray-300 bg-white text-gray-600 hover:bg-gray-100 transition flex items-center justify-center"
+            title={(L.preview as any).removePageHint ?? "移除最后一张手动添加的空白页"}
+            aria-label="remove extra page"
+          >
+            −
+          </button>
+        )}
         <span className="w-px h-4 bg-gray-200 mx-1" />
         <button
           type="button"
@@ -284,6 +323,7 @@ export function Preview() {
             // Independent bullet colour (falls back to the accent so legacy
             // resumes look identical until the user sets one explicitly).
             ["--resume-bullet-color" as any]: theme.bulletColor ?? theme.accent,
+            ...(forcedMinHeightPx ? { minHeight: forcedMinHeightPx } : null),
             fontFamily: "var(--resume-font-sans)",
             padding: marginMM > 0 ? `${marginMM}mm` : undefined,
             transform: `scale(${zoom})`,

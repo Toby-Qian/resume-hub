@@ -50,6 +50,11 @@ export interface PageSetup {
   showPageNumbers: boolean;
   /** When true, footer carries "Name · email" line on every printed page. */
   showFooter: boolean;
+  /** Manually appended blank pages on top of whatever the content needs.
+   *  Lets the user reserve a second/third page for free-form floating
+   *  elements (text boxes, images, shapes) even when the resume body
+   *  doesn't naturally overflow. */
+  extraPages: number;
 }
 
 export const defaultPageSetup: PageSetup = {
@@ -57,6 +62,7 @@ export const defaultPageSetup: PageSetup = {
   margin: 0,
   showPageNumbers: false,
   showFooter: false,
+  extraPages: 0,
 };
 
 /** Map legacy string values for `pageSetup.margin` to mm.                    */
