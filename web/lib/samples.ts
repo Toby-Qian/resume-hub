@@ -60,7 +60,7 @@ export const sampleEN: Resume = {
 
 export const sampleZH: Resume = {
   basics: {
-    name: "钱思远",
+    name: "柒言",
     label: "全栈软件工程师",
     email: "siyuan.qian@example.com",
     phone: "138 0000 0000",
