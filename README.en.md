@@ -7,7 +7,7 @@
 
 > 🇺🇸 English ｜ 🇨🇳 [简体中文](README.md)
 
-A **fully client-side**, bilingual (Chinese & English) résumé editor: 14 built-in templates, PowerPoint-style free-form layout (multi-select / align / snap), one-click PDF export. Your data stays in **your** browser — nothing is uploaded.
+A **fully client-side**, bilingual (Chinese & English) résumé editor: 16 built-in templates, PowerPoint-style free-form layout (multi-select / align / snap), one-click PDF export. Your data stays in **your** browser — nothing is uploaded.
 
 > 🚀 **Try it**: <https://resume-hub-mu-eight.vercel.app>
 
@@ -19,7 +19,11 @@ A **fully client-side**, bilingual (Chinese & English) résumé editor: 14 built
 
 ### Editor
 - 📝 **JSON Resume–compatible schema** — work / education / projects / skills / awards / languages
-- 🎨 **14 built-in templates** — Modern · Classic · Minimal · 4 Academic variants · Chinese-formal · Chinese-creative · Timeline · Compact · Elegant
+- 🎨 **16 built-in templates** — Modern · Classic · Minimal · Elegant · Compact · Timeline · Chinese-formal · Chinese-creative · 4 Academic variants + 3 brand-new visual styles:
+  - 🌈 **Infographic** — animated skill bars + 5-dot language proficiency + ribbon-style section heads
+  - 📰 **Magazine** — large serif masthead + drop-cap summary + two-column body
+  - 🌑 **Dark Card** — accent-gradient hero band + soft card panels + chip-style keyword tags
+- 🌐 **Bilingual section titles** — toggling the UI language flips every template's headings (Experience ↔ 工作经历, Education ↔ 教育背景 …) instantly
 - 🖼️ **Hover thumbnails** preview each template rendered with *your* data
 - 📅 Native month picker + "Present" toggle for date fields
 - 📊 **Completeness score** — 13 weighted signals; hover to see what's missing
@@ -92,7 +96,7 @@ resume-hub/
 │   │                            · StylePanel · TemplatePreview · DateField
 │   │                            · DisclaimerModal · ErrorBoundary · ...
 │   ├── lib/                     store · schema · i18n · samples · imageCompress
-│   ├── templates/               14 built-in templates + shared Avatar/Section
+│   ├── templates/               16 built-in templates + shared Avatar/Section + useSectionLabels
 │   └── public/                  sample-avatar.jpg · static assets
 └── README.md / README.en.md
 ```

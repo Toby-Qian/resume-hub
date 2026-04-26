@@ -7,7 +7,7 @@
 
 > 🇨🇳 简体中文 ｜ 🇺🇸 [English](README.en.md)
 
-一个**纯前端**的中英双语简历编辑器：14 套内置模板、PPT 式自由排版（多选 / 对齐 / 吸附）、一键导出 PDF。所有数据只保存在你自己的浏览器里，不上传任何服务器。
+一个**纯前端**的中英双语简历编辑器：16 套内置模板、PPT 式自由排版（多选 / 对齐 / 吸附）、一键导出 PDF。所有数据只保存在你自己的浏览器里，不上传任何服务器。
 
 > 🚀 **在线试用**：<https://resume-hub-mu-eight.vercel.app>
 
@@ -19,7 +19,11 @@
 
 ### 编辑器
 - 📝 **JSON Resume 兼容 schema** — 工作 / 教育 / 项目 / 技能 / 奖项 / 语言一应俱全
-- 🎨 **14 套内置模板** — 现代 / 经典 / 极简 / 学术（4 套）/ 中文正式 / 中文创意 / 时间轴 / 紧凑等
+- 🎨 **16 套内置模板** — 现代 / 经典 / 极简 / 优雅 / 紧凑 / 时间轴 / 中文正式 / 中文创意 / 学术（4 套）+ 三套全新视觉风格：
+  - 🌈 **信息图（Infographic）** — 技能进度条 + 5 点语言流利度 + 三角丝带式节头
+  - 📰 **杂志（Magazine）** — 大衬线 masthead + 摘要首字母放大 + 双栏正文
+  - 🌑 **深色卡片（Dark Card）** — 主色渐变 hero 横条 + 浅色卡片化经历 + 关键字 chip
+- 🌐 **中英文一键切换** — 切换 UI 语言时，所有模版的小标题（Experience ↔ 工作经历 / Education ↔ 教育背景 …）也跟着切
 - 🖼️ **模板缩略图悬浮预览** — 鼠标悬停时显示用你自己数据渲染的实际效果
 - 📅 **原生月份选择器** + "至今" 快捷开关
 - 📊 **完整度评分** — 13 项加权指标，悬浮看缺什么
@@ -92,7 +96,7 @@ resume-hub/
 │   │                            · StylePanel · TemplatePreview · DateField
 │   │                            · DisclaimerModal · ErrorBoundary · ...
 │   ├── lib/                     store · schema · i18n · samples · imageCompress
-│   ├── templates/               14 套内置模板 + 共享 Avatar/Section 组件
+│   ├── templates/               16 套内置模板 + 共享 Avatar/Section 组件 + useSectionLabels
 │   └── public/                  sample-avatar.jpg · 静态资源
 └── README.md / README.en.md
 ```
