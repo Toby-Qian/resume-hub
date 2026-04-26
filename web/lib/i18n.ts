@@ -8,6 +8,7 @@ export const T = {
     sections: {
       basics: "基本信息", work: "工作经历", education: "教育背景",
       projects: "项目经历", skills: "技能", awards: "荣誉", languages: "语言",
+      publications: "学术论文", talks: "学术报告", teaching: "教学经历",
     },
     fields: {
       name: "姓名", label: "职位/头衔", email: "邮箱", phone: "电话",
@@ -25,6 +26,9 @@ export const T = {
       skillName: "技能类别", level: "熟练度",
       awardTitle: "标题", date: "日期", awarder: "颁发方",
       language: "语言", fluency: "水平",
+      pubTitle: "论文标题", pubAuthors: "作者", pubVenue: "刊物 / 会议", pubDoi: "DOI",
+      talkTitle: "报告标题", talkVenue: "会议 / 单位",
+      teachCourse: "课程名", teachInstitution: "学校", teachRole: "身份",
     },
     actions: {
       add: "添加", remove: "删除", loadSample: "加载示例", reset: "清空", print: "导出 PDF",
@@ -165,6 +169,7 @@ export const T = {
     sections: {
       basics: "Basics", work: "Work", education: "Education",
       projects: "Projects", skills: "Skills", awards: "Awards", languages: "Languages",
+      publications: "Publications", talks: "Talks", teaching: "Teaching",
     },
     fields: {
       name: "Name", label: "Headline", email: "Email", phone: "Phone",
@@ -182,6 +187,9 @@ export const T = {
       skillName: "Category", level: "Level",
       awardTitle: "Title", date: "Date", awarder: "Awarder",
       language: "Language", fluency: "Fluency",
+      pubTitle: "Title", pubAuthors: "Authors", pubVenue: "Venue / Journal", pubDoi: "DOI",
+      talkTitle: "Talk title", talkVenue: "Venue / Host",
+      teachCourse: "Course", teachInstitution: "Institution", teachRole: "Role",
     },
     actions: {
       add: "Add", remove: "Remove", loadSample: "Load sample", reset: "Reset", print: "Export PDF",

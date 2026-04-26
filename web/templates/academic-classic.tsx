@@ -108,6 +108,50 @@ export default function AcademicClassic({ resume }: TemplateProps) {
         </>
       )}
 
+      {resume.publications && resume.publications.length > 0 && (
+        <><H>{L.publicationsOnly}</H>
+          <ol className="text-[0.92em] space-y-1">
+            {resume.publications.map((p, i) => (
+              <li key={p.id} className={itemCls(p, "flex gap-2")}>
+                <span className="font-mono text-gray-600 shrink-0">[{i + 1}]</span>
+                <div>
+                  {p.authors && <span className="text-gray-700"><E path={`publications.${i}.authors`}>{p.authors}</E>. </span>}
+                  <b><E path={`publications.${i}.title`}>{p.title}</E></b>
+                  {p.venue && <>. <i><E path={`publications.${i}.venue`}>{p.venue}</E></i></>}
+                  {p.date && <span className="text-gray-600"> ({p.date})</span>}
+                  {p.doi && <span className="text-[0.88em] text-gray-600"> · doi: <E path={`publications.${i}.doi`}>{p.doi}</E></span>}
+                </div>
+              </li>
+            ))}
+          </ol>
+        </>
+      )}
+
+      {resume.talks && resume.talks.length > 0 && (
+        <><H>{L.talks}</H>
+          <ul className="list-disc ml-5 text-[0.92em]">
+            {resume.talks.map((tk, i) => (
+              <li key={tk.id} className={itemCls(tk)}>
+                <b><E path={`talks.${i}.title`}>{tk.title}</E></b>{tk.venue && <>, <i><E path={`talks.${i}.venue`}>{tk.venue}</E></i></>}{tk.date && <span className="text-gray-600"> ({tk.date})</span>}
+              </li>
+            ))}
+          </ul>
+        </>
+      )}
+
+      {resume.teaching && resume.teaching.length > 0 && (
+        <><H>{L.teaching}</H>
+          {resume.teaching.map((tg, i) => (
+            <div key={tg.id} className={itemCls(tg, "mb-1.5 text-[0.92em]")}>
+              <div className="flex justify-between">
+                <div><b><E path={`teaching.${i}.course`}>{tg.course}</E></b>{tg.institution && <>, <i><E path={`teaching.${i}.institution`}>{tg.institution}</E></i></>}{tg.role && <span className="text-gray-600"> · <E path={`teaching.${i}.role`}>{tg.role}</E></span>}</div>
+                <div className="text-gray-600">{range(tg.startDate, tg.endDate)}</div>
+              </div>
+            </div>
+          ))}
+        </>
+      )}
+
       {resume.languages.length > 0 && (
         <><H>{L.languages}</H>
           <div className="text-[0.92em]">{resume.languages.map((l, i) => `${l.language} (${l.fluency})`).join("; ")}</div>

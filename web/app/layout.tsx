@@ -3,6 +3,7 @@ import "./globals.css";
 import { Toaster } from "@/components/Toast";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { ReportingBootstrap } from "@/components/ReportingBootstrap";
+import { MobileWarning } from "@/components/MobileWarning";
 
 export const metadata: Metadata = {
   title: "Resume Hub — 简历聚合 & 编辑器",
@@ -30,6 +31,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <ReportingBootstrap />
           {children}
         </ErrorBoundary>
+        <MobileWarning />
         <Toaster />
       </body>
     </html>

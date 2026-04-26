@@ -16,6 +16,9 @@ const SECTION_ICONS: Record<string, string> = {
   skills: "🛠",
   awards: "🏆",
   languages: "🌐",
+  publications: "📚",
+  talks: "🎤",
+  teaching: "🧑‍🏫",
 };
 
 /* -------------------------------------------------------------------------
@@ -422,6 +425,64 @@ export function Editor() {
           <div className="grid grid-cols-2 gap-x-3">
             <Field label={L.fields.language} value={l.language} onChange={(v) => patch("languages", l.id, "language", v)} />
             <Field label={L.fields.fluency} value={l.fluency} onChange={(v) => patch("languages", l.id, "fluency", v)} />
+          </div>
+        </SortableCard>
+      ))}
+
+      {/* Optional academic-flavoured sections — only the academic templates
+          actively render these, but the editor exposes them universally so a
+          user on, say, "modern" who switches to "academic-pub" later won't
+          have to re-key data. Empty arrays are silently skipped by templates. */}
+      <SectionTitle sectionKey="publications" count={(resume.publications || []).length} open={isOpen("publications")} onToggle={() => toggle("publications")} addLabel={addLabel} onAdd={() => addItem("publications")}>{(L.sections as any).publications}</SectionTitle>
+      {isOpen("publications") && (resume.publications || []).map((p) => (
+        <SortableCard key={p.id} section="publications" id={p.id}
+          onRemove={() => removeItem("publications", p.id)}
+          breakBefore={(p as any).breakBefore}
+          onToggleBreak={(v) => patch("publications", p.id, "breakBefore", v)}
+          onReorder={reorderItem} reorderHint={reorderHint} breakLabel={breakLabel} removeLabel={removeLabel}>
+          <Field label={(L.fields as any).pubTitle} value={p.title} onChange={(v) => patch("publications", p.id, "title", v)} />
+          <Field label={(L.fields as any).pubAuthors} value={p.authors || ""} onChange={(v) => patch("publications", p.id, "authors", v)} />
+          <div className="grid grid-cols-2 gap-x-3">
+            <Field label={(L.fields as any).pubVenue} value={p.venue || ""} onChange={(v) => patch("publications", p.id, "venue", v)} />
+            <DateField label={L.fields.date} value={p.date || ""} onChange={(v) => patch("publications", p.id, "date", v)} />
+            <Field label={(L.fields as any).pubDoi} value={p.doi || ""} onChange={(v) => patch("publications", p.id, "doi", v)} />
+            <Field label={L.fields.url} value={p.url || ""} onChange={(v) => patch("publications", p.id, "url", v)} />
+          </div>
+          <Field label={L.fields.summary} value={p.summary || ""} onChange={(v) => patch("publications", p.id, "summary", v)} />
+        </SortableCard>
+      ))}
+
+      <SectionTitle sectionKey="talks" count={(resume.talks || []).length} open={isOpen("talks")} onToggle={() => toggle("talks")} addLabel={addLabel} onAdd={() => addItem("talks")}>{(L.sections as any).talks}</SectionTitle>
+      {isOpen("talks") && (resume.talks || []).map((tk) => (
+        <SortableCard key={tk.id} section="talks" id={tk.id}
+          onRemove={() => removeItem("talks", tk.id)}
+          breakBefore={(tk as any).breakBefore}
+          onToggleBreak={(v) => patch("talks", tk.id, "breakBefore", v)}
+          onReorder={reorderItem} reorderHint={reorderHint} breakLabel={breakLabel} removeLabel={removeLabel}>
+          <Field label={(L.fields as any).talkTitle} value={tk.title} onChange={(v) => patch("talks", tk.id, "title", v)} />
+          <div className="grid grid-cols-2 gap-x-3">
+            <Field label={(L.fields as any).talkVenue} value={tk.venue || ""} onChange={(v) => patch("talks", tk.id, "venue", v)} />
+            <DateField label={L.fields.date} value={tk.date || ""} onChange={(v) => patch("talks", tk.id, "date", v)} />
+            <Field label={L.fields.location} value={tk.location || ""} onChange={(v) => patch("talks", tk.id, "location", v)} />
+            <Field label={L.fields.url} value={tk.url || ""} onChange={(v) => patch("talks", tk.id, "url", v)} />
+          </div>
+        </SortableCard>
+      ))}
+
+      <SectionTitle sectionKey="teaching" count={(resume.teaching || []).length} open={isOpen("teaching")} onToggle={() => toggle("teaching")} addLabel={addLabel} onAdd={() => addItem("teaching")}>{(L.sections as any).teaching}</SectionTitle>
+      {isOpen("teaching") && (resume.teaching || []).map((tg) => (
+        <SortableCard key={tg.id} section="teaching" id={tg.id}
+          onRemove={() => removeItem("teaching", tg.id)}
+          breakBefore={(tg as any).breakBefore}
+          onToggleBreak={(v) => patch("teaching", tg.id, "breakBefore", v)}
+          onReorder={reorderItem} reorderHint={reorderHint} breakLabel={breakLabel} removeLabel={removeLabel}>
+          <div className="grid grid-cols-2 gap-x-3">
+            <Field label={(L.fields as any).teachCourse} value={tg.course} onChange={(v) => patch("teaching", tg.id, "course", v)} />
+            <Field label={(L.fields as any).teachInstitution} value={tg.institution || ""} onChange={(v) => patch("teaching", tg.id, "institution", v)} />
+            <Field label={(L.fields as any).teachRole} value={tg.role || ""} onChange={(v) => patch("teaching", tg.id, "role", v)} />
+            <Field label={L.fields.summary} value={tg.summary || ""} onChange={(v) => patch("teaching", tg.id, "summary", v)} />
+            <DateField label={L.fields.startDate} value={tg.startDate || ""} onChange={(v) => patch("teaching", tg.id, "startDate", v)} />
+            <DateField label={L.fields.endDate} value={tg.endDate || ""} allowPresent onChange={(v) => patch("teaching", tg.id, "endDate", v)} />
           </div>
         </SortableCard>
       ))}

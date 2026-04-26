@@ -7,6 +7,38 @@ import { NotesLayer } from "./NotesLayer";
 import { toast } from "@/lib/toast";
 import { compressToDataURL } from "@/lib/imageCompress";
 
+/** Parse `#rrggbb` / `#rgb` / `rgb(r, g, b)` into "r, g, b" — used so
+ *  templates can build rgba(...) tints as a fallback for browsers without
+ *  CSS color-mix support (Safari < 16.4). */
+function accentToRgbTriplet(c: string): string {
+  if (!c) return "37, 99, 235";
+  const s = c.trim();
+  // #rgb / #rrggbb
+  if (s.startsWith("#")) {
+    let h = s.slice(1);
+    if (h.length === 3) h = h.split("").map((x) => x + x).join("");
+    if (h.length === 6) {
+      const r = parseInt(h.slice(0, 2), 16);
+      const g = parseInt(h.slice(2, 4), 16);
+      const b = parseInt(h.slice(4, 6), 16);
+      if (Number.isFinite(r) && Number.isFinite(g) && Number.isFinite(b)) return `${r}, ${g}, ${b}`;
+    }
+  }
+  // rgb(...) / rgba(...)
+  const m = s.match(/(\d+)[,\s]+(\d+)[,\s]+(\d+)/);
+  if (m) return `${m[1]}, ${m[2]}, ${m[3]}`;
+  return "37, 99, 235";
+}
+
+/** Mix the accent toward black by `pct` (0–1). Used for the dark hero band
+ *  in dark-card; rgba can't darken (only lighten over white). */
+function darkenHex(c: string, pct: number): string {
+  const trip = accentToRgbTriplet(c).split(",").map((x) => parseInt(x, 10));
+  if (trip.length !== 3) return c;
+  const [r, g, b] = trip.map((v) => Math.max(0, Math.min(255, Math.round(v * (1 - pct)))));
+  return `rgb(${r}, ${g}, ${b})`;
+}
+
 export function Preview() {
   const { resume, template, theme, lang, addNote, addImageNote, addShapeNote, pageSetup, setPageSetup, hiddenSections } = useStore();
   // Boolean "open the second-page canvas". Persisted PageSetups from the
@@ -303,6 +335,10 @@ export function Preview() {
           className={`paper paper-flow print-area density-${theme.density} ${pageSetup.size === "Letter" ? "paper-letter" : ""}`}
           style={{
             ["--resume-accent" as any]: theme.accent,
+            // Companion variables exposed to templates so they can build
+            // tints/shades that work even when color-mix() is unavailable.
+            ["--resume-accent-rgb" as any]: accentToRgbTriplet(theme.accent),
+            ["--resume-accent-dark" as any]: darkenHex(theme.accent, 0.35),
             ["--resume-font-sans" as any]: theme.fontSans,
             ["--resume-font-serif" as any]: theme.fontSerif,
             ["--resume-font-scale" as any]: String(theme.fontScale),

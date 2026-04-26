@@ -25,8 +25,8 @@ export default function Elegant({ resume }: TemplateProps) {
     <div className="grid grid-cols-[34%_1fr]" style={{ minHeight: "inherit" }}>
       <aside
         style={{
-          background: "color-mix(in srgb, var(--resume-accent) 10%, white)",
-          borderRight: "1px solid color-mix(in srgb, var(--resume-accent) 25%, white)",
+          background: "var(--resume-tint-10)",
+          borderRight: "1px solid var(--resume-tint-25)",
           padding: "var(--pad)",
         }}
       >

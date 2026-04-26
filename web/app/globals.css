@@ -23,6 +23,21 @@ body { background: #f3f4f6; color: #111827; font-family: var(--resume-font-sans)
   --resume-line-height: 1.55;
   --resume-bullet: "\2022\00A0";       /* • + nbsp */
   --resume-bullet-indent: 1.25em;
+  /* RGB triplet of the accent ("37, 99, 235") and a pre-darkened shade —
+     also set by Preview.tsx. Defaults match the default blue accent so
+     templates render correctly during the very first frame. */
+  --resume-accent-rgb: 37, 99, 235;
+  --resume-accent-dark: rgb(24, 65, 153);
+  /* Tints (lighten over white) — fallback path uses rgba so Safari < 16.4
+     and any other browser without color-mix() still gets the right look.
+     Modern browsers override these via the @supports block below. */
+  --resume-tint-04: rgba(var(--resume-accent-rgb), 0.04);
+  --resume-tint-08: rgba(var(--resume-accent-rgb), 0.08);
+  --resume-tint-10: rgba(var(--resume-accent-rgb), 0.10);
+  --resume-tint-12: rgba(var(--resume-accent-rgb), 0.12);
+  --resume-tint-25: rgba(var(--resume-accent-rgb), 0.25);
+  --resume-tint-30: rgba(var(--resume-accent-rgb), 0.30);
+  --resume-tint-35: rgba(var(--resume-accent-rgb), 0.35);
   width: var(--page-w);
   min-height: var(--page-h);
   background: white;
@@ -31,6 +46,22 @@ body { background: #f3f4f6; color: #111827; font-family: var(--resume-font-sans)
   line-height: var(--resume-line-height);
   color: #111827;
   position: relative;
+}
+
+/* When the browser supports color-mix(), prefer it for the tints so the
+   blend follows perceptual sRGB rather than a flat alpha overlay. The
+   visual delta is small but matters for darker accent colours where rgba
+   over white can read slightly washed-out. */
+@supports (background: color-mix(in srgb, red, blue)) {
+  .paper {
+    --resume-tint-04: color-mix(in srgb, var(--resume-accent) 4%, white);
+    --resume-tint-08: color-mix(in srgb, var(--resume-accent) 8%, white);
+    --resume-tint-10: color-mix(in srgb, var(--resume-accent) 10%, white);
+    --resume-tint-12: color-mix(in srgb, var(--resume-accent) 12%, white);
+    --resume-tint-25: color-mix(in srgb, var(--resume-accent) 25%, white);
+    --resume-tint-30: color-mix(in srgb, var(--resume-accent) 30%, white);
+    --resume-tint-35: color-mix(in srgb, var(--resume-accent) 35%, white);
+  }
 }
 
 /* ---- Theme-driven bullets ---------------------------------------------- */

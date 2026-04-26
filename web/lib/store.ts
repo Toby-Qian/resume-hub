@@ -145,6 +145,9 @@ const blankItem = (s: SectionKey): any => {
     case "skills": return { id, name: "", level: "", keywords: [] };
     case "awards": return { id, title: "", date: "", awarder: "", summary: "" };
     case "languages": return { id, language: "", fluency: "" };
+    case "publications": return { id, title: "", authors: "", venue: "", date: "", doi: "", url: "", summary: "" };
+    case "talks": return { id, title: "", venue: "", date: "", location: "", url: "" };
+    case "teaching": return { id, course: "", institution: "", role: "", startDate: "", endDate: "", summary: "" };
   }
 };
 
@@ -416,6 +419,13 @@ export const useStore = create<State>()(
       merge: (persisted, current) => {
         const p = (persisted ?? {}) as any;
         if (p.template === "academic-cn") p.template = "cn-formal";
+        // Backfill new optional academic sections so legacy resumes don't
+        // crash code paths that assume an array.
+        if (p.resume) {
+          p.resume.publications = p.resume.publications ?? [];
+          p.resume.talks = p.resume.talks ?? [];
+          p.resume.teaching = p.resume.teaching ?? [];
+        }
         return { ...current, ...p };
       },
     }

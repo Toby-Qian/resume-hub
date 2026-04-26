@@ -37,7 +37,26 @@ export default function AcademicPub({ resume }: TemplateProps) {
       </Draggable>
 
       <H>{L.publicationsOnly}</H>
-      {resume.projects.length === 0 ? (
+      {/* Prefer the dedicated publications array when populated; otherwise
+          fall back to projects so legacy resumes still render usefully. */}
+      {(resume.publications && resume.publications.length > 0) ? (
+        <ol className="text-[0.9em] space-y-1.5">
+          {resume.publications.map((p, i) => (
+            <li key={p.id} className={itemCls(p, "flex gap-2")}>
+              <span className="font-mono text-gray-600 shrink-0">[{i + 1}]</span>
+              <div className="min-w-0">
+                {p.authors && <span className="text-gray-700"><E path={`publications.${i}.authors`}>{p.authors}</E>. </span>}
+                <b><E path={`publications.${i}.title`}>{p.title}</E></b>
+                {p.venue && <span>. <i><E path={`publications.${i}.venue`}>{p.venue}</E></i></span>}
+                {p.date && <span className="text-gray-600"> ({p.date})</span>}
+                {p.doi && <div className="text-[0.85em] text-gray-600">doi: <E path={`publications.${i}.doi`}>{p.doi}</E></div>}
+                {p.url && <div className="text-[0.85em] text-gray-600 break-all"><E path={`publications.${i}.url`}>{p.url}</E></div>}
+                {p.summary && <div className="text-[0.85em] text-gray-700 italic"><E path={`publications.${i}.summary`} multiline>{p.summary}</E></div>}
+              </div>
+            </li>
+          ))}
+        </ol>
+      ) : resume.projects.length === 0 ? (
         <div className="text-[0.88em] italic text-gray-500">No publications yet.</div>
       ) : (
         <ol className="text-[0.9em] space-y-1.5">
@@ -97,6 +116,35 @@ export default function AcademicPub({ resume }: TemplateProps) {
               </li>
             ))}
           </ul>
+        </>
+      )}
+
+      {resume.talks && resume.talks.length > 0 && (
+        <><H>{L.talks}</H>
+          <ul className="list-disc ml-5 text-[0.9em]">
+            {resume.talks.map((tk, i) => (
+              <li key={tk.id} className={itemCls(tk)}>
+                <b><E path={`talks.${i}.title`}>{tk.title}</E></b>
+                {tk.venue && <>, <i><E path={`talks.${i}.venue`}>{tk.venue}</E></i></>}
+                {tk.location && <span className="text-gray-600"> · {tk.location}</span>}
+                {tk.date && <span className="text-gray-600"> ({tk.date})</span>}
+              </li>
+            ))}
+          </ul>
+        </>
+      )}
+
+      {resume.teaching && resume.teaching.length > 0 && (
+        <><H>{L.teaching}</H>
+          {resume.teaching.map((tg, i) => (
+            <div key={tg.id} className={itemCls(tg, "mb-1.5 text-[0.9em]")}>
+              <div className="flex justify-between">
+                <div><b><E path={`teaching.${i}.course`}>{tg.course}</E></b>{tg.institution && <>, <i><E path={`teaching.${i}.institution`}>{tg.institution}</E></i></>}{tg.role && <span className="text-gray-600"> · <E path={`teaching.${i}.role`}>{tg.role}</E></span>}</div>
+                <div className="text-gray-600">{range(tg.startDate, tg.endDate)}</div>
+              </div>
+              {tg.summary && <div className="text-gray-700"><E path={`teaching.${i}.summary`} multiline>{tg.summary}</E></div>}
+            </div>
+          ))}
         </>
       )}
 

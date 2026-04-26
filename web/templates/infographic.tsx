@@ -52,7 +52,7 @@ export default function Infographic({ resume }: TemplateProps) {
   return (
     <div className="grid grid-cols-[36%_1fr]" style={{ minHeight: "inherit" }}>
       <aside style={{
-        background: "color-mix(in srgb, var(--resume-accent) 8%, white)",
+        background: "var(--resume-tint-08)",
         padding: "var(--pad)",
       }}>
         {b.showAvatar && b.avatar && (
@@ -138,7 +138,7 @@ export default function Infographic({ resume }: TemplateProps) {
             <Ribbon>{L.experience}</Ribbon>
             {resume.work.map((w, i) => (
               <div key={w.id} className={itemCls(w, "mb-3 text-[0.92em] pl-3 border-l-2")}
-                style={{ borderColor: "color-mix(in srgb, var(--resume-accent) 35%, white)" }}>
+                style={{ borderColor: "var(--resume-tint-35)" }}>
                 <div className="flex justify-between items-baseline">
                   <div><b><E path={`work.${i}.position`}>{w.position}</E></b> · <span className="text-gray-700"><E path={`work.${i}.company`}>{w.company}</E></span></div>
                   <div className="text-[0.85em] px-2 rounded text-white font-semibold whitespace-nowrap"
@@ -158,7 +158,7 @@ export default function Infographic({ resume }: TemplateProps) {
             <Ribbon>{L.projects}</Ribbon>
             {resume.projects.map((p, i) => (
               <div key={p.id} className={itemCls(p, "mb-3 text-[0.92em] pl-3 border-l-2")}
-                style={{ borderColor: "color-mix(in srgb, var(--resume-accent) 35%, white)" }}>
+                style={{ borderColor: "var(--resume-tint-35)" }}>
                 <div className="flex justify-between items-baseline">
                   <div><b><E path={`projects.${i}.name`}>{p.name}</E></b></div>
                   <div className="text-[0.85em] text-gray-500 whitespace-nowrap">{range(p.startDate, p.endDate)}</div>
@@ -173,7 +173,7 @@ export default function Infographic({ resume }: TemplateProps) {
                   <div className="flex flex-wrap gap-1 mt-1">
                     {p.keywords.map((k, j) => (
                       <span key={j} className="text-[0.78em] px-1.5 py-0.5 rounded"
-                        style={{ background: "color-mix(in srgb, var(--resume-accent) 12%, white)", color: "var(--resume-accent)" }}>{k}</span>
+                        style={{ background: "var(--resume-tint-12)", color: "var(--resume-accent)" }}>{k}</span>
                     ))}
                   </div>
                 )}
@@ -187,7 +187,7 @@ export default function Infographic({ resume }: TemplateProps) {
             <Ribbon>{L.education}</Ribbon>
             {resume.education.map((e, i) => (
               <div key={e.id} className={itemCls(e, "mb-2 text-[0.92em] pl-3 border-l-2")}
-                style={{ borderColor: "color-mix(in srgb, var(--resume-accent) 35%, white)" }}>
+                style={{ borderColor: "var(--resume-tint-35)" }}>
                 <div className="flex justify-between items-baseline">
                   <div><b><E path={`education.${i}.institution`}>{e.institution}</E></b> · <E path={`education.${i}.studyType`}>{e.studyType}</E>, <E path={`education.${i}.area`}>{e.area}</E></div>
                   <div className="text-[0.85em] text-gray-500 whitespace-nowrap">{range(e.startDate, e.endDate)}</div>

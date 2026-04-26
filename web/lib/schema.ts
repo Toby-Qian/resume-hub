@@ -74,6 +74,42 @@ export interface ResumeLanguage {
   fluency: string;
 }
 
+/** Academic publication. Distinct from `projects` so academic templates can
+ *  render proper citation lists (numbered, with venue/authors/DOI). Falls
+ *  back to `projects` in academic templates when this array is empty. */
+export interface ResumePublication {
+  id: string;
+  title: string;
+  authors?: string;       // free text — "A. Doe, B. Smith, C. Lee"
+  venue?: string;         // journal / conference name
+  date?: string;          // YYYY-MM
+  doi?: string;
+  url?: string;
+  summary?: string;
+  breakBefore?: boolean;
+}
+
+export interface ResumeTalk {
+  id: string;
+  title: string;
+  venue?: string;         // conference / event / institution
+  date?: string;
+  location?: string;
+  url?: string;
+  breakBefore?: boolean;
+}
+
+export interface ResumeTeaching {
+  id: string;
+  course: string;
+  institution?: string;
+  role?: string;          // Lecturer / TA / Guest lecturer ...
+  startDate?: string;
+  endDate?: string;
+  summary?: string;
+  breakBefore?: boolean;
+}
+
 /** Free-floating text box the user can drop anywhere on the paper for layout
  *  freedom beyond the template's fixed sections. Coordinates are relative to
  *  the .paper top-left, in px at 96dpi A4 scale. */
@@ -110,12 +146,20 @@ export interface Resume {
   skills: ResumeSkill[];
   awards: ResumeAward[];
   languages: ResumeLanguage[];
+  /** Optional academic-flavoured sections. Older saved resumes don't have
+   *  these; templates that read them must treat undefined as `[]`. */
+  publications?: ResumePublication[];
+  talks?: ResumeTalk[];
+  teaching?: ResumeTeaching[];
   notes?: ResumeNote[];
 }
 
 export const emptyResume = (): Resume => ({
   basics: { name: "", label: "", email: "", phone: "", location: "", website: "", summary: "" },
-  work: [], education: [], projects: [], skills: [], awards: [], languages: [], notes: [],
+  work: [], education: [], projects: [], skills: [], awards: [], languages: [],
+  publications: [], talks: [], teaching: [], notes: [],
 });
 
-export type SectionKey = "work" | "education" | "projects" | "skills" | "awards" | "languages";
+export type SectionKey =
+  | "work" | "education" | "projects" | "skills" | "awards" | "languages"
+  | "publications" | "talks" | "teaching";

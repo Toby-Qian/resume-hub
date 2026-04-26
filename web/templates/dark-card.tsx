@@ -24,7 +24,7 @@ export default function DarkCard({ resume }: TemplateProps) {
   );
   const Card = ({ children, className = "", breakBefore = false }: { children: React.ReactNode; className?: string; breakBefore?: boolean }) => (
     <div className={`resume-item ${breakBefore ? "page-break-before" : ""} relative pl-4 py-2 mb-2 ${className}`}
-      style={{ borderLeft: "3px solid color-mix(in srgb, var(--resume-accent) 35%, white)", background: "color-mix(in srgb, var(--resume-accent) 4%, white)" }}>
+      style={{ borderLeft: "3px solid var(--resume-tint-35)", background: "var(--resume-tint-04)" }}>
       {children}
     </div>
   );
@@ -32,7 +32,7 @@ export default function DarkCard({ resume }: TemplateProps) {
     <div>
       {/* Hero band */}
       <div style={{
-        background: "linear-gradient(135deg, color-mix(in srgb, var(--resume-accent) 90%, black) 0%, color-mix(in srgb, var(--resume-accent) 65%, black) 100%)",
+        background: "linear-gradient(135deg, var(--resume-accent) 0%, var(--resume-accent-dark) 100%)",
         color: "white",
         padding: "calc(var(--pad) * 0.75) var(--pad)",
       }}>
@@ -69,7 +69,7 @@ export default function DarkCard({ resume }: TemplateProps) {
                 <div className="flex justify-between items-baseline">
                   <div className="font-semibold"><E path={`work.${i}.position`}>{w.position}</E> <span className="font-normal text-gray-700">@ <E path={`work.${i}.company`}>{w.company}</E></span></div>
                   <div className="text-[0.82em] px-2 py-0.5 rounded-full font-medium"
-                    style={{ background: "color-mix(in srgb, var(--resume-accent) 12%, white)", color: "var(--resume-accent)" }}>
+                    style={{ background: "var(--resume-tint-12)", color: "var(--resume-accent)" }}>
                     {range(w.startDate, w.endDate)}
                   </div>
                 </div>
@@ -102,7 +102,7 @@ export default function DarkCard({ resume }: TemplateProps) {
                     {p.keywords.map((k, j) => (
                       <span key={j} className="text-[0.78em] px-2 py-0.5 rounded-full border"
                         style={{
-                          borderColor: "color-mix(in srgb, var(--resume-accent) 30%, white)",
+                          borderColor: "var(--resume-tint-30)",
                           color: "var(--resume-accent)",
                         }}>{k}</span>
                     ))}

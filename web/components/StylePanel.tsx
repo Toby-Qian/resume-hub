@@ -4,9 +4,10 @@ import type { SectionKey } from "@/lib/schema";
 import { t } from "@/lib/i18n";
 import { TemplateGrid } from "./TemplatePreview";
 
-const SECTION_KEYS: SectionKey[] = ["work", "education", "projects", "skills", "awards", "languages"];
+const SECTION_KEYS: SectionKey[] = ["work", "education", "projects", "skills", "awards", "languages", "publications", "talks", "teaching"];
 const SECTION_ICONS: Record<SectionKey, string> = {
   work: "💼", education: "🎓", projects: "🚀", skills: "🛠", awards: "🏆", languages: "🌐",
+  publications: "📚", talks: "🎤", teaching: "🧑‍🏫",
 };
 
 const MARGIN_PRESETS: { mm: number; key: string }[] = [

@@ -93,6 +93,40 @@ export default function AcademicMinimal({ resume }: TemplateProps) {
         </Row>
       )}
 
+      {resume.publications && resume.publications.length > 0 && (
+        <Row label={L.publicationsOnly}>
+          {resume.publications.map((p, i) => (
+            <div key={p.id} className={itemCls(p)}>
+              <span className="text-gray-500 mr-1">{i + 1}.</span>
+              {p.authors && <span className="text-gray-700"><E path={`publications.${i}.authors`}>{p.authors}</E>. </span>}
+              <b><E path={`publications.${i}.title`}>{p.title}</E></b>
+              {p.venue && <>. <i><E path={`publications.${i}.venue`}>{p.venue}</E></i></>}
+              {p.date && <span className="text-gray-500"> · {p.date}</span>}
+            </div>
+          ))}
+        </Row>
+      )}
+
+      {resume.talks && resume.talks.length > 0 && (
+        <Row label={L.talks}>
+          {resume.talks.map((tk, i) => (
+            <div key={tk.id} className={itemCls(tk)}>
+              <b><E path={`talks.${i}.title`}>{tk.title}</E></b>{tk.venue && <>, <i><E path={`talks.${i}.venue`}>{tk.venue}</E></i></>}{tk.date && <span className="text-gray-500"> · {tk.date}</span>}
+            </div>
+          ))}
+        </Row>
+      )}
+
+      {resume.teaching && resume.teaching.length > 0 && (
+        <Row label={L.teaching}>
+          {resume.teaching.map((tg, i) => (
+            <div key={tg.id} className={itemCls(tg)}>
+              <b><E path={`teaching.${i}.course`}>{tg.course}</E></b>{tg.institution && <>, <E path={`teaching.${i}.institution`}>{tg.institution}</E></>}{tg.role && <span className="text-gray-500"> · <E path={`teaching.${i}.role`}>{tg.role}</E></span>} <span className="text-gray-500">· {range(tg.startDate, tg.endDate)}</span>
+            </div>
+          ))}
+        </Row>
+      )}
+
       {resume.languages.length > 0 && (
         <Row label={L.languages}>
           <div>{resume.languages.map((l, i) => `${l.language} (${l.fluency})`).join(" · ")}</div>
