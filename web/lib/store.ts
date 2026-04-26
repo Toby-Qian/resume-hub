@@ -10,7 +10,9 @@ export type TemplateId =
   | "cn-formal" | "cn-creative"
   | "en-academic"
   | "academic-classic" | "academic-modern" | "academic-pub"
-  | "academic-minimal" | "academic-cn";
+  | "academic-minimal"
+  // New rich templates
+  | "infographic" | "magazine" | "dark-card";
 
 export interface ThemeTokens {
   accent: string;          // primary color
@@ -408,6 +410,14 @@ export const useStore = create<State>()(
         pageSetup: s.pageSetup,
         hiddenSections: s.hiddenSections,
       }) as any,
+      // Migrate persisted state for users who had the now-removed
+      // "academic-cn" template selected. Falls back to cn-formal which is
+      // the closest-feel Chinese-friendly layout.
+      merge: (persisted, current) => {
+        const p = (persisted ?? {}) as any;
+        if (p.template === "academic-cn") p.template = "cn-formal";
+        return { ...current, ...p };
+      },
     }
   )
 );

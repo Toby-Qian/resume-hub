@@ -1,8 +1,9 @@
 "use client";
-import { TemplateProps, range, itemCls, Avatar, E, Draggable } from "./shared";
+import { TemplateProps, range, itemCls, Avatar, E, Draggable, useSectionLabels } from "./shared";
 
 export default function CNFormal({ resume }: TemplateProps) {
   const b = resume.basics;
+  const L = useSectionLabels();
   const H = ({ children }: { children: React.ReactNode }) => (
     <h2 className="text-[1em] font-bold mb-2 pl-2 mt-4" style={{ borderLeft: "4px solid var(--resume-accent)" }}>{children}</h2>
   );
@@ -23,11 +24,11 @@ export default function CNFormal({ resume }: TemplateProps) {
           <div>主页：<E path="basics.website">{b.website}</E></div>
         </div>
       </Draggable>
-      <Draggable name="summary"><H>个人简介</H><p className="text-[0.95em]"><E path="basics.summary" multiline>{b.summary}</E></p></Draggable>
+      <Draggable name="summary"><H>{L.summary}</H><p className="text-[0.95em]"><E path="basics.summary" multiline>{b.summary}</E></p></Draggable>
 
       {resume.education.length > 0 && (
         <>
-          <H>教育背景</H>
+          <H>{L.education}</H>
           {resume.education.map((e, i) => (
             <div key={e.id} className={itemCls(e, "mb-2 text-[0.95em]")}>
               <div className="flex justify-between">
@@ -43,7 +44,7 @@ export default function CNFormal({ resume }: TemplateProps) {
 
       {resume.work.length > 0 && (
         <>
-          <H>工作经历</H>
+          <H>{L.experience}</H>
           {resume.work.map((w, i) => (
             <div key={w.id} className={itemCls(w, "mb-3 text-[0.95em]")}>
               <div className="flex justify-between">
@@ -60,7 +61,7 @@ export default function CNFormal({ resume }: TemplateProps) {
 
       {resume.projects.length > 0 && (
         <>
-          <H>项目经历</H>
+          <H>{L.projects}</H>
           {resume.projects.map((p, i) => (
             <div key={p.id} className={itemCls(p, "mb-3 text-[0.95em]")}>
               <div className="flex justify-between">
@@ -78,7 +79,7 @@ export default function CNFormal({ resume }: TemplateProps) {
 
       {resume.skills.length > 0 && (
         <>
-          <H>专业技能</H>
+          <H>{L.skills}</H>
           <ul className="list-disc ml-5 text-[0.95em]">
             {resume.skills.map((s) => (
               <li key={s.id} className={itemCls(s)}><b>{s.name}</b>{s.level && `（${s.level}）`}：{s.keywords.join("、")}</li>
@@ -89,7 +90,7 @@ export default function CNFormal({ resume }: TemplateProps) {
 
       {resume.awards.length > 0 && (
         <>
-          <H>荣誉奖项</H>
+          <H>{L.awards}</H>
           <ul className="list-disc ml-5 text-[0.95em]">
             {resume.awards.map((a) => (
               <li key={a.id} className={itemCls(a)}><b>{a.title}</b> · {a.awarder} · {a.date}{a.summary && ` — ${a.summary}`}</li>
@@ -100,7 +101,7 @@ export default function CNFormal({ resume }: TemplateProps) {
 
       {resume.languages.length > 0 && (
         <>
-          <H>语言能力</H>
+          <H>{L.languages}</H>
           <div className="text-[0.95em]">
             {resume.languages.map((l) => `${l.language}（${l.fluency}）`).join(" · ")}
           </div>

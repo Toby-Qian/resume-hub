@@ -1,5 +1,5 @@
 "use client";
-import { TemplateProps, range, itemCls, Avatar, E, Draggable } from "./shared";
+import { TemplateProps, range, itemCls, Avatar, E, Draggable, useSectionLabels } from "./shared";
 
 /**
  * Publication-first CV. Projects are rendered as a numbered publication list
@@ -9,6 +9,7 @@ import { TemplateProps, range, itemCls, Avatar, E, Draggable } from "./shared";
  */
 export default function AcademicPub({ resume }: TemplateProps) {
   const b = resume.basics;
+  const L = useSectionLabels();
   const H = ({ children }: { children: React.ReactNode }) => (
     <h2 className="text-[0.92em] font-bold mt-4 mb-2 pb-0.5 border-b-2"
       style={{ borderColor: "var(--resume-accent)" }}>
@@ -35,7 +36,7 @@ export default function AcademicPub({ resume }: TemplateProps) {
         <Avatar basics={b} size={88} />
       </Draggable>
 
-      <H>Publications</H>
+      <H>{L.publicationsOnly}</H>
       {resume.projects.length === 0 ? (
         <div className="text-[0.88em] italic text-gray-500">No publications yet.</div>
       ) : (
@@ -58,7 +59,7 @@ export default function AcademicPub({ resume }: TemplateProps) {
       )}
 
       {resume.education.length > 0 && (
-        <><H>Education</H>
+        <><H>{L.education}</H>
           {resume.education.map((e, i) => (
             <div key={e.id} className={itemCls(e, "mb-1.5 text-[0.9em]")}>
               <div className="flex justify-between">
@@ -72,7 +73,7 @@ export default function AcademicPub({ resume }: TemplateProps) {
       )}
 
       {resume.work.length > 0 && (
-        <><H>Research Experience</H>
+        <><H>{L.appointments}</H>
           {resume.work.map((w, i) => (
             <div key={w.id} className={itemCls(w, "mb-2 text-[0.9em]")}>
               <div className="flex justify-between">
@@ -88,7 +89,7 @@ export default function AcademicPub({ resume }: TemplateProps) {
       )}
 
       {resume.awards.length > 0 && (
-        <><H>Fellowships & Awards</H>
+        <><H>{L.honorsAndGrants}</H>
           <ul className="list-disc ml-5 text-[0.9em]">
             {resume.awards.map((a, i) => (
               <li key={a.id} className={itemCls(a)}>
@@ -100,7 +101,7 @@ export default function AcademicPub({ resume }: TemplateProps) {
       )}
 
       {(resume.skills.length > 0 || resume.languages.length > 0) && (
-        <><H>Skills & Languages</H>
+        <><H>{`${L.skills} & ${L.languages}`}</H>
           <div className="text-[0.88em] space-y-0.5">
             {resume.skills.map((s, i) => (
               <div key={s.id} className={itemCls(s)}><b><E path={`skills.${i}.name`}>{s.name}</E>:</b> {s.keywords.join(", ")}</div>

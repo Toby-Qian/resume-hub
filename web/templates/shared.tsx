@@ -7,6 +7,69 @@ export interface TemplateProps {
   resume: Resume;
 }
 
+/**
+ * Localised section titles for templates. Templates should NEVER hard-code
+ * English/Chinese section headings — call `useSectionLabels()` and pluck the
+ * key. The map covers both the standard JSON Resume sections and the extra
+ * academic-flavoured headings (publications, grants, teaching…).
+ *
+ * The two languages share the same key shape so a template can stay in one
+ * style (e.g. an academic CV that says "Publications & Research") without the
+ * call site caring about the user's UI language.
+ */
+const SECTION_LABELS: { zh: Record<string, string>; en: Record<string, string> } = {
+  zh: {
+    cv: "个人简历",
+    summary: "个人简介", about: "关于我", contact: "联系方式",
+    experience: "工作经历", workShort: "工作", appointments: "学术任职",
+    education: "教育背景", educationShort: "教育",
+    projects: "项目经历", projectsShort: "项目",
+    publications: "论文与研究", publicationsOnly: "论文",
+    skills: "技能", technicalSkills: "技术能力", skillsShort: "技能",
+    awards: "荣誉奖项", honorsAndAwards: "荣誉与奖项", honorsAndGrants: "荣誉与基金",
+    awardsShort: "荣誉",
+    languages: "语言", languagesShort: "语言",
+    teaching: "教学经历", talks: "学术报告", grants: "基金/资助", certifications: "证书",
+    interests: "兴趣爱好", references: "推荐人",
+    coursework: "主修课程",
+  },
+  en: {
+    cv: "Curriculum Vitae",
+    summary: "Summary", about: "About", contact: "Contact",
+    experience: "Experience", workShort: "Work", appointments: "Academic Appointments",
+    education: "Education", educationShort: "Edu",
+    projects: "Projects", projectsShort: "Projects",
+    publications: "Publications & Research", publicationsOnly: "Publications",
+    skills: "Skills", technicalSkills: "Technical Skills", skillsShort: "Skills",
+    awards: "Awards", honorsAndAwards: "Honors & Awards", honorsAndGrants: "Honors & Grants",
+    awardsShort: "Awards",
+    languages: "Languages", languagesShort: "Lang",
+    teaching: "Teaching", talks: "Invited Talks", grants: "Grants & Funding", certifications: "Certifications",
+    interests: "Interests", references: "References",
+    coursework: "Coursework",
+  },
+};
+
+export type SectionLabels = {
+  cv: string; summary: string; about: string; contact: string;
+  experience: string; workShort: string; appointments: string;
+  education: string; educationShort: string;
+  projects: string; projectsShort: string;
+  publications: string; publicationsOnly: string;
+  skills: string; technicalSkills: string; skillsShort: string;
+  awards: string; honorsAndAwards: string; honorsAndGrants: string; awardsShort: string;
+  languages: string; languagesShort: string;
+  teaching: string; talks: string; grants: string; certifications: string;
+  interests: string; references: string;
+  coursework: string;
+};
+
+/** Reactive — re-renders when the user toggles language at the top bar. */
+export function useSectionLabels(): SectionLabels {
+  const lang = useStore((s) => s.lang);
+  return SECTION_LABELS[lang] as SectionLabels;
+}
+
 export const fmtDate = (s?: string) => s || "";
 export const range = (a?: string, b?: string) =>
   [fmtDate(a), fmtDate(b)].filter(Boolean).join(" — ");

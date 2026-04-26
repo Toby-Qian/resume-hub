@@ -1,5 +1,5 @@
 "use client";
-import { TemplateProps, range, itemCls, Avatar, E, Draggable } from "./shared";
+import { TemplateProps, range, itemCls, Avatar, E, Draggable, useSectionLabels } from "./shared";
 
 /**
  * Vertical timeline: each work/project entry has a dot on the left with a
@@ -8,6 +8,7 @@ import { TemplateProps, range, itemCls, Avatar, E, Draggable } from "./shared";
  */
 export default function Timeline({ resume }: TemplateProps) {
   const b = resume.basics;
+  const L = useSectionLabels();
   const H = ({ children }: { children: React.ReactNode }) => (
     <h2 className="text-[0.86em] font-bold uppercase tracking-[0.18em] mt-5 mb-3 first:mt-2"
       style={{ color: "var(--resume-accent)" }}>
@@ -48,7 +49,7 @@ export default function Timeline({ resume }: TemplateProps) {
 
       {resume.work.length > 0 && (
         <>
-          <H>Experience</H>
+          <H>{L.experience}</H>
           {resume.work.map((w, i) => (
             <Node key={w.id} date={range(w.startDate, w.endDate)} breakBefore={(w as any).breakBefore}>
               <div className="text-[0.93em]"><b><E path={`work.${i}.position`}>{w.position}</E></b> · <span className="text-gray-700"><E path={`work.${i}.company`}>{w.company}</E></span></div>
@@ -63,7 +64,7 @@ export default function Timeline({ resume }: TemplateProps) {
 
       {resume.projects.length > 0 && (
         <>
-          <H>Projects</H>
+          <H>{L.projects}</H>
           {resume.projects.map((p, i) => (
             <Node key={p.id} date={range(p.startDate, p.endDate)} breakBefore={(p as any).breakBefore}>
               <div className="text-[0.93em]"><b><E path={`projects.${i}.name`}>{p.name}</E></b></div>
@@ -83,7 +84,7 @@ export default function Timeline({ resume }: TemplateProps) {
 
       {resume.education.length > 0 && (
         <>
-          <H>Education</H>
+          <H>{L.education}</H>
           {resume.education.map((e, i) => (
             <Node key={e.id} date={range(e.startDate, e.endDate)} breakBefore={(e as any).breakBefore}>
               <div className="text-[0.93em]"><b><E path={`education.${i}.institution`}>{e.institution}</E></b></div>
@@ -95,7 +96,7 @@ export default function Timeline({ resume }: TemplateProps) {
 
       {resume.skills.length > 0 && (
         <>
-          <H>Skills</H>
+          <H>{L.skills}</H>
           <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-[0.88em]">
             {resume.skills.map((s, i) => (
               <div key={s.id} className={itemCls(s)}>
@@ -109,7 +110,7 @@ export default function Timeline({ resume }: TemplateProps) {
 
       {(resume.awards.length > 0 || resume.languages.length > 0) && (
         <>
-          <H>Honors & Languages</H>
+          <H>{`${L.honorsAndAwards} & ${L.languages}`}</H>
           <div className="text-[0.88em] space-y-0.5">
             {resume.awards.map((a, i) => (
               <div key={a.id} className={itemCls(a)}><b><E path={`awards.${i}.title`}>{a.title}</E></b> · <E path={`awards.${i}.awarder`}>{a.awarder}</E> · <span className="text-gray-500"><E path={`awards.${i}.date`}>{a.date}</E></span></div>

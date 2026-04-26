@@ -1,5 +1,5 @@
 "use client";
-import { TemplateProps, range, itemCls, Avatar, E, Draggable } from "./shared";
+import { TemplateProps, range, itemCls, Avatar, E, Draggable, useSectionLabels } from "./shared";
 
 /**
  * Single-column, tight-leading, small-type resume — built for senior
@@ -9,6 +9,7 @@ import { TemplateProps, range, itemCls, Avatar, E, Draggable } from "./shared";
  */
 export default function Compact({ resume }: TemplateProps) {
   const b = resume.basics;
+  const L = useSectionLabels();
   const H = ({ children }: { children: React.ReactNode }) => (
     <h2 className="text-[0.78em] font-bold uppercase tracking-[0.2em] mt-3 mb-1 pb-0.5 border-b border-gray-400">
       {children}
@@ -36,7 +37,7 @@ export default function Compact({ resume }: TemplateProps) {
 
       {resume.work.length > 0 && (
         <>
-          <H>Experience</H>
+          <H>{L.experience}</H>
           {resume.work.map((w, i) => (
             <div key={w.id} className={itemCls(w, "text-[0.86em] mb-1.5")}>
               <div className="flex justify-between">
@@ -55,7 +56,7 @@ export default function Compact({ resume }: TemplateProps) {
 
       {resume.projects.length > 0 && (
         <>
-          <H>Projects</H>
+          <H>{L.projects}</H>
           {resume.projects.map((p, i) => (
             <div key={p.id} className={itemCls(p, "text-[0.86em] mb-1")}>
               <div className="flex justify-between">
@@ -77,7 +78,7 @@ export default function Compact({ resume }: TemplateProps) {
 
       {resume.education.length > 0 && (
         <>
-          <H>Education</H>
+          <H>{L.education}</H>
           {resume.education.map((e, i) => (
             <div key={e.id} className={itemCls(e, "text-[0.86em]")}>
               <div className="flex justify-between">
@@ -91,7 +92,7 @@ export default function Compact({ resume }: TemplateProps) {
 
       {resume.skills.length > 0 && (
         <>
-          <H>Skills</H>
+          <H>{L.skills}</H>
           <div className="text-[0.86em] space-y-0.5">
             {resume.skills.map((s, i) => (
               <div key={s.id} className={itemCls(s)}>
@@ -104,7 +105,7 @@ export default function Compact({ resume }: TemplateProps) {
 
       {(resume.awards.length > 0 || resume.languages.length > 0) && (
         <>
-          <H>Honors & Languages</H>
+          <H>{`${L.honorsAndAwards} & ${L.languages}`}</H>
           <div className="text-[0.85em] space-y-0.5">
             {resume.awards.map((a, i) => (
               <div key={a.id} className={itemCls(a)}>

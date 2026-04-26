@@ -1,8 +1,9 @@
 "use client";
-import { TemplateProps, Section, range, itemCls, Avatar, E, Draggable } from "./shared";
+import { TemplateProps, Section, range, itemCls, Avatar, E, Draggable, useSectionLabels } from "./shared";
 
 export default function Modern({ resume }: TemplateProps) {
   const b = resume.basics;
+  const L = useSectionLabels();
   return (
     <div style={{ padding: "var(--pad)" }}>
       <Draggable name="header" as="header" className="mb-6 flex items-start gap-5">
@@ -21,7 +22,7 @@ export default function Modern({ resume }: TemplateProps) {
       </Draggable>
 
       {resume.work.length > 0 && (
-        <Section title="Experience" accent>
+        <Section title={L.experience} accent>
           {resume.work.map((w, i) => (
             <div key={w.id} className={itemCls(w)}>
               <div className="flex justify-between items-baseline">
@@ -38,7 +39,7 @@ export default function Modern({ resume }: TemplateProps) {
       )}
 
       {resume.projects.length > 0 && (
-        <Section title="Projects" accent>
+        <Section title={L.projects} accent>
           {resume.projects.map((p, i) => (
             <div key={p.id} className={itemCls(p)}>
               <div className="flex justify-between items-baseline">
@@ -60,7 +61,7 @@ export default function Modern({ resume }: TemplateProps) {
       )}
 
       {resume.education.length > 0 && (
-        <Section title="Education" accent>
+        <Section title={L.education} accent>
           {resume.education.map((e, i) => (
             <div key={e.id} className={itemCls(e)}>
               <div className="flex justify-between items-baseline">
@@ -77,7 +78,7 @@ export default function Modern({ resume }: TemplateProps) {
       )}
 
       {resume.skills.length > 0 && (
-        <Section title="Skills" accent>
+        <Section title={L.skills} accent>
           {resume.skills.map((s, i) => (
             <div key={s.id} className={itemCls(s, "text-[0.92em]")}>
               <span className="font-semibold"><E path={`skills.${i}.name`}>{s.name}</E></span>
@@ -89,7 +90,7 @@ export default function Modern({ resume }: TemplateProps) {
       )}
 
       {resume.awards.length > 0 && (
-        <Section title="Awards" accent>
+        <Section title={L.awards} accent>
           {resume.awards.map((a, i) => (
             <div key={a.id} className={itemCls(a, "text-[0.92em]")}>
               <span className="font-semibold"><E path={`awards.${i}.title`}>{a.title}</E></span>
@@ -101,7 +102,7 @@ export default function Modern({ resume }: TemplateProps) {
       )}
 
       {resume.languages.length > 0 && (
-        <Section title="Languages" accent>
+        <Section title={L.languages} accent>
           <div className="flex flex-wrap gap-x-6 gap-y-1 text-[0.92em]">
             {resume.languages.map((l, i) => (
               <div key={l.id} className={itemCls(l)}><span className="font-semibold"><E path={`languages.${i}.language`}>{l.language}</E></span> · <span className="text-gray-600"><E path={`languages.${i}.fluency`}>{l.fluency}</E></span></div>

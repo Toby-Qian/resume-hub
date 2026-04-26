@@ -1,8 +1,9 @@
 "use client";
-import { TemplateProps, range, itemCls, Avatar, E, Draggable } from "./shared";
+import { TemplateProps, range, itemCls, Avatar, E, Draggable, useSectionLabels } from "./shared";
 
 export default function CNCreative({ resume }: TemplateProps) {
   const b = resume.basics;
+  const L = useSectionLabels();
   return (
     <div className="grid grid-cols-[35%_1fr]" style={{ minHeight: "inherit" }}>
       <aside style={{ background: "var(--resume-accent)", color: "white", padding: "var(--pad)" }}>
@@ -22,7 +23,7 @@ export default function CNCreative({ resume }: TemplateProps) {
         </div>
         {resume.skills.length > 0 && (
           <>
-            <div className="mt-6 mb-2 font-semibold tracking-wider text-[0.85em]">专业技能</div>
+            <div className="mt-6 mb-2 font-semibold tracking-wider text-[0.85em]">{L.skills}</div>
             {resume.skills.map((s, i) => (
               <div key={s.id} className={itemCls(s, "text-[0.85em] mb-2")}>
                 <div className="font-semibold"><E path={`skills.${i}.name`}>{s.name}</E></div>
@@ -33,7 +34,7 @@ export default function CNCreative({ resume }: TemplateProps) {
         )}
         {resume.languages.length > 0 && (
           <>
-            <div className="mt-6 mb-2 font-semibold tracking-wider text-[0.85em]">语言</div>
+            <div className="mt-6 mb-2 font-semibold tracking-wider text-[0.85em]">{L.languages}</div>
             {resume.languages.map((l, i) => (
               <div key={l.id} className={itemCls(l, "text-[0.85em]")}><E path={`languages.${i}.language`}>{l.language}</E> · <E path={`languages.${i}.fluency`}>{l.fluency}</E></div>
             ))}
@@ -46,7 +47,7 @@ export default function CNCreative({ resume }: TemplateProps) {
 
         {resume.work.length > 0 && (
           <section className="resume-section mb-5">
-            <h2 className="text-[1em] font-bold mb-2" style={{ color: "var(--resume-accent)" }}>工作经历</h2>
+            <h2 className="text-[1em] font-bold mb-2" style={{ color: "var(--resume-accent)" }}>{L.experience}</h2>
             {resume.work.map((w, i) => (
               <div key={w.id} className={itemCls(w, "mb-3 text-[0.92em]")}>
                 <div className="flex justify-between"><b><E path={`work.${i}.company`}>{w.company}</E> · <E path={`work.${i}.position`}>{w.position}</E></b><span className="text-gray-500">{range(w.startDate, w.endDate)}</span></div>
@@ -60,7 +61,7 @@ export default function CNCreative({ resume }: TemplateProps) {
 
         {resume.projects.length > 0 && (
           <section className="resume-section mb-5">
-            <h2 className="text-[1em] font-bold mb-2" style={{ color: "var(--resume-accent)" }}>项目经历</h2>
+            <h2 className="text-[1em] font-bold mb-2" style={{ color: "var(--resume-accent)" }}>{L.projects}</h2>
             {resume.projects.map((p, i) => (
               <div key={p.id} className={itemCls(p, "mb-3 text-[0.92em]")}>
                 <div className="flex justify-between"><b><E path={`projects.${i}.name`}>{p.name}</E></b><span className="text-gray-500">{range(p.startDate, p.endDate)}</span></div>
@@ -75,7 +76,7 @@ export default function CNCreative({ resume }: TemplateProps) {
 
         {resume.education.length > 0 && (
           <section className="resume-section mb-5">
-            <h2 className="text-[1em] font-bold mb-2" style={{ color: "var(--resume-accent)" }}>教育背景</h2>
+            <h2 className="text-[1em] font-bold mb-2" style={{ color: "var(--resume-accent)" }}>{L.education}</h2>
             {resume.education.map((e, i) => (
               <div key={e.id} className={itemCls(e, "text-[0.92em] mb-1")}>
                 <div className="flex justify-between"><b><E path={`education.${i}.institution`}>{e.institution}</E></b><span className="text-gray-500">{range(e.startDate, e.endDate)}</span></div>
@@ -87,7 +88,7 @@ export default function CNCreative({ resume }: TemplateProps) {
 
         {resume.awards.length > 0 && (
           <section className="resume-section">
-            <h2 className="text-[1em] font-bold mb-2" style={{ color: "var(--resume-accent)" }}>荣誉奖项</h2>
+            <h2 className="text-[1em] font-bold mb-2" style={{ color: "var(--resume-accent)" }}>{L.awards}</h2>
             <ul className="list-disc ml-5 text-[0.92em]">
               {resume.awards.map((a, i) => (
                 <li key={a.id} className={itemCls(a)}><b><E path={`awards.${i}.title`}>{a.title}</E></b> · <E path={`awards.${i}.awarder`}>{a.awarder}</E> · <E path={`awards.${i}.date`}>{a.date}</E></li>

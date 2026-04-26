@@ -1,5 +1,5 @@
 "use client";
-import { TemplateProps, range, itemCls, Avatar, E, Draggable } from "./shared";
+import { TemplateProps, range, itemCls, Avatar, E, Draggable, useSectionLabels } from "./shared";
 
 /**
  * Minimalist academic: no color, purely typographic hierarchy. Small-caps
@@ -8,6 +8,7 @@ import { TemplateProps, range, itemCls, Avatar, E, Draggable } from "./shared";
  */
 export default function AcademicMinimal({ resume }: TemplateProps) {
   const b = resume.basics;
+  const L = useSectionLabels();
   const Row = ({ label, children }: { label: string; children: React.ReactNode }) => (
     <section className="resume-section grid grid-cols-[100px_1fr] gap-5 mb-4">
       <div className="text-[0.72em] uppercase tracking-[0.25em] text-gray-500 pt-1">{label}</div>
@@ -33,12 +34,12 @@ export default function AcademicMinimal({ resume }: TemplateProps) {
         <Avatar basics={b} size={80} />
       </Draggable>
 
-      <Row label="Profile">
+      <Row label={L.summary}>
         <Draggable name="summary"><p className="italic"><E path="basics.summary" multiline>{b.summary}</E></p></Draggable>
       </Row>
 
       {resume.education.length > 0 && (
-        <Row label="Education">
+        <Row label={L.education}>
           {resume.education.map((e, i) => (
             <div key={e.id} className={itemCls(e)}>
               <div><i><E path={`education.${i}.institution`}>{e.institution}</E></i>, <E path={`education.${i}.studyType`}>{e.studyType}</E>, <E path={`education.${i}.area`}>{e.area}</E> <span className="text-gray-500">· {range(e.startDate, e.endDate)}</span></div>
@@ -49,7 +50,7 @@ export default function AcademicMinimal({ resume }: TemplateProps) {
       )}
 
       {resume.work.length > 0 && (
-        <Row label="Positions">
+        <Row label={L.appointments}>
           {resume.work.map((w, i) => (
             <div key={w.id} className={itemCls(w)}>
               <div><b><E path={`work.${i}.position`}>{w.position}</E></b>, <i><E path={`work.${i}.company`}>{w.company}</E></i> <span className="text-gray-500">· {range(w.startDate, w.endDate)}</span></div>
@@ -62,7 +63,7 @@ export default function AcademicMinimal({ resume }: TemplateProps) {
       )}
 
       {resume.projects.length > 0 && (
-        <Row label="Publications">
+        <Row label={L.publicationsOnly}>
           {resume.projects.map((p, i) => (
             <div key={p.id} className={itemCls(p)}>
               <span className="text-gray-500 mr-1">{i + 1}.</span>
@@ -75,7 +76,7 @@ export default function AcademicMinimal({ resume }: TemplateProps) {
       )}
 
       {resume.awards.length > 0 && (
-        <Row label="Honors">
+        <Row label={L.awards}>
           {resume.awards.map((a, i) => (
             <div key={a.id} className={itemCls(a)}>
               <b><E path={`awards.${i}.title`}>{a.title}</E></b>, <E path={`awards.${i}.awarder`}>{a.awarder}</E> <span className="text-gray-500">· <E path={`awards.${i}.date`}>{a.date}</E></span>
@@ -85,7 +86,7 @@ export default function AcademicMinimal({ resume }: TemplateProps) {
       )}
 
       {resume.skills.length > 0 && (
-        <Row label="Skills">
+        <Row label={L.skills}>
           {resume.skills.map((s, i) => (
             <div key={s.id} className={itemCls(s)}><b><E path={`skills.${i}.name`}>{s.name}</E></b> — <span className="text-gray-700">{s.keywords.join(", ")}</span></div>
           ))}
@@ -93,7 +94,7 @@ export default function AcademicMinimal({ resume }: TemplateProps) {
       )}
 
       {resume.languages.length > 0 && (
-        <Row label="Languages">
+        <Row label={L.languages}>
           <div>{resume.languages.map((l, i) => `${l.language} (${l.fluency})`).join(" · ")}</div>
         </Row>
       )}

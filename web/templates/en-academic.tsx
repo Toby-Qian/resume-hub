@@ -1,8 +1,9 @@
 "use client";
-import { TemplateProps, range, itemCls, Avatar, E, Draggable } from "./shared";
+import { TemplateProps, range, itemCls, Avatar, E, Draggable, useSectionLabels } from "./shared";
 
 export default function ENAcademic({ resume }: TemplateProps) {
   const b = resume.basics;
+  const L = useSectionLabels();
   const H = ({ children }: { children: React.ReactNode }) => (
     <h2 className="text-[0.82em] uppercase tracking-[0.2em] font-bold mt-5 mb-2 pb-1 border-b border-gray-400">{children}</h2>
   );
@@ -27,7 +28,7 @@ export default function ENAcademic({ resume }: TemplateProps) {
 
       {resume.education.length > 0 && (
         <>
-          <H>Education</H>
+          <H>{L.education}</H>
           {resume.education.map((e, i) => (
             <div key={e.id} className={itemCls(e, "mb-2 text-[0.95em]")}>
               <div className="flex justify-between">
@@ -42,7 +43,7 @@ export default function ENAcademic({ resume }: TemplateProps) {
 
       {resume.work.length > 0 && (
         <>
-          <H>Research & Work Experience</H>
+          <H>{L.appointments}</H>
           {resume.work.map((w, i) => (
             <div key={w.id} className={itemCls(w, "mb-3 text-[0.95em]")}>
               <div className="flex justify-between">
@@ -59,7 +60,7 @@ export default function ENAcademic({ resume }: TemplateProps) {
 
       {resume.projects.length > 0 && (
         <>
-          <H>Publications & Projects</H>
+          <H>{L.publications}</H>
           {resume.projects.map((p, i) => (
             <div key={p.id} className={itemCls(p, "mb-2 text-[0.95em]")}>
               <div className="flex justify-between">
@@ -75,7 +76,7 @@ export default function ENAcademic({ resume }: TemplateProps) {
 
       {resume.awards.length > 0 && (
         <>
-          <H>Honors & Awards</H>
+          <H>{L.honorsAndAwards}</H>
           <ul className="list-disc ml-5 text-[0.95em]">
             {resume.awards.map((a, i) => (
               <li key={a.id} className={itemCls(a)}><b><E path={`awards.${i}.title`}>{a.title}</E></b>, <E path={`awards.${i}.awarder`}>{a.awarder}</E> (<E path={`awards.${i}.date`}>{a.date}</E>){a.summary && `. ${a.summary}`}</li>
@@ -86,7 +87,7 @@ export default function ENAcademic({ resume }: TemplateProps) {
 
       {resume.skills.length > 0 && (
         <>
-          <H>Technical Skills</H>
+          <H>{L.technicalSkills}</H>
           <div className="text-[0.93em] space-y-0.5">
             {resume.skills.map((s, i) => (
               <div key={s.id} className={itemCls(s)}><b><E path={`skills.${i}.name`}>{s.name}</E>:</b> {s.keywords.join(", ")}</div>
@@ -97,7 +98,7 @@ export default function ENAcademic({ resume }: TemplateProps) {
 
       {resume.languages.length > 0 && (
         <>
-          <H>Languages</H>
+          <H>{L.languages}</H>
           <div className="text-[0.93em]">{resume.languages.map((l, i) => `${l.language} (${l.fluency})`).join("; ")}</div>
         </>
       )}

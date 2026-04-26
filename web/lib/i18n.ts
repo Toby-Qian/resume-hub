@@ -72,7 +72,7 @@ export const T = {
       "cn-formal": "中式正统", "cn-creative": "中式创意", "en-academic": "学术",
       "academic-classic": "学术·经典", "academic-modern": "学术·现代",
       "academic-pub": "学术·论文优先", "academic-minimal": "学术·极简",
-      "academic-cn": "学术·中文",
+      infographic: "信息图", magazine: "杂志", "dark-card": "深色卡片",
     },
     style: {
       presets: "配色预设",
@@ -229,7 +229,7 @@ export const T = {
       "cn-formal": "CN Formal", "cn-creative": "CN Creative", "en-academic": "Academic",
       "academic-classic": "Academic · Classic", "academic-modern": "Academic · Modern",
       "academic-pub": "Academic · Pub", "academic-minimal": "Academic · Minimal",
-      "academic-cn": "Academic · CN",
+      infographic: "Infographic", magazine: "Magazine", "dark-card": "Dark Card",
     },
     style: {
       presets: "Theme presets",

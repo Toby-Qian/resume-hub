@@ -1,5 +1,5 @@
 "use client";
-import { TemplateProps, range, itemCls, Avatar, E, Draggable } from "./shared";
+import { TemplateProps, range, itemCls, Avatar, E, Draggable, useSectionLabels } from "./shared";
 
 /**
  * Two-column layout with a soft tinted sidebar. Feels lighter than
@@ -8,6 +8,7 @@ import { TemplateProps, range, itemCls, Avatar, E, Draggable } from "./shared";
  */
 export default function Elegant({ resume }: TemplateProps) {
   const b = resume.basics;
+  const L = useSectionLabels();
   const SideH = ({ children }: { children: React.ReactNode }) => (
     <h3 className="text-[0.75em] font-bold uppercase tracking-[0.18em] mb-2 mt-5 first:mt-0"
       style={{ color: "var(--resume-accent)" }}>
@@ -37,7 +38,7 @@ export default function Elegant({ resume }: TemplateProps) {
           <div className="text-[0.95em] text-gray-700 mt-1"><E path="basics.label">{b.label}</E></div>
         </Draggable>
 
-        <SideH>Contact</SideH>
+        <SideH>{L.contact}</SideH>
         <div className="text-[0.83em] text-gray-700 space-y-1">
           <div>✉ <E path="basics.email">{b.email}</E></div>
           <div>☎ <E path="basics.phone">{b.phone}</E></div>
@@ -47,7 +48,7 @@ export default function Elegant({ resume }: TemplateProps) {
 
         {resume.skills.length > 0 && (
           <>
-            <SideH>Skills</SideH>
+            <SideH>{L.skills}</SideH>
             {resume.skills.map((s, i) => (
               <div key={s.id} className={itemCls(s, "text-[0.83em] mb-2")}>
                 <div className="font-semibold text-gray-800"><E path={`skills.${i}.name`}>{s.name}</E></div>
@@ -59,7 +60,7 @@ export default function Elegant({ resume }: TemplateProps) {
 
         {resume.languages.length > 0 && (
           <>
-            <SideH>Languages</SideH>
+            <SideH>{L.languages}</SideH>
             {resume.languages.map((l, i) => (
               <div key={l.id} className={itemCls(l, "text-[0.83em]")}>
                 <E path={`languages.${i}.language`}>{l.language}</E> · <span className="text-gray-600"><E path={`languages.${i}.fluency`}>{l.fluency}</E></span>
@@ -70,7 +71,7 @@ export default function Elegant({ resume }: TemplateProps) {
 
         {resume.awards.length > 0 && (
           <>
-            <SideH>Awards</SideH>
+            <SideH>{L.awards}</SideH>
             {resume.awards.map((a, i) => (
               <div key={a.id} className={itemCls(a, "text-[0.83em] mb-1")}>
                 <div className="font-semibold"><E path={`awards.${i}.title`}>{a.title}</E></div>
@@ -83,13 +84,13 @@ export default function Elegant({ resume }: TemplateProps) {
 
       <main style={{ padding: "var(--pad)" }}>
         <Draggable name="summary">
-          <MainH>About</MainH>
+          <MainH>{L.about}</MainH>
           <p className="text-[0.94em] text-gray-800 leading-relaxed"><E path="basics.summary" multiline>{b.summary}</E></p>
         </Draggable>
 
         {resume.work.length > 0 && (
           <>
-            <MainH>Experience</MainH>
+            <MainH>{L.experience}</MainH>
             {resume.work.map((w, i) => (
               <div key={w.id} className={itemCls(w, "mb-4 text-[0.92em]")}>
                 <div className="flex justify-between items-baseline">
@@ -107,7 +108,7 @@ export default function Elegant({ resume }: TemplateProps) {
 
         {resume.projects.length > 0 && (
           <>
-            <MainH>Projects</MainH>
+            <MainH>{L.projects}</MainH>
             {resume.projects.map((p, i) => (
               <div key={p.id} className={itemCls(p, "mb-3 text-[0.92em]")}>
                 <div className="flex justify-between items-baseline">
@@ -127,7 +128,7 @@ export default function Elegant({ resume }: TemplateProps) {
 
         {resume.education.length > 0 && (
           <>
-            <MainH>Education</MainH>
+            <MainH>{L.education}</MainH>
             {resume.education.map((e, i) => (
               <div key={e.id} className={itemCls(e, "mb-2 text-[0.92em]")}>
                 <div className="flex justify-between items-baseline">

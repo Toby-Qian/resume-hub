@@ -1,5 +1,5 @@
 "use client";
-import { TemplateProps, range, itemCls, Avatar, E, Draggable } from "./shared";
+import { TemplateProps, range, itemCls, Avatar, E, Draggable, useSectionLabels } from "./shared";
 
 /**
  * Modern academic: sans-serif, colored accent rules, left-aligned headers
@@ -8,6 +8,7 @@ import { TemplateProps, range, itemCls, Avatar, E, Draggable } from "./shared";
  */
 export default function AcademicModern({ resume }: TemplateProps) {
   const b = resume.basics;
+  const L = useSectionLabels();
   const H = ({ children }: { children: React.ReactNode }) => (
     <h2 className="text-[0.82em] font-bold uppercase tracking-[0.22em] mt-5 mb-2 pb-1"
       style={{ color: "var(--resume-accent)", borderBottom: "2px solid var(--resume-accent)" }}>
@@ -41,7 +42,7 @@ export default function AcademicModern({ resume }: TemplateProps) {
       <Draggable name="summary"><p className="text-[0.93em] text-gray-800 mb-2"><E path="basics.summary" multiline>{b.summary}</E></p></Draggable>
 
       {resume.education.length > 0 && (
-        <><H>Education</H>
+        <><H>{L.education}</H>
           {resume.education.map((e, i) => (
             <Row key={e.id} breakBefore={(e as any).breakBefore}
               left={<><b><E path={`education.${i}.institution`}>{e.institution}</E></b> — <E path={`education.${i}.studyType`}>{e.studyType}</E>, <E path={`education.${i}.area`}>{e.area}</E></>}
@@ -56,7 +57,7 @@ export default function AcademicModern({ resume }: TemplateProps) {
       )}
 
       {resume.work.length > 0 && (
-        <><H>Research & Appointments</H>
+        <><H>{L.appointments}</H>
           {resume.work.map((w, i) => (
             <Row key={w.id} breakBefore={(w as any).breakBefore}
               left={<><b><E path={`work.${i}.position`}>{w.position}</E></b> · <span className="text-gray-700"><E path={`work.${i}.company`}>{w.company}</E></span>{w.location && <span className="text-gray-500"> · <E path={`work.${i}.location`}>{w.location}</E></span>}</>}
@@ -70,7 +71,7 @@ export default function AcademicModern({ resume }: TemplateProps) {
       )}
 
       {resume.projects.length > 0 && (
-        <><H>Publications & Projects</H>
+        <><H>{L.publications}</H>
           {resume.projects.map((p, i) => (
             <Row key={p.id} breakBefore={(p as any).breakBefore}
               left={<><b><E path={`projects.${i}.name`}>{p.name}</E></b>{p.url && <span className="text-[0.82em] text-gray-500"> — <E path={`projects.${i}.url`}>{p.url}</E></span>}</>}
@@ -85,7 +86,7 @@ export default function AcademicModern({ resume }: TemplateProps) {
       )}
 
       {resume.awards.length > 0 && (
-        <><H>Honors & Grants</H>
+        <><H>{L.honorsAndGrants}</H>
           <ul className="list-disc ml-5 text-[0.9em] space-y-0.5">
             {resume.awards.map((a, i) => (
               <li key={a.id} className={itemCls(a)}>
@@ -98,7 +99,7 @@ export default function AcademicModern({ resume }: TemplateProps) {
 
       <div className="grid grid-cols-2 gap-x-6 mt-1">
         {resume.skills.length > 0 && (
-          <div><H>Skills</H>
+          <div><H>{L.skills}</H>
             <div className="text-[0.88em] space-y-0.5">
               {resume.skills.map((s, i) => (
                 <div key={s.id} className={itemCls(s)}><b><E path={`skills.${i}.name`}>{s.name}</E>:</b> {s.keywords.join(", ")}</div>
@@ -107,7 +108,7 @@ export default function AcademicModern({ resume }: TemplateProps) {
           </div>
         )}
         {resume.languages.length > 0 && (
-          <div><H>Languages</H>
+          <div><H>{L.languages}</H>
             <div className="text-[0.88em]">
               {resume.languages.map((l, i) => `${l.language} (${l.fluency})`).join(" · ")}
             </div>

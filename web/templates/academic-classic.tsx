@@ -1,5 +1,5 @@
 "use client";
-import { TemplateProps, range, itemCls, Avatar, E, Draggable } from "./shared";
+import { TemplateProps, range, itemCls, Avatar, E, Draggable, useSectionLabels } from "./shared";
 
 /**
  * The quintessential CV: serif body, "Curriculum Vitae" banner, centered
@@ -8,6 +8,7 @@ import { TemplateProps, range, itemCls, Avatar, E, Draggable } from "./shared";
  */
 export default function AcademicClassic({ resume }: TemplateProps) {
   const b = resume.basics;
+  const L = useSectionLabels();
   const H = ({ children }: { children: React.ReactNode }) => (
     <h2 className="text-[0.95em] font-bold tracking-wide mt-5 mb-2 pb-1 border-b border-gray-500">
       {children}
@@ -16,7 +17,7 @@ export default function AcademicClassic({ resume }: TemplateProps) {
   return (
     <div style={{ padding: "var(--pad)", fontFamily: "var(--resume-font-serif)" }}>
       <div className="text-center text-[0.8em] tracking-[0.3em] uppercase text-gray-600 mb-2">
-        Curriculum Vitae
+        {L.cv}
       </div>
       <Draggable name="header" as="header" className="text-center border-b-2 border-gray-700 pb-3 mb-4">
         {b.showAvatar && b.avatar && (
@@ -37,7 +38,7 @@ export default function AcademicClassic({ resume }: TemplateProps) {
       <Draggable name="summary"><p className="text-[0.92em] text-justify italic mb-3"><E path="basics.summary" multiline>{b.summary}</E></p></Draggable>
 
       {resume.education.length > 0 && (
-        <><H>Education</H>
+        <><H>{L.education}</H>
           {resume.education.map((e, i) => (
             <div key={e.id} className={itemCls(e, "mb-2 text-[0.93em]")}>
               <div className="flex justify-between">
@@ -46,7 +47,7 @@ export default function AcademicClassic({ resume }: TemplateProps) {
               </div>
               {e.score && <div className="text-gray-700"><E path={`education.${i}.score`}>{e.score}</E></div>}
               {e.courses && e.courses.length > 0 && (
-                <div className="text-[0.88em] text-gray-600 italic">Coursework: {e.courses.join("; ")}</div>
+                <div className="text-[0.88em] text-gray-600 italic">{L.coursework}: {e.courses.join("; ")}</div>
               )}
             </div>
           ))}
@@ -54,7 +55,7 @@ export default function AcademicClassic({ resume }: TemplateProps) {
       )}
 
       {resume.work.length > 0 && (
-        <><H>Academic Appointments</H>
+        <><H>{L.appointments}</H>
           {resume.work.map((w, i) => (
             <div key={w.id} className={itemCls(w, "mb-3 text-[0.93em]")}>
               <div className="flex justify-between">
@@ -70,7 +71,7 @@ export default function AcademicClassic({ resume }: TemplateProps) {
       )}
 
       {resume.projects.length > 0 && (
-        <><H>Publications & Research</H>
+        <><H>{L.publications}</H>
           {resume.projects.map((p, idx) => (
             <div key={p.id} className={itemCls(p, "mb-2 text-[0.92em]")}>
               <div>
@@ -86,7 +87,7 @@ export default function AcademicClassic({ resume }: TemplateProps) {
       )}
 
       {resume.awards.length > 0 && (
-        <><H>Honors & Grants</H>
+        <><H>{L.honorsAndGrants}</H>
           <ul className="list-disc ml-5 text-[0.92em]">
             {resume.awards.map((a, i) => (
               <li key={a.id} className={itemCls(a)}>
@@ -98,7 +99,7 @@ export default function AcademicClassic({ resume }: TemplateProps) {
       )}
 
       {resume.skills.length > 0 && (
-        <><H>Technical Skills</H>
+        <><H>{L.technicalSkills}</H>
           <div className="text-[0.92em]">
             {resume.skills.map((s, i) => (
               <div key={s.id} className={itemCls(s)}><b><E path={`skills.${i}.name`}>{s.name}</E>:</b> {s.keywords.join(", ")}</div>
@@ -108,7 +109,7 @@ export default function AcademicClassic({ resume }: TemplateProps) {
       )}
 
       {resume.languages.length > 0 && (
-        <><H>Languages</H>
+        <><H>{L.languages}</H>
           <div className="text-[0.92em]">{resume.languages.map((l, i) => `${l.language} (${l.fluency})`).join("; ")}</div>
         </>
       )}

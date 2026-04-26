@@ -11,7 +11,9 @@ import AcademicClassic from "./academic-classic";
 import AcademicModern from "./academic-modern";
 import AcademicPub from "./academic-pub";
 import AcademicMinimal from "./academic-minimal";
-import AcademicCN from "./academic-cn";
+import Infographic from "./infographic";
+import Magazine from "./magazine";
+import DarkCard from "./dark-card";
 import type { TemplateId } from "@/lib/store";
 import type { TemplateProps } from "./shared";
 
@@ -29,12 +31,15 @@ export const templates: Record<TemplateId, (p: TemplateProps) => JSX.Element> = 
   "academic-modern": AcademicModern,
   "academic-pub": AcademicPub,
   "academic-minimal": AcademicMinimal,
-  "academic-cn": AcademicCN,
+  infographic: Infographic,
+  magazine: Magazine,
+  "dark-card": DarkCard,
 };
 
 export const templateList: TemplateId[] = [
   "modern", "classic", "minimal", "elegant", "compact", "timeline",
   "cn-formal", "cn-creative",
   "en-academic", "academic-classic", "academic-modern",
-  "academic-pub", "academic-minimal", "academic-cn",
+  "academic-pub", "academic-minimal",
+  "infographic", "magazine", "dark-card",
 ];
