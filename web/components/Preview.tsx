@@ -9,9 +9,12 @@ import { compressToDataURL } from "@/lib/imageCompress";
 
 export function Preview() {
   const { resume, template, theme, lang, addNote, addImageNote, addShapeNote, pageSetup, setPageSetup, hiddenSections } = useStore();
-  // Persisted PageSetups created before `extraPages` existed lack the field.
-  // Coerce to a number so arithmetic / button states behave.
-  const extraPages = Math.max(0, Number((pageSetup as any).extraPages) || 0);
+  // Boolean "open the second-page canvas". Persisted PageSetups from the
+  // earlier numeric `extraPages` field are migrated by treating any positive
+  // value as "second page on". The field stays a number in storage so we
+  // don't churn the persisted shape, but the UI is a clean on/off toggle —
+  // capped at 1 so we never grow past 2 pages.
+  const secondPage = (Number((pageSetup as any).extraPages) || 0) > 0;
   // Apply visibility toggles by zeroing hidden section arrays. Templates
   // already gate sections on `array.length > 0`, so this hides them
   // without per-template changes.
@@ -137,16 +140,14 @@ export function Preview() {
     measure();
     return () => ro.disconnect();
   }, [pageH]);
-  // Pages required by content alone, then take the larger of (content,
-  // content+extra) so the user-forced pages always show up. Using
-  // (autoPages + extraPages) instead of (1 + extraPages) means: if the
-  // resume already needs 2 pages and the user forces +1, total = 3.
-  const autoPages = Math.max(1, Math.ceil(paperHpx / pageH));
-  const totalPages = Math.max(autoPages, autoPages + 0 + (extraPages || 0));
-  // The min-height to force on the paper so the browser actually grows the
-  // canvas (and the print engine emits the blank pages). When user hasn't
-  // forced extras, leave min-height unset so the natural CSS rule wins.
-  const forcedMinHeightPx = extraPages > 0 ? pageH * (autoPages + extraPages) : undefined;
+  // Pages required by the natural flow content. Capped at 2 (we don't show
+  // a 3rd canvas — overflow past page 2 is a content-trim signal, not a UI
+  // affordance to add infinite pages).
+  const autoPages = Math.min(2, Math.max(1, Math.ceil(paperHpx / pageH)));
+  // If the user opened page 2, force a 2-page minimum so the canvas always
+  // shows it as available — even when the resume body fits in one page.
+  const totalPages = secondPage ? 2 : autoPages;
+  const forcedMinHeightPx = secondPage ? pageH * 2 : undefined;
 
   // ---- Ctrl+wheel zoom on the paper area --------------------------------
   useEffect(() => {
@@ -253,34 +254,31 @@ export function Preview() {
           <span>
             {((L.preview as any).pages ?? "{m} 页").replace("{m}", String(totalPages))}
           </span>
-          {extraPages > 0 && (
-            <span className="ml-1 text-[0.6rem] text-blue-600 font-semibold" title={(L.preview as any).extraPagesHint ?? "其中手动添加的空白页数"}>
-              (+{extraPages})
-            </span>
-          )}
         </span>
-        {/* Manual page add / remove. The "−" button appears only when there
-            are manually-added pages so the bar stays compact otherwise. */}
+        {/* Single second-page toggle — capped at 2. Active styling makes the
+            current state obvious at a glance. */}
         <button
           type="button"
-          onClick={() => setPageSetup({ extraPages: extraPages + 1 })}
-          className="text-xs h-6 px-2 rounded-full border border-blue-300 bg-blue-50 text-blue-700 hover:bg-blue-100 transition flex items-center gap-1"
-          title={(L.preview as any).addPageHint ?? "在简历末尾追加一张空白页（用于放浮动文本框/图片）"}
+          onClick={() => setPageSetup({ extraPages: secondPage ? 0 : 1 } as any)}
+          className={`text-xs h-6 px-2.5 rounded-full border transition flex items-center gap-1.5 ${
+            secondPage
+              ? "border-blue-500 bg-blue-600 text-white shadow-sm hover:bg-blue-700"
+              : "border-blue-300 bg-blue-50 text-blue-700 hover:bg-blue-100"
+          }`}
+          title={
+            secondPage
+              ? ((L.preview as any).disableSecondPageHint ?? "关闭第 2 页画布")
+              : ((L.preview as any).enableSecondPageHint ?? "启用第 2 页画布 — 内容超出第 1 页时自动流到第 2 页，也可往上面拖文本框/图片/形状")
+          }
+          aria-pressed={secondPage}
         >
-          <span className="text-blue-600">＋</span>
-          {(L.preview as any).addPage ?? "添加页"}
+          {secondPage ? <span>✓</span> : <span className="text-blue-600">＋</span>}
+          <span>
+            {secondPage
+              ? ((L.preview as any).secondPageOn ?? "第 2 页已启用")
+              : ((L.preview as any).enableSecondPage ?? "启用第 2 页")}
+          </span>
         </button>
-        {extraPages > 0 && (
-          <button
-            type="button"
-            onClick={() => setPageSetup({ extraPages: extraPages - 1 })}
-            className="text-xs w-6 h-6 rounded-full border border-gray-300 bg-white text-gray-600 hover:bg-gray-100 transition flex items-center justify-center"
-            title={(L.preview as any).removePageHint ?? "移除最后一张手动添加的空白页"}
-            aria-label="remove extra page"
-          >
-            −
-          </button>
-        )}
         <span className="w-px h-4 bg-gray-200 mx-1" />
         <button
           type="button"

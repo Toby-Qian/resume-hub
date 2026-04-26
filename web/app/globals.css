@@ -67,41 +67,69 @@ body { background: #f3f4f6; color: #111827; font-family: var(--resume-font-sans)
 .paper.paper-flow {
   min-height: 1123px;
 }
+/* Seam between two paper pages — visually suggests "this is where one
+   sheet ends and the next begins" without actually splitting the DOM
+   (which would break flow content). The seam is a 14px gutter that
+   uses subtle highlights to imply the bottom edge of page N and the
+   top edge of page N+1. Visible only on screen. */
 .page-break-overlay {
   position: absolute;
-  left: 0;
-  right: 0;
+  left: -8px;
+  right: -8px;
   height: 0;
   pointer-events: none;
-  z-index: 5;
+  z-index: 6;
 }
+/* Bottom edge of the upper page: a soft inner shadow on white. */
 .page-break-overlay::before {
   content: "";
   position: absolute;
-  inset: -1px 0 auto 0;
-  height: 0;
-  border-top: 1px dashed rgba(148, 163, 184, 0.7);
+  left: 8px;
+  right: 8px;
+  top: -8px;
+  height: 8px;
+  background: linear-gradient(to bottom,
+    rgba(0, 0, 0, 0) 0%,
+    rgba(15, 23, 42, 0.045) 70%,
+    rgba(15, 23, 42, 0.09) 100%);
+  border-bottom: 1px solid rgba(148, 163, 184, 0.55);
+}
+/* Top edge of the lower page: highlight + soft inner shadow. */
+.page-break-overlay::after {
+  content: "";
+  position: absolute;
+  left: 8px;
+  right: 8px;
+  top: 0;
+  height: 8px;
+  background: linear-gradient(to top,
+    rgba(0, 0, 0, 0) 0%,
+    rgba(15, 23, 42, 0.04) 80%,
+    rgba(15, 23, 42, 0.08) 100%);
+  border-top: 1px solid rgba(226, 232, 240, 0.95);
 }
 .page-break-overlay > .page-break-label {
   position: absolute;
-  right: 14px;
-  top: -10px;
+  right: 18px;
+  top: -12px;
   font-size: 10px;
   line-height: 1;
-  padding: 3px 7px;
+  padding: 3px 8px;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.92);
+  background: rgba(255, 255, 255, 0.96);
   border: 1px solid rgba(148, 163, 184, 0.45);
-  color: #64748b;
+  color: #475569;
   font-family: var(--resume-font-sans);
+  font-weight: 500;
   letter-spacing: 0.04em;
   white-space: nowrap;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.08);
+  z-index: 7;
 }
 .page-break-overlay > .page-break-label--page1 {
-  top: 6px;
+  top: 10px;
   right: auto;
-  left: 14px;
+  left: 18px;
 }
 @media print {
   .page-break-overlay { display: none !important; }
