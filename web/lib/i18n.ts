@@ -35,6 +35,10 @@ export const T = {
       accent: "主色", fontSans: "无衬线字体", fontSerif: "衬线字体",
       density: "信息密度", fontScale: "字号",
       density_compact: "紧凑", density_comfy: "舒适", density_spacious: "宽松",
+      lineHeight: "行间距",
+      bullet: "项目符号",
+      bulletDisc: "圆点", bulletCircle: "空心", bulletSquare: "方块",
+      bulletDash: "破折号", bulletNone: "无",
     },
     gallery: {
       title: "GitHub 简历模板画廊",
@@ -182,6 +186,10 @@ export const T = {
       accent: "Accent", fontSans: "Sans font", fontSerif: "Serif font",
       density: "Density", fontScale: "Font scale",
       density_compact: "Compact", density_comfy: "Comfy", density_spacious: "Spacious",
+      lineHeight: "Line height",
+      bullet: "Bullet style",
+      bulletDisc: "Disc", bulletCircle: "Circle", bulletSquare: "Square",
+      bulletDash: "Dash", bulletNone: "None",
     },
     gallery: {
       title: "GitHub Resume Template Gallery",

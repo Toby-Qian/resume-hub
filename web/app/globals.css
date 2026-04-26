@@ -19,14 +19,41 @@ body { background: #f3f4f6; color: #111827; font-family: var(--resume-font-sans)
 .paper {
   --page-w: 794px;
   --page-h: 1123px;
+  /* Filled in by Preview.tsx; defaults preserve pre-feature behavior. */
+  --resume-line-height: 1.55;
+  --resume-bullet: "\2022\00A0";       /* • + nbsp */
+  --resume-bullet-indent: 1.25em;
   width: var(--page-w);
   min-height: var(--page-h);
   background: white;
   box-shadow: 0 4px 24px rgba(0,0,0,0.08);
   font-size: calc(14px * var(--resume-font-scale));
-  line-height: 1.55;
+  line-height: var(--resume-line-height);
   color: #111827;
   position: relative;
+}
+
+/* ---- Theme-driven bullets ---------------------------------------------- */
+/* Override Tailwind's `list-disc` so the bullet glyph (or its absence) is
+   driven by the theme. We use a generated marker via ::before because
+   list-style-type doesn't accept arbitrary glyphs / em-dashes consistently. */
+.paper ul.list-disc {
+  list-style: none !important;
+  padding-left: 0 !important;
+  margin-left: 0 !important;
+}
+.paper ul.list-disc > li {
+  position: relative;
+  padding-left: var(--resume-bullet-indent);
+}
+.paper ul.list-disc > li::before {
+  content: var(--resume-bullet);
+  position: absolute;
+  left: 0;
+  top: 0;
+  color: var(--resume-accent);
+  font-weight: 600;
+  white-space: pre;
 }
 .paper.paper-letter { --page-w: 816px; --page-h: 1056px; }
 .paper.density-compact { --pad: 32px; --gap: 10px; }

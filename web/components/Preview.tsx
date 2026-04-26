@@ -270,6 +270,17 @@ export function Preview() {
             ["--resume-font-serif" as any]: theme.fontSerif,
             ["--resume-font-scale" as any]: String(theme.fontScale),
             ["--resume-page-margin" as any]: `${marginMM}mm`,
+            // Defaults guard against persisted themes that pre-date these
+            // tokens being added (zustand persist won't auto-merge new fields).
+            ["--resume-line-height" as any]: String(theme.lineHeight ?? 1.55),
+            ["--resume-bullet" as any]:
+              (theme.bulletStyle ?? "disc") === "dash" ? '"\\2014 \\00A0"' /* em dash + nbsp */
+              : (theme.bulletStyle ?? "disc") === "none" ? '""'
+              : (theme.bulletStyle ?? "disc") === "square" ? '"\\25A0\\00A0"' /* ■ */
+              : (theme.bulletStyle ?? "disc") === "circle" ? '"\\25CB\\00A0"' /* ○ */
+              : '"\\2022\\00A0"', /* • */
+            ["--resume-bullet-indent" as any]:
+              (theme.bulletStyle ?? "disc") === "none" ? "0" : "1.25em",
             fontFamily: "var(--resume-font-sans)",
             padding: marginMM > 0 ? `${marginMM}mm` : undefined,
             transform: `scale(${zoom})`,

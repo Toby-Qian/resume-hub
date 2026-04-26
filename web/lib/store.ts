@@ -18,6 +18,10 @@ export interface ThemeTokens {
   fontSerif: string;
   density: "compact" | "comfy" | "spacious";
   fontScale: number;       // 0.9 ~ 1.15
+  /** List bullet style applied to all `<ul>` inside .paper. */
+  bulletStyle: "disc" | "none" | "dash" | "square" | "circle";
+  /** Body line-height (CSS unitless). 1.2 ~ 2.0. */
+  lineHeight: number;
 }
 
 export const defaultTheme: ThemeTokens = {
@@ -26,6 +30,8 @@ export const defaultTheme: ThemeTokens = {
   fontSerif: "'Source Serif Pro', 'Source Han Serif SC', serif",
   density: "comfy",
   fontScale: 1,
+  bulletStyle: "disc",
+  lineHeight: 1.55,
 };
 
 export type UILang = "zh" | "en";

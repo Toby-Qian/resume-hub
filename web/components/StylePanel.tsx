@@ -204,6 +204,72 @@ export function StylePanel() {
           onChange={(e) => setTheme({ fontScale: Number(e.target.value) })} className="w-full" />
       </div>
 
+      {/* Line height — body & list-item line-height (unitless) ------------ */}
+      <div>
+        <div className="text-xs font-semibold uppercase text-gray-500 mb-2">
+          {(L.theme as any).lineHeight ?? "行间距"} — {(theme.lineHeight ?? 1.55).toFixed(2)}
+        </div>
+        <input
+          type="range"
+          min={1.1}
+          max={2.2}
+          step={0.05}
+          value={theme.lineHeight ?? 1.55}
+          onChange={(e) => setTheme({ lineHeight: Number(e.target.value) })}
+          className="w-full accent-blue-600"
+        />
+        <div className="grid grid-cols-4 gap-1 mt-1">
+          {[1.2, 1.45, 1.7, 2.0].map((v) => (
+            <button
+              key={v}
+              onClick={() => setTheme({ lineHeight: v })}
+              className={`px-1 py-1 rounded border text-[0.7rem] transition ${
+                Math.abs((theme.lineHeight ?? 1.55) - v) < 0.03
+                  ? "border-blue-500 bg-blue-50 text-blue-700"
+                  : "border-gray-200 hover:bg-gray-50 text-gray-600"
+              }`}
+            >
+              {v.toFixed(2)}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Bullet style — controls every <ul> inside .paper ----------------- */}
+      <div>
+        <div className="text-xs font-semibold uppercase text-gray-500 mb-2">
+          {(L.theme as any).bullet ?? "项目符号"}
+        </div>
+        <div className="grid grid-cols-5 gap-1">
+          {([
+            { id: "disc",   glyph: "•",  label: (L.theme as any).bulletDisc   ?? "圆点" },
+            { id: "circle", glyph: "○",  label: (L.theme as any).bulletCircle ?? "空心" },
+            { id: "square", glyph: "■",  label: (L.theme as any).bulletSquare ?? "方块" },
+            { id: "dash",   glyph: "—",  label: (L.theme as any).bulletDash   ?? "破折号" },
+            { id: "none",   glyph: "∅",  label: (L.theme as any).bulletNone   ?? "无" },
+          ] as const).map((b) => {
+            const active = (theme.bulletStyle ?? "disc") === b.id;
+            return (
+              <button
+                key={b.id}
+                onClick={() => setTheme({ bulletStyle: b.id })}
+                title={b.label}
+                className={`flex flex-col items-center py-1.5 rounded border text-[0.65rem] transition ${
+                  active
+                    ? "border-blue-500 bg-blue-50 text-blue-700"
+                    : "border-gray-200 hover:bg-gray-50 text-gray-600"
+                }`}
+              >
+                <span className="text-base leading-none mb-0.5" style={{ color: active ? "#2563eb" : "#374151" }}>
+                  {b.glyph}
+                </span>
+                {b.label}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
       {/* Section visibility toggles — hide a section from the rendered
           resume without losing its data. Implemented by zeroing the
           array before passing to Tpl (see Preview.tsx).               */}
