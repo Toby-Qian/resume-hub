@@ -87,6 +87,7 @@ export const T = {
     footer: {
       privacy: "所有内容仅保存在你的浏览器本地，不会上传到任何服务器。",
       github: "在 GitHub 查看源码",
+      disclaimerLink: "免责声明",
       disclaimer: "早期版本 · 建议定期导出 JSON 备份",
     },
     empty: {
@@ -239,6 +240,7 @@ export const T = {
     footer: {
       privacy: "Everything you type stays in your browser's local storage — nothing is uploaded.",
       github: "View source on GitHub",
+      disclaimerLink: "Disclaimer",
       disclaimer: "Early build · Export JSON regularly as a backup",
     },
     empty: {
