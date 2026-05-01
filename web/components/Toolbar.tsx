@@ -1,5 +1,5 @@
 "use client";
-import { useRef, useEffect, useState } from "react";
+import { useRef, useEffect, useState, useMemo } from "react";
 import { useStore } from "@/lib/store";
 import { t } from "@/lib/i18n";
 import { toast } from "@/lib/toast";
@@ -76,9 +76,36 @@ export function Toolbar() {
   const canUndo = past.length > 0;
   const canRedo = future.length > 0;
 
+  // Auto-save indicator: zustand persist writes to localStorage on every
+  // mutation, so any change in `resume` ≈ "saved a moment ago". Track the
+  // timestamp of the last change; tick a clock so the relative label updates.
+  const [savedAt, setSavedAt] = useState<number>(() => Date.now());
+  const [now, setNow] = useState(() => Date.now());
+  useEffect(() => { setSavedAt(Date.now()); }, [resume]);
+  useEffect(() => {
+    const t = setInterval(() => setNow(Date.now()), 15_000);
+    return () => clearInterval(t);
+  }, []);
+  const savedLabel = useMemo(() => {
+    const diff = Math.max(0, Math.floor((now - savedAt) / 1000));
+    if (diff < 5)  return (L.actions as any).savedJustNow ?? "Saved";
+    if (diff < 60) return ((L.actions as any).savedSecondsAgo ?? "Saved {n}s ago").replace("{n}", String(diff));
+    const m = Math.floor(diff / 60);
+    return ((L.actions as any).savedMinutesAgo ?? "Saved {n}m ago").replace("{n}", String(m));
+  }, [savedAt, now, L]);
+
   return (
     <div className="space-y-2 no-print">
-    <Completeness />
+    <div className="flex items-center justify-between gap-2">
+      <div className="flex-1"><Completeness /></div>
+      <span
+        className="shrink-0 inline-flex items-center gap-1 text-[0.65rem] text-emerald-700 bg-emerald-50 border border-emerald-200/70 rounded-full px-2 py-0.5"
+        title={L.footer.privacy}
+      >
+        <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+        {savedLabel}
+      </span>
+    </div>
     <div className="flex flex-wrap items-center gap-2">
       <div className="inline-flex items-center rounded-lg border border-gray-200 bg-white overflow-hidden mr-1">
         <button onClick={undo} disabled={!canUndo}

@@ -37,6 +37,14 @@ const RemoveBtn = ({ onClick, label }: { onClick: () => void; label: string }) =
   </button>
 );
 
+const DuplicateBtn = ({ onClick, label }: { onClick: () => void; label: string }) => (
+  <button onClick={onClick}
+    className="text-[0.7rem] text-gray-400 hover:text-blue-600 transition-colors opacity-0 group-hover:opacity-100"
+    title={label}>
+    ⎘
+  </button>
+);
+
 const AddBtn = ({ onClick, label }: { onClick: () => void; label: string }) => (
   <button onClick={(e) => { e.stopPropagation(); onClick(); }}
     className="text-xs px-2.5 py-1 rounded-lg bg-blue-600 text-white hover:bg-blue-700 shadow-sm transition-all hover:-translate-y-px flex items-center gap-1">
@@ -50,16 +58,18 @@ interface SortableCardProps {
   breakBefore?: boolean;
   onToggleBreak?: (v: boolean) => void;
   onRemove: () => void;
+  onDuplicate?: () => void;
   onReorder: (section: SectionKey, fromId: string, toId: string) => void;
   reorderHint: string;
   breakLabel: string;
   removeLabel: string;
+  duplicateLabel: string;
   children: React.ReactNode;
 }
 
 const SortableCard = ({
-  section, id, breakBefore, onToggleBreak, onRemove, onReorder,
-  reorderHint, breakLabel, removeLabel, children,
+  section, id, breakBefore, onToggleBreak, onRemove, onDuplicate, onReorder,
+  reorderHint, breakLabel, removeLabel, duplicateLabel, children,
 }: SortableCardProps) => {
   const onDragStart = (e: React.DragEvent) => {
     e.dataTransfer.setData("text/x-resume-item", `${section}:${id}`);
@@ -115,7 +125,10 @@ const SortableCard = ({
             </label>
           ) : null}
         </div>
-        <RemoveBtn onClick={onRemove} label={removeLabel} />
+        <div className="flex items-center gap-2">
+          {onDuplicate && <DuplicateBtn onClick={onDuplicate} label={duplicateLabel} />}
+          <RemoveBtn onClick={onRemove} label={removeLabel} />
+        </div>
       </div>
       {children}
     </div>
@@ -167,12 +180,16 @@ const SectionTitle = ({ children, onAdd, sectionKey, count, open, onToggle, addL
 };
 
 export function Editor() {
-  const { resume, update, addItem, removeItem, reorderItem, lang } = useStore();
+  const { resume, update, addItem, removeItem, duplicateItem, reorderItem, lang } = useStore();
   const L = t(lang);
   // Collapsible state per section (open by default).
   const [collapsed, setCollapsed] = useState<Record<string, boolean>>({});
   const isOpen = (key: string) => !collapsed[key];
   const toggle = (key: string) => setCollapsed((c) => ({ ...c, [key]: !c[key] }));
+  const ALL_SECTIONS = ["basics","work","education","projects","skills","awards","languages","publications","talks","teaching"];
+  const collapseAll = () => setCollapsed(Object.fromEntries(ALL_SECTIONS.map((k) => [k, true])));
+  const expandAll = () => setCollapsed({});
+  const allCollapsed = ALL_SECTIONS.every((k) => collapsed[k]);
 
   const patch = <K extends SectionKey>(section: K, id: string, field: string, value: any) => {
     const list = resume[section] as any[];
@@ -185,12 +202,25 @@ export function Editor() {
   const reorderHint = (L.actions as any).reorderHint ?? "拖动以排序 / drag to reorder";
   const breakLabel  = L.form.breakBefore;
   const removeLabel = L.actions.remove;
+  const duplicateLabel = (L.actions as any).duplicate ?? "Duplicate";
   const addLabel    = L.actions.add;
   const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const validateEmail = (v: string) => (!v || emailRe.test(v) ? null : L.form.invalidEmail);
 
   return (
     <div className="space-y-1">
+      <div className="flex justify-end -mb-1">
+        <button
+          type="button"
+          onClick={allCollapsed ? expandAll : collapseAll}
+          className="text-[0.7rem] text-gray-500 hover:text-blue-600 transition px-2 py-1 rounded hover:bg-gray-50"
+          title={allCollapsed ? ((L.actions as any).expandAll ?? "Expand all") : ((L.actions as any).collapseAll ?? "Collapse all")}
+        >
+          {allCollapsed
+            ? `▾ ${(L.actions as any).expandAll ?? "Expand all"}`
+            : `▴ ${(L.actions as any).collapseAll ?? "Collapse all"}`}
+        </button>
+      </div>
       <SectionTitle sectionKey="basics" open={isOpen("basics")} onToggle={() => toggle("basics")} addLabel={addLabel}>{L.sections.basics}</SectionTitle>
       {isOpen("basics") && <>
       <div className="grid grid-cols-2 gap-x-3">
@@ -327,9 +357,10 @@ export function Editor() {
       {isOpen("work") && resume.work.map((w) => (
         <SortableCard key={w.id} section="work" id={w.id}
           onRemove={() => removeItem("work", w.id)}
+          onDuplicate={() => duplicateItem("work", w.id)}
           breakBefore={(w as any).breakBefore}
           onToggleBreak={(v) => patch("work", w.id, "breakBefore", v)}
-          onReorder={reorderItem} reorderHint={reorderHint} breakLabel={breakLabel} removeLabel={removeLabel}>
+          onReorder={reorderItem} reorderHint={reorderHint} breakLabel={breakLabel} removeLabel={removeLabel} duplicateLabel={duplicateLabel}>
           <div className="grid grid-cols-2 gap-x-3">
             <Field label={L.fields.company} value={w.company} onChange={(v) => patch("work", w.id, "company", v)} />
             <Field label={L.fields.position} value={w.position} onChange={(v) => patch("work", w.id, "position", v)} />
@@ -346,9 +377,10 @@ export function Editor() {
       {isOpen("education") && resume.education.map((e) => (
         <SortableCard key={e.id} section="education" id={e.id}
           onRemove={() => removeItem("education", e.id)}
+          onDuplicate={() => duplicateItem("education", e.id)}
           breakBefore={(e as any).breakBefore}
           onToggleBreak={(v) => patch("education", e.id, "breakBefore", v)}
-          onReorder={reorderItem} reorderHint={reorderHint} breakLabel={breakLabel} removeLabel={removeLabel}>
+          onReorder={reorderItem} reorderHint={reorderHint} breakLabel={breakLabel} removeLabel={removeLabel} duplicateLabel={duplicateLabel}>
           <div className="grid grid-cols-2 gap-x-3">
             <Field label={L.fields.institution} value={e.institution} onChange={(v) => patch("education", e.id, "institution", v)} />
             <Field label={L.fields.studyType} value={e.studyType} onChange={(v) => patch("education", e.id, "studyType", v)} />
@@ -366,9 +398,10 @@ export function Editor() {
       {isOpen("projects") && resume.projects.map((p) => (
         <SortableCard key={p.id} section="projects" id={p.id}
           onRemove={() => removeItem("projects", p.id)}
+          onDuplicate={() => duplicateItem("projects", p.id)}
           breakBefore={(p as any).breakBefore}
           onToggleBreak={(v) => patch("projects", p.id, "breakBefore", v)}
-          onReorder={reorderItem} reorderHint={reorderHint} breakLabel={breakLabel} removeLabel={removeLabel}>
+          onReorder={reorderItem} reorderHint={reorderHint} breakLabel={breakLabel} removeLabel={removeLabel} duplicateLabel={duplicateLabel}>
           <div className="grid grid-cols-2 gap-x-3">
             <Field label={L.fields.projectName} value={p.name} onChange={(v) => patch("projects", p.id, "name", v)} />
             <Field label={L.fields.url} value={p.url || ""} onChange={(v) => patch("projects", p.id, "url", v)} />
@@ -387,9 +420,10 @@ export function Editor() {
       {isOpen("skills") && resume.skills.map((s) => (
         <SortableCard key={s.id} section="skills" id={s.id}
           onRemove={() => removeItem("skills", s.id)}
+          onDuplicate={() => duplicateItem("skills", s.id)}
           breakBefore={(s as any).breakBefore}
           onToggleBreak={(v) => patch("skills", s.id, "breakBefore", v)}
-          onReorder={reorderItem} reorderHint={reorderHint} breakLabel={breakLabel} removeLabel={removeLabel}>
+          onReorder={reorderItem} reorderHint={reorderHint} breakLabel={breakLabel} removeLabel={removeLabel} duplicateLabel={duplicateLabel}>
           <div className="grid grid-cols-2 gap-x-3">
             <Field label={L.fields.skillName} value={s.name} onChange={(v) => patch("skills", s.id, "name", v)} />
             <Field label={L.fields.level} value={s.level} onChange={(v) => patch("skills", s.id, "level", v)} />
@@ -403,9 +437,10 @@ export function Editor() {
       {isOpen("awards") && resume.awards.map((a) => (
         <SortableCard key={a.id} section="awards" id={a.id}
           onRemove={() => removeItem("awards", a.id)}
+          onDuplicate={() => duplicateItem("awards", a.id)}
           breakBefore={(a as any).breakBefore}
           onToggleBreak={(v) => patch("awards", a.id, "breakBefore", v)}
-          onReorder={reorderItem} reorderHint={reorderHint} breakLabel={breakLabel} removeLabel={removeLabel}>
+          onReorder={reorderItem} reorderHint={reorderHint} breakLabel={breakLabel} removeLabel={removeLabel} duplicateLabel={duplicateLabel}>
           <div className="grid grid-cols-2 gap-x-3">
             <Field label={L.fields.awardTitle} value={a.title} onChange={(v) => patch("awards", a.id, "title", v)} />
             <DateField label={L.fields.date} value={a.date} onChange={(v) => patch("awards", a.id, "date", v)} />
@@ -419,9 +454,10 @@ export function Editor() {
       {isOpen("languages") && resume.languages.map((l) => (
         <SortableCard key={l.id} section="languages" id={l.id}
           onRemove={() => removeItem("languages", l.id)}
+          onDuplicate={() => duplicateItem("languages", l.id)}
           breakBefore={(l as any).breakBefore}
           onToggleBreak={(v) => patch("languages", l.id, "breakBefore", v)}
-          onReorder={reorderItem} reorderHint={reorderHint} breakLabel={breakLabel} removeLabel={removeLabel}>
+          onReorder={reorderItem} reorderHint={reorderHint} breakLabel={breakLabel} removeLabel={removeLabel} duplicateLabel={duplicateLabel}>
           <div className="grid grid-cols-2 gap-x-3">
             <Field label={L.fields.language} value={l.language} onChange={(v) => patch("languages", l.id, "language", v)} />
             <Field label={L.fields.fluency} value={l.fluency} onChange={(v) => patch("languages", l.id, "fluency", v)} />
@@ -437,9 +473,10 @@ export function Editor() {
       {isOpen("publications") && (resume.publications || []).map((p) => (
         <SortableCard key={p.id} section="publications" id={p.id}
           onRemove={() => removeItem("publications", p.id)}
+          onDuplicate={() => duplicateItem("publications", p.id)}
           breakBefore={(p as any).breakBefore}
           onToggleBreak={(v) => patch("publications", p.id, "breakBefore", v)}
-          onReorder={reorderItem} reorderHint={reorderHint} breakLabel={breakLabel} removeLabel={removeLabel}>
+          onReorder={reorderItem} reorderHint={reorderHint} breakLabel={breakLabel} removeLabel={removeLabel} duplicateLabel={duplicateLabel}>
           <Field label={(L.fields as any).pubTitle} value={p.title} onChange={(v) => patch("publications", p.id, "title", v)} />
           <Field label={(L.fields as any).pubAuthors} value={p.authors || ""} onChange={(v) => patch("publications", p.id, "authors", v)} />
           <div className="grid grid-cols-2 gap-x-3">
@@ -456,9 +493,10 @@ export function Editor() {
       {isOpen("talks") && (resume.talks || []).map((tk) => (
         <SortableCard key={tk.id} section="talks" id={tk.id}
           onRemove={() => removeItem("talks", tk.id)}
+          onDuplicate={() => duplicateItem("talks", tk.id)}
           breakBefore={(tk as any).breakBefore}
           onToggleBreak={(v) => patch("talks", tk.id, "breakBefore", v)}
-          onReorder={reorderItem} reorderHint={reorderHint} breakLabel={breakLabel} removeLabel={removeLabel}>
+          onReorder={reorderItem} reorderHint={reorderHint} breakLabel={breakLabel} removeLabel={removeLabel} duplicateLabel={duplicateLabel}>
           <Field label={(L.fields as any).talkTitle} value={tk.title} onChange={(v) => patch("talks", tk.id, "title", v)} />
           <div className="grid grid-cols-2 gap-x-3">
             <Field label={(L.fields as any).talkVenue} value={tk.venue || ""} onChange={(v) => patch("talks", tk.id, "venue", v)} />
@@ -473,9 +511,10 @@ export function Editor() {
       {isOpen("teaching") && (resume.teaching || []).map((tg) => (
         <SortableCard key={tg.id} section="teaching" id={tg.id}
           onRemove={() => removeItem("teaching", tg.id)}
+          onDuplicate={() => duplicateItem("teaching", tg.id)}
           breakBefore={(tg as any).breakBefore}
           onToggleBreak={(v) => patch("teaching", tg.id, "breakBefore", v)}
-          onReorder={reorderItem} reorderHint={reorderHint} breakLabel={breakLabel} removeLabel={removeLabel}>
+          onReorder={reorderItem} reorderHint={reorderHint} breakLabel={breakLabel} removeLabel={removeLabel} duplicateLabel={duplicateLabel}>
           <div className="grid grid-cols-2 gap-x-3">
             <Field label={(L.fields as any).teachCourse} value={tg.course} onChange={(v) => patch("teaching", tg.id, "course", v)} />
             <Field label={(L.fields as any).teachInstitution} value={tg.institution || ""} onChange={(v) => patch("teaching", tg.id, "institution", v)} />

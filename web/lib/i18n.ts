@@ -34,6 +34,8 @@ export const T = {
       add: "添加", remove: "删除", loadSample: "加载示例", reset: "清空", print: "导出 PDF",
       importJson: "导入 JSON", exportJson: "导出 JSON",
       undo: "撤销", redo: "重做",
+      duplicate: "复制此条", expandAll: "全部展开", collapseAll: "全部折叠",
+      savedJustNow: "已保存", savedSecondsAgo: "{n} 秒前已保存", savedMinutesAgo: "{n} 分钟前已保存",
     },
     theme: {
       accent: "主色", fontSans: "无衬线字体", fontSerif: "衬线字体",
@@ -195,6 +197,8 @@ export const T = {
       add: "Add", remove: "Remove", loadSample: "Load sample", reset: "Reset", print: "Export PDF",
       importJson: "Import JSON", exportJson: "Export JSON",
       undo: "Undo", redo: "Redo",
+      duplicate: "Duplicate", expandAll: "Expand all", collapseAll: "Collapse all",
+      savedJustNow: "Saved", savedSecondsAgo: "Saved {n}s ago", savedMinutesAgo: "Saved {n}m ago",
     },
     theme: {
       accent: "Accent", fontSans: "Sans font", fontSerif: "Serif font",

@@ -101,6 +101,7 @@ interface State {
   update: <K extends keyof Resume>(key: K, value: Resume[K]) => void;
   addItem: (section: SectionKey) => void;
   removeItem: (section: SectionKey, id: string) => void;
+  duplicateItem: (section: SectionKey, id: string) => void;
   reorderItem: (section: SectionKey, fromId: string, toId: string) => void;
   addNote: () => void;
   addImageNote: (src: string) => void;
@@ -302,6 +303,20 @@ export const useStore = create<State>()(
           mutate({ ...get().resume, [section]: [...(get().resume[section] as any[]), blankItem(section)] } as Resume),
         removeItem: (section, id) =>
           mutate({ ...get().resume, [section]: (get().resume[section] as any[]).filter((x) => x.id !== id) } as Resume),
+        duplicateItem: (section, id) => {
+          const list = (get().resume[section] as any[]).slice();
+          const idx = list.findIndex((x) => x.id === id);
+          if (idx < 0) return;
+          // Deep-ish clone — arrays of primitives (highlights/keywords/courses)
+          // need their own copy so editing the dup doesn't mutate the source.
+          const src = list[idx];
+          const copy: any = { ...src, id: uid() };
+          for (const k of Object.keys(copy)) {
+            if (Array.isArray(copy[k])) copy[k] = copy[k].slice();
+          }
+          list.splice(idx + 1, 0, copy);
+          mutate({ ...get().resume, [section]: list } as Resume);
+        },
         reorderItem: (section, fromId, toId) => {
           if (fromId === toId) return;
           const list = (get().resume[section] as any[]).slice();
