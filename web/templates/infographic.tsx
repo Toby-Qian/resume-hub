@@ -140,7 +140,10 @@ export default function Infographic({ resume }: TemplateProps) {
           <>
             <SideTitle><EditableLabel k="skills" fallback={L.skills} /></SideTitle>
             {resume.skills.map((s, i) => {
-              const pct = levelToPct(s.level);
+              // Numeric levelValue (0-5) takes precedence over text level
+              // mapping. 0 hides the bar entirely.
+              const lv = (s as any).levelValue as number | undefined;
+              const pct = typeof lv === "number" && lv > 0 ? (lv / 5) * 100 : (lv === 0 ? 0 : levelToPct(s.level));
               return (
                 <div key={s.id} className={itemCls(s, "mb-2")}>
                   <div className="flex justify-between text-[0.83em]">

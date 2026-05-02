@@ -60,6 +60,9 @@ export interface ResumeSkill {
   id: string;
   name: string;
   level: string;          // Beginner / Intermediate / Advanced / Expert
+  /** Optional 0-5 numeric proficiency for visual bars. Renders next to the
+   *  text level when > 0. Templates that opt in render `<SkillBar>`. */
+  levelValue?: number;
   keywords: string[];
 }
 

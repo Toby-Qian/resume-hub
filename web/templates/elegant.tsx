@@ -1,5 +1,5 @@
 "use client";
-import { TemplateProps, range, itemCls, Avatar, E, Draggable, useSectionLabels, useOrderedSections , DateRange, EditableLabel} from "./shared";
+import { TemplateProps, range, itemCls, Avatar, E, Draggable, useSectionLabels, useOrderedSections, DateRange, EditableLabel, SkillBar } from "./shared";
 
 /**
  * Two-column layout with a soft tinted sidebar. Feels lighter than
@@ -104,7 +104,7 @@ export default function Elegant({ resume }: TemplateProps) {
             <SideH><EditableLabel k="skills" fallback={L.skills} /></SideH>
             {resume.skills.map((s, i) => (
               <div key={s.id} className={itemCls(s, "text-[0.83em] mb-2")}>
-                <div className="font-semibold text-gray-800"><E path={`skills.${i}.name`}>{s.name}</E></div>
+                <div className="font-semibold text-gray-800"><E path={`skills.${i}.name`}>{s.name}</E><SkillBar value={(s as any).levelValue} /></div>
                 <div className="text-gray-600">{s.keywords.join(" · ")}</div>
               </div>
             ))}

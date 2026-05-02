@@ -1,5 +1,5 @@
 "use client";
-import { TemplateProps, Section, range, itemCls, Avatar, E, Draggable, useSectionLabels, useOrderedSections , DateRange} from "./shared";
+import { TemplateProps, Section, range, itemCls, Avatar, E, Draggable, useSectionLabels, useOrderedSections, DateRange, SkillBar } from "./shared";
 
 export default function Classic({ resume }: TemplateProps) {
   const b = resume.basics;
@@ -57,6 +57,7 @@ export default function Classic({ resume }: TemplateProps) {
       {resume.skills.map((s, i) => (
         <div key={s.id} className={itemCls(s, "text-[0.92em]")}>
           <b><E path={`skills.${i}.name`}>{s.name}</E>:</b> {s.keywords.join(", ")}
+          <SkillBar value={(s as any).levelValue} />
         </div>
       ))}
     </Section>

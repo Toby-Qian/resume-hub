@@ -353,6 +353,21 @@ body {
 .draggable-block:hover > .drag-reset { opacity: 0.85; }
 .drag-reset:hover { opacity: 1 !important; background: #fecdd3; color: #9f1239; }
 
+/* Skill proficiency indicator (templates render <SkillBar value={1..5} />).
+   Inherits accent color via currentColor; off-segments use a tinted version.
+   `bar` = rounded slim rectangles. `dots` = circles. */
+.skill-bar {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  vertical-align: -1px;
+  margin-left: 4px;
+}
+.skill-bar .skill-seg { background: currentColor; opacity: 0.22; transition: opacity 0.15s; }
+.skill-bar .skill-seg.on { opacity: 1; }
+.skill-bar-bar .skill-seg { width: 10px; height: 5px; border-radius: 2px; }
+.skill-bar-dots .skill-seg { width: 6px; height: 6px; border-radius: 50%; }
+
 /* Print: no hover affordances, no handles. */
 @media print {
   .editable-field { background: transparent !important; box-shadow: none !important; }

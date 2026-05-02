@@ -1,5 +1,5 @@
 "use client";
-import { TemplateProps, range, itemCls, Avatar, E, Draggable, useSectionLabels, useOrderedSections , DateRange, EditableLabel} from "./shared";
+import { TemplateProps, range, itemCls, Avatar, E, Draggable, useSectionLabels, useOrderedSections, DateRange, EditableLabel, SkillBar } from "./shared";
 
 /**
  * Dark hero band + light content cards. Modern startup / SaaS-portfolio
@@ -139,6 +139,7 @@ export default function DarkCard({ resume }: TemplateProps) {
                   <div key={s.id} className={itemCls(s, "mb-1")}>
                     <span className="font-semibold"><E path={`skills.${i}.name`}>{s.name}</E></span>
                     {s.level && <span className="text-gray-500 text-[0.85em]"> · {s.level}</span>}
+                    <SkillBar value={(s as any).levelValue} />
                     {s.keywords.length > 0 && <div className="text-gray-700 text-[0.88em]">{s.keywords.join(" · ")}</div>}
                   </div>
                 ))}

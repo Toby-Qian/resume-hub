@@ -1,5 +1,5 @@
 "use client";
-import { TemplateProps, Section, range, itemCls, Avatar, E, Draggable, useSectionLabels, useOrderedSections , DateRange} from "./shared";
+import { TemplateProps, Section, range, itemCls, Avatar, E, Draggable, useSectionLabels, useOrderedSections, DateRange, SkillBar } from "./shared";
 
 export default function Modern({ resume }: TemplateProps) {
   const b = resume.basics;
@@ -67,6 +67,7 @@ export default function Modern({ resume }: TemplateProps) {
         <div key={s.id} className={itemCls(s, "text-[0.92em]")}>
           <span className="font-semibold"><E path={`skills.${i}.name`}>{s.name}</E></span>
           {s.level && <span className="text-gray-500"> · <E path={`skills.${i}.level`}>{s.level}</E></span>}
+          <SkillBar value={(s as any).levelValue} />
           {s.keywords.length > 0 && <span className="text-gray-700"> — {s.keywords.join(", ")}</span>}
         </div>
       ))}

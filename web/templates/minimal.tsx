@@ -1,5 +1,5 @@
 "use client";
-import { TemplateProps, range, itemCls, Avatar, E, Draggable, useSectionLabels, useOrderedSections , DateRange, EditableLabel} from "./shared";
+import { TemplateProps, range, itemCls, Avatar, E, Draggable, useSectionLabels, useOrderedSections, DateRange, EditableLabel, SkillBar } from "./shared";
 
 export default function Minimal({ resume }: TemplateProps) {
   const b = resume.basics;
@@ -47,7 +47,7 @@ export default function Minimal({ resume }: TemplateProps) {
   const skills = resume.skills.length > 0 && (
     <Row title={<EditableLabel k="skills" fallback={L.skills} />}>
       {resume.skills.map((s, i) => (
-        <div key={s.id} className={itemCls(s, "text-[0.9em]")}><b><E path={`skills.${i}.name`}>{s.name}</E></b> — {s.keywords.join(", ")}</div>
+        <div key={s.id} className={itemCls(s, "text-[0.9em]")}><b><E path={`skills.${i}.name`}>{s.name}</E></b> — {s.keywords.join(", ")}<SkillBar value={(s as any).levelValue} /></div>
       ))}
     </Row>
   );

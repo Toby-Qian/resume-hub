@@ -453,3 +453,43 @@ export function Draggable({
     </Tag>
   );
 }
+
+// ---------- Skill proficiency bar -----------------------------------------
+/**
+ * Render a 0-`max` proficiency indicator. Returns null when `value` is falsy
+ * or <=0, so templates can drop it in unconditionally — invisible until the
+ * user sets `levelValue` in the editor. `variant`:
+ *   - "bar" (default): `max` segmented blocks, filled left-to-right.
+ *   - "dots": `max` dots, filled left-to-right.
+ * Color follows the active accent (`--ink-accent`) via `currentColor` so each
+ * template inherits its theme automatically.
+ */
+export function SkillBar({
+  value,
+  max = 5,
+  variant = "bar",
+  className = "",
+}: {
+  value?: number;
+  max?: number;
+  variant?: "bar" | "dots";
+  className?: string;
+}) {
+  if (!value || value <= 0) return null;
+  const v = Math.max(0, Math.min(max, Math.round(value)));
+  return (
+    <span
+      className={`skill-bar skill-bar-${variant} ${className}`}
+      style={{ color: "var(--ink-accent)" }}
+      aria-label={`level ${v} of ${max}`}
+      role="img"
+    >
+      {Array.from({ length: max }).map((_, i) => (
+        <span
+          key={i}
+          className={`skill-seg ${i < v ? "on" : "off"}`}
+        />
+      ))}
+    </span>
+  );
+}

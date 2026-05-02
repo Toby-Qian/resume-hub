@@ -525,6 +525,34 @@ export function Editor() {
             <Field label={L.fields.skillName} value={s.name} onChange={(v) => patch("skills", s.id, "name", v)} />
             <Field label={L.fields.level} value={s.level} onChange={(v) => patch("skills", s.id, "level", v)} />
           </div>
+          {/* Numeric proficiency 0-5 → renders <SkillBar> in templates that
+              opt in. 0 == hide bar. Stored as `levelValue` to keep the legacy
+              free-text `level` untouched for ATS/text export. */}
+          <div className="flex items-center gap-2 mt-1.5 mb-1">
+            <span className="text-[0.7rem] text-gray-500 select-none">
+              {(L.fields as any).levelValue ?? "等级 / Proficiency"}
+            </span>
+            <div className="inline-flex rounded-md border border-gray-200 overflow-hidden">
+              {[0, 1, 2, 3, 4, 5].map((n) => {
+                const active = ((s as any).levelValue || 0) === n;
+                return (
+                  <button
+                    key={n}
+                    type="button"
+                    onClick={() => patch("skills", s.id, "levelValue" as any, n)}
+                    className={`text-[0.7rem] px-2 py-0.5 transition ${
+                      active
+                        ? "bg-blue-600 text-white"
+                        : "bg-white text-gray-600 hover:bg-gray-50"
+                    } ${n > 0 ? "border-l border-gray-200" : ""}`}
+                    title={n === 0 ? "隐藏 / hide" : `${n}/5`}
+                  >
+                    {n === 0 ? "—" : n}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
           <ChipsField
             label={L.fields.keywords}
             value={s.keywords || []}
