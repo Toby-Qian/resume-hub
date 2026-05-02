@@ -60,8 +60,7 @@ const SERIF_FONTS: { stack: string; zh: string; en: string; loaded?: boolean }[]
 const SANS = SANS_FONTS.map((f) => f.stack);
 const SERIF = SERIF_FONTS.map((f) => f.stack);
 
-/** Curated palette: one click sets accent only. Fonts are kept independent
- *  (changing the accent should NOT silently change the user's chosen font).  */
+/** Accent-only swatches (one click sets accent without touching fonts). */
 type Preset = { id: string; nameZh: string; nameEn: string; accent: string };
 const THEME_PRESETS: Preset[] = [
   { id: "modern-blue",   nameZh: "现代蓝",   nameEn: "Modern Blue",   accent: "#2563eb" },
@@ -76,6 +75,115 @@ const THEME_PRESETS: Preset[] = [
 
 function isMatchingPreset(theme: ThemeTokens, p: Preset) {
   return theme.accent.toLowerCase() === p.accent.toLowerCase();
+}
+
+/** Full-style packs: one click overrides accent + fonts + density + line
+ *  height + bullets + heading divider in lockstep. Distinct from the accent
+ *  swatches above — those preserve typography choices, these reset them.    */
+type StylePack = {
+  id: string;
+  nameZh: string;
+  nameEn: string;
+  blurb?: { zh: string; en: string };
+  /** Full theme override applied via `setTheme(pack.tokens)`. */
+  tokens: Partial<ThemeTokens>;
+};
+
+const STYLE_PACKS: StylePack[] = [
+  {
+    id: "pack-modern",
+    nameZh: "现代",
+    nameEn: "Modern",
+    blurb: { zh: "Inter · 蓝调 · 舒适密度", en: "Inter · blue · comfy" },
+    tokens: {
+      accent: "#2563eb",
+      fontSans: "'Inter', 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif",
+      fontSerif: "'Source Serif 4', 'Noto Serif SC', 'Songti SC', serif",
+      density: "comfy", fontScale: 1, lineHeight: 1.55,
+      bulletStyle: "disc", divider: "solid",
+    },
+  },
+  {
+    id: "pack-classic",
+    nameZh: "经典印刷",
+    nameEn: "Classic Print",
+    blurb: { zh: "Source Serif · 黑色 · 紧凑", en: "Serif · black · compact" },
+    tokens: {
+      accent: "#111827",
+      fontSans: "'Source Serif 4', 'Noto Serif SC', 'Songti SC', serif",
+      fontSerif: "'Source Serif 4', 'Noto Serif SC', 'Songti SC', serif",
+      density: "comfy", fontScale: 1, lineHeight: 1.5,
+      bulletStyle: "square", divider: "solid",
+    },
+  },
+  {
+    id: "pack-academic",
+    nameZh: "学术",
+    nameEn: "Academic",
+    blurb: { zh: "Lora · 学院绿 · 宽松", en: "Lora · green · spacious" },
+    tokens: {
+      accent: "#065f46",
+      fontSans: "'Lora', 'Noto Serif SC', 'Songti SC', serif",
+      fontSerif: "'Lora', 'Noto Serif SC', 'Songti SC', serif",
+      density: "spacious", fontScale: 1, lineHeight: 1.7,
+      bulletStyle: "none", divider: "solid",
+    },
+  },
+  {
+    id: "pack-editorial",
+    nameZh: "杂志",
+    nameEn: "Editorial",
+    blurb: { zh: "Playfair · 暖橙 · 杂志风", en: "Playfair · orange · magazine" },
+    tokens: {
+      accent: "#c2410c",
+      fontSans: "'Playfair Display', 'Noto Serif SC', serif",
+      fontSerif: "'EB Garamond', 'Noto Serif SC', 'Songti SC', serif",
+      density: "comfy", fontScale: 1.05, lineHeight: 1.6,
+      bulletStyle: "dash", divider: "double",
+    },
+  },
+  {
+    id: "pack-mono-slate",
+    nameZh: "极简灰",
+    nameEn: "Mono Slate",
+    blurb: { zh: "Inter · 冷灰 · 紧凑点线", en: "Inter · slate · dotted" },
+    tokens: {
+      accent: "#475569",
+      fontSans: "'Inter', 'Noto Sans SC', 'PingFang SC', sans-serif",
+      fontSerif: "'Source Serif 4', 'Noto Serif SC', serif",
+      density: "compact", fontScale: 0.95, lineHeight: 1.45,
+      bulletStyle: "dash", divider: "dotted",
+    },
+  },
+  {
+    id: "pack-cn-brush",
+    nameZh: "中式毛笔",
+    nameEn: "CN Brush",
+    blurb: { zh: "霞鹜文楷 · 酒红 · 双线", en: "LXGW Wenkai · bordeaux · double" },
+    tokens: {
+      accent: "#9f1239",
+      fontSans: "'LXGW WenKai', 'Noto Serif SC', serif",
+      fontSerif: "'LXGW WenKai', 'Noto Serif SC', serif",
+      density: "comfy", fontScale: 1.05, lineHeight: 1.7,
+      bulletStyle: "none", divider: "double",
+    },
+  },
+];
+
+/** A pack is "active" when every overridden token matches the live theme.
+ *  Lets us highlight which preset the user is currently on (or none, if
+ *  they've tweaked something off-pack via the granular controls below). */
+function isMatchingPack(theme: ThemeTokens, p: StylePack): boolean {
+  for (const k of Object.keys(p.tokens) as (keyof ThemeTokens)[]) {
+    const expected = p.tokens[k];
+    const actual = theme[k];
+    if (typeof expected === "string" && typeof actual === "string") {
+      if (expected.toLowerCase() !== actual.toLowerCase()) return false;
+    } else if (expected !== actual) {
+      return false;
+    }
+  }
+  return true;
 }
 
 export function StylePanel() {
@@ -111,6 +219,55 @@ export function StylePanel() {
           <span className="text-[0.6rem] text-gray-400">{S.hoverHint ?? "悬停可预览"}</span>
         </div>
         <TemplateGrid />
+      </div>
+
+      {/* Style packs — one click rewrites accent + fonts + density + bullets +
+          divider. Listed before the granular controls so users start from a
+          coherent look and tweak from there. */}
+      <div>
+        <div className="flex items-center justify-between mb-2">
+          <div className="text-xs font-semibold uppercase text-gray-500">
+            {S.stylePacks ?? "风格包"}
+          </div>
+          <span className="text-[0.6rem] text-gray-400">
+            {S.stylePacksHint ?? "一键替换字体 / 配色 / 间距 / 分隔线"}
+          </span>
+        </div>
+        <div className="grid grid-cols-2 gap-1.5">
+          {STYLE_PACKS.map((p) => {
+            const active = isMatchingPack(theme, p);
+            return (
+              <button
+                key={p.id}
+                onClick={() => setTheme(p.tokens)}
+                className={`group flex flex-col items-start gap-1 px-2 py-2 rounded border text-left transition ${
+                  active
+                    ? "border-blue-500 bg-blue-50 ring-1 ring-blue-300"
+                    : "border-gray-200 hover:border-gray-400 hover:bg-gray-50"
+                }`}
+                title={`${lang === "zh" ? p.nameZh : p.nameEn}`}
+              >
+                <div className="flex items-center gap-1.5 w-full">
+                  <span
+                    className="w-3 h-3 rounded-full shrink-0 ring-1 ring-black/10"
+                    style={{ background: p.tokens.accent }}
+                  />
+                  <span
+                    className="text-[0.75rem] font-medium text-gray-800 truncate"
+                    style={{ fontFamily: p.tokens.fontSerif || p.tokens.fontSans }}
+                  >
+                    {lang === "zh" ? p.nameZh : p.nameEn}
+                  </span>
+                </div>
+                {p.blurb && (
+                  <span className="text-[0.6rem] text-gray-400 truncate w-full">
+                    {lang === "zh" ? p.blurb.zh : p.blurb.en}
+                  </span>
+                )}
+              </button>
+            );
+          })}
+        </div>
       </div>
 
       {/* Theme presets — accent + sans + serif in one click */}

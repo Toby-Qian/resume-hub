@@ -88,6 +88,8 @@ export const T = {
     },
     style: {
       presets: "配色预设",
+      stylePacks: "风格包",
+      stylePacksHint: "一键替换字体 + 配色 + 间距 + 分隔线",
       reset: "重置",
       resetTheme: "重置为默认配色",
       custom: "自定义",
@@ -285,6 +287,8 @@ export const T = {
     },
     style: {
       presets: "Theme presets",
+      stylePacks: "Style packs",
+      stylePacksHint: "Swap fonts + accent + spacing + divider in one click",
       reset: "Reset",
       resetTheme: "Reset theme to default",
       custom: "Custom",
