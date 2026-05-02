@@ -92,7 +92,7 @@ export const T = {
       sectionOrder: "节区顺序",
       sectionOrderHint: "拖动调整简历中各节区的先后顺序",
       sectionOrderReset: "恢复默认顺序",
-      sectionOrderReorderable: "支持拖动重排的模板：现代 / 经典 / 极简 / 紧凑 / 时间线 / 中式正统 / 中式创意 / 优雅",
+      sectionOrderReorderable: "现已支持全部 16 个模板。带侧栏的（中式创意 / 优雅 / 信息图 / 学术·现代）会保留侧栏元素的位置，主栏顺序按你的设置渲染。",
     },
     footer: {
       privacy: "所有内容仅保存在你的浏览器本地，不会上传到任何服务器。",
@@ -259,7 +259,7 @@ export const T = {
       sectionOrder: "Section order",
       sectionOrderHint: "Drag to reorder sections in the resume",
       sectionOrderReset: "Restore default order",
-      sectionOrderReorderable: "Reorderable in: Modern / Classic / Minimal / Compact / Timeline / CN-Formal / CN-Creative / Elegant",
+      sectionOrderReorderable: "All 16 templates now respect the order. Templates with a fixed sidebar (CN-Creative / Elegant / Infographic / Academic-Modern) keep sidebar items in place; the main column reorders.",
     },
     footer: {
       privacy: "Everything you type stays in your browser's local storage — nothing is uploaded.",

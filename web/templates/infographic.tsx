@@ -1,5 +1,5 @@
 "use client";
-import { TemplateProps, range, itemCls, Avatar, E, Draggable, useSectionLabels } from "./shared";
+import { TemplateProps, range, itemCls, Avatar, E, Draggable, useSectionLabels, useOrderedSections } from "./shared";
 
 /**
  * Infographic resume — skill bars, language proficiency dots, ribbon-style
@@ -49,6 +49,71 @@ export default function Infographic({ resume }: TemplateProps) {
       {children}
     </div>
   );
+  // Main column reorderable sections (sidebar skills/languages/awards stay).
+  const work = resume.work.length > 0 && (
+    <>
+      <Ribbon>{L.experience}</Ribbon>
+      {resume.work.map((w, i) => (
+        <div key={w.id} className={itemCls(w, "mb-3 text-[0.92em] pl-3 border-l-2")}
+          style={{ borderColor: "var(--resume-tint-35)" }}>
+          <div className="flex justify-between items-baseline">
+            <div><b><E path={`work.${i}.position`}>{w.position}</E></b> · <span className="text-gray-700"><E path={`work.${i}.company`}>{w.company}</E></span></div>
+            <div className="text-[0.85em] px-2 rounded text-white font-semibold whitespace-nowrap"
+              style={{ background: "var(--resume-accent)" }}>{range(w.startDate, w.endDate)}</div>
+          </div>
+          {w.location && <div className="text-[0.82em] text-gray-500"><E path={`work.${i}.location`}>{w.location}</E></div>}
+          <ul className="list-disc ml-5 mt-1">
+            {w.highlights.filter(Boolean).map((h, j) => <li key={j}><E path={`work.${i}.highlights.${j}`}>{h}</E></li>)}
+          </ul>
+        </div>
+      ))}
+    </>
+  );
+  const projects = resume.projects.length > 0 && (
+    <>
+      <Ribbon>{L.projects}</Ribbon>
+      {resume.projects.map((p, i) => (
+        <div key={p.id} className={itemCls(p, "mb-3 text-[0.92em] pl-3 border-l-2")}
+          style={{ borderColor: "var(--resume-tint-35)" }}>
+          <div className="flex justify-between items-baseline">
+            <div><b><E path={`projects.${i}.name`}>{p.name}</E></b></div>
+            <div className="text-[0.85em] text-gray-500 whitespace-nowrap">{range(p.startDate, p.endDate)}</div>
+          </div>
+          {p.description && <div className="text-gray-700"><E path={`projects.${i}.description`} multiline>{p.description}</E></div>}
+          {p.highlights.filter(Boolean).length > 0 && (
+            <ul className="list-disc ml-5 mt-0.5">
+              {p.highlights.filter(Boolean).map((h, j) => <li key={j}><E path={`projects.${i}.highlights.${j}`}>{h}</E></li>)}
+            </ul>
+          )}
+          {p.keywords && p.keywords.length > 0 && (
+            <div className="flex flex-wrap gap-1 mt-1">
+              {p.keywords.map((k, j) => (
+                <span key={j} className="text-[0.78em] px-1.5 py-0.5 rounded"
+                  style={{ background: "var(--resume-tint-12)", color: "var(--resume-accent)" }}>{k}</span>
+              ))}
+            </div>
+          )}
+        </div>
+      ))}
+    </>
+  );
+  const education = resume.education.length > 0 && (
+    <>
+      <Ribbon>{L.education}</Ribbon>
+      {resume.education.map((e, i) => (
+        <div key={e.id} className={itemCls(e, "mb-2 text-[0.92em] pl-3 border-l-2")}
+          style={{ borderColor: "var(--resume-tint-35)" }}>
+          <div className="flex justify-between items-baseline">
+            <div><b><E path={`education.${i}.institution`}>{e.institution}</E></b> · <E path={`education.${i}.studyType`}>{e.studyType}</E>, <E path={`education.${i}.area`}>{e.area}</E></div>
+            <div className="text-[0.85em] text-gray-500 whitespace-nowrap">{range(e.startDate, e.endDate)}</div>
+          </div>
+          {e.score && <div className="text-[0.85em] text-gray-600"><E path={`education.${i}.score`}>{e.score}</E></div>}
+        </div>
+      ))}
+    </>
+  );
+  const ordered = useOrderedSections({ work, projects, education });
+
   return (
     <div className="grid grid-cols-[36%_1fr]" style={{ minHeight: "inherit" }}>
       <aside style={{
@@ -132,71 +197,7 @@ export default function Infographic({ resume }: TemplateProps) {
 
       <main style={{ padding: "var(--pad)" }}>
         <Draggable name="summary"><p className="text-[0.95em] text-gray-800 leading-relaxed mb-2"><E path="basics.summary" multiline>{b.summary}</E></p></Draggable>
-
-        {resume.work.length > 0 && (
-          <>
-            <Ribbon>{L.experience}</Ribbon>
-            {resume.work.map((w, i) => (
-              <div key={w.id} className={itemCls(w, "mb-3 text-[0.92em] pl-3 border-l-2")}
-                style={{ borderColor: "var(--resume-tint-35)" }}>
-                <div className="flex justify-between items-baseline">
-                  <div><b><E path={`work.${i}.position`}>{w.position}</E></b> · <span className="text-gray-700"><E path={`work.${i}.company`}>{w.company}</E></span></div>
-                  <div className="text-[0.85em] px-2 rounded text-white font-semibold whitespace-nowrap"
-                    style={{ background: "var(--resume-accent)" }}>{range(w.startDate, w.endDate)}</div>
-                </div>
-                {w.location && <div className="text-[0.82em] text-gray-500"><E path={`work.${i}.location`}>{w.location}</E></div>}
-                <ul className="list-disc ml-5 mt-1">
-                  {w.highlights.filter(Boolean).map((h, j) => <li key={j}><E path={`work.${i}.highlights.${j}`}>{h}</E></li>)}
-                </ul>
-              </div>
-            ))}
-          </>
-        )}
-
-        {resume.projects.length > 0 && (
-          <>
-            <Ribbon>{L.projects}</Ribbon>
-            {resume.projects.map((p, i) => (
-              <div key={p.id} className={itemCls(p, "mb-3 text-[0.92em] pl-3 border-l-2")}
-                style={{ borderColor: "var(--resume-tint-35)" }}>
-                <div className="flex justify-between items-baseline">
-                  <div><b><E path={`projects.${i}.name`}>{p.name}</E></b></div>
-                  <div className="text-[0.85em] text-gray-500 whitespace-nowrap">{range(p.startDate, p.endDate)}</div>
-                </div>
-                {p.description && <div className="text-gray-700"><E path={`projects.${i}.description`} multiline>{p.description}</E></div>}
-                {p.highlights.filter(Boolean).length > 0 && (
-                  <ul className="list-disc ml-5 mt-0.5">
-                    {p.highlights.filter(Boolean).map((h, j) => <li key={j}><E path={`projects.${i}.highlights.${j}`}>{h}</E></li>)}
-                  </ul>
-                )}
-                {p.keywords && p.keywords.length > 0 && (
-                  <div className="flex flex-wrap gap-1 mt-1">
-                    {p.keywords.map((k, j) => (
-                      <span key={j} className="text-[0.78em] px-1.5 py-0.5 rounded"
-                        style={{ background: "var(--resume-tint-12)", color: "var(--resume-accent)" }}>{k}</span>
-                    ))}
-                  </div>
-                )}
-              </div>
-            ))}
-          </>
-        )}
-
-        {resume.education.length > 0 && (
-          <>
-            <Ribbon>{L.education}</Ribbon>
-            {resume.education.map((e, i) => (
-              <div key={e.id} className={itemCls(e, "mb-2 text-[0.92em] pl-3 border-l-2")}
-                style={{ borderColor: "var(--resume-tint-35)" }}>
-                <div className="flex justify-between items-baseline">
-                  <div><b><E path={`education.${i}.institution`}>{e.institution}</E></b> · <E path={`education.${i}.studyType`}>{e.studyType}</E>, <E path={`education.${i}.area`}>{e.area}</E></div>
-                  <div className="text-[0.85em] text-gray-500 whitespace-nowrap">{range(e.startDate, e.endDate)}</div>
-                </div>
-                {e.score && <div className="text-[0.85em] text-gray-600"><E path={`education.${i}.score`}>{e.score}</E></div>}
-              </div>
-            ))}
-          </>
-        )}
+        {ordered}
       </main>
     </div>
   );

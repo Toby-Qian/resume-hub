@@ -1,5 +1,5 @@
 "use client";
-import { TemplateProps, range, itemCls, Avatar, E, Draggable, useSectionLabels } from "./shared";
+import { TemplateProps, range, itemCls, Avatar, E, Draggable, useSectionLabels, useOrderedSections } from "./shared";
 
 /**
  * Publication-first CV. Projects are rendered as a numbered publication list
@@ -16,29 +16,11 @@ export default function AcademicPub({ resume }: TemplateProps) {
       {children}
     </h2>
   );
-  return (
-    <div style={{ padding: "var(--pad)", fontFamily: "var(--resume-font-serif)" }}>
-      <Draggable name="header" as="header" className="flex items-start gap-4 mb-3">
-        <div className="flex-1 min-w-0">
-          <h1 className="text-[2em] font-bold"><E path="basics.name">{b.name}</E></h1>
-          <div className="text-[0.95em] italic text-gray-700"><E path="basics.label">{b.label}</E></div>
-          <div className="text-[0.82em] text-gray-600 mt-1 flex flex-wrap gap-x-3">
-            <E path="basics.email">{b.email}</E>
-            <span className="text-gray-400">·</span>
-            <E path="basics.phone">{b.phone}</E>
-            <span className="text-gray-400">·</span>
-            <E path="basics.website">{b.website}</E>
-            <span className="text-gray-400">·</span>
-            <E path="basics.location">{b.location}</E>
-          </div>
-          <Draggable name="summary"><p className="text-[0.9em] mt-2 text-gray-800"><E path="basics.summary" multiline>{b.summary}</E></p></Draggable>
-        </div>
-        <Avatar basics={b} size={88} />
-      </Draggable>
-
+  // Publications: dedicated array preferred; falls back to projects so legacy
+  // resumes still render usefully. Either way, this is the single "pub" block.
+  const publications = (
+    <>
       <H>{L.publicationsOnly}</H>
-      {/* Prefer the dedicated publications array when populated; otherwise
-          fall back to projects so legacy resumes still render usefully. */}
       {(resume.publications && resume.publications.length > 0) ? (
         <ol className="text-[0.9em] space-y-1.5">
           {resume.publications.map((p, i) => (
@@ -76,77 +58,103 @@ export default function AcademicPub({ resume }: TemplateProps) {
           ))}
         </ol>
       )}
-
-      {resume.education.length > 0 && (
-        <><H>{L.education}</H>
-          {resume.education.map((e, i) => (
-            <div key={e.id} className={itemCls(e, "mb-1.5 text-[0.9em]")}>
-              <div className="flex justify-between">
-                <div><i><E path={`education.${i}.institution`}>{e.institution}</E></i>, <E path={`education.${i}.studyType`}>{e.studyType}</E> in <E path={`education.${i}.area`}>{e.area}</E></div>
-                <div className="text-gray-600">{range(e.startDate, e.endDate)}</div>
-              </div>
-              {e.score && <div className="text-gray-700"><E path={`education.${i}.score`}>{e.score}</E></div>}
-            </div>
-          ))}
-        </>
-      )}
-
-      {resume.work.length > 0 && (
-        <><H>{L.appointments}</H>
-          {resume.work.map((w, i) => (
-            <div key={w.id} className={itemCls(w, "mb-2 text-[0.9em]")}>
-              <div className="flex justify-between">
-                <div><b><E path={`work.${i}.position`}>{w.position}</E></b>, <i><E path={`work.${i}.company`}>{w.company}</E></i></div>
-                <div className="text-gray-600">{range(w.startDate, w.endDate)}</div>
-              </div>
-              <ul className="list-disc ml-5">
-                {w.highlights.filter(Boolean).map((h, j) => <li key={j}><E path={`work.${i}.highlights.${j}`}>{h}</E></li>)}
-              </ul>
-            </div>
-          ))}
-        </>
-      )}
-
-      {resume.awards.length > 0 && (
-        <><H>{L.honorsAndGrants}</H>
-          <ul className="list-disc ml-5 text-[0.9em]">
-            {resume.awards.map((a, i) => (
-              <li key={a.id} className={itemCls(a)}>
-                <b><E path={`awards.${i}.title`}>{a.title}</E></b>, <i><E path={`awards.${i}.awarder`}>{a.awarder}</E></i>, <E path={`awards.${i}.date`}>{a.date}</E>{a.summary && `. ${a.summary}`}
-              </li>
-            ))}
+    </>
+  );
+  const education = resume.education.length > 0 && (
+    <><H>{L.education}</H>
+      {resume.education.map((e, i) => (
+        <div key={e.id} className={itemCls(e, "mb-1.5 text-[0.9em]")}>
+          <div className="flex justify-between">
+            <div><i><E path={`education.${i}.institution`}>{e.institution}</E></i>, <E path={`education.${i}.studyType`}>{e.studyType}</E> in <E path={`education.${i}.area`}>{e.area}</E></div>
+            <div className="text-gray-600">{range(e.startDate, e.endDate)}</div>
+          </div>
+          {e.score && <div className="text-gray-700"><E path={`education.${i}.score`}>{e.score}</E></div>}
+        </div>
+      ))}
+    </>
+  );
+  const work = resume.work.length > 0 && (
+    <><H>{L.appointments}</H>
+      {resume.work.map((w, i) => (
+        <div key={w.id} className={itemCls(w, "mb-2 text-[0.9em]")}>
+          <div className="flex justify-between">
+            <div><b><E path={`work.${i}.position`}>{w.position}</E></b>, <i><E path={`work.${i}.company`}>{w.company}</E></i></div>
+            <div className="text-gray-600">{range(w.startDate, w.endDate)}</div>
+          </div>
+          <ul className="list-disc ml-5">
+            {w.highlights.filter(Boolean).map((h, j) => <li key={j}><E path={`work.${i}.highlights.${j}`}>{h}</E></li>)}
           </ul>
-        </>
-      )}
+        </div>
+      ))}
+    </>
+  );
+  const awards = resume.awards.length > 0 && (
+    <><H>{L.honorsAndGrants}</H>
+      <ul className="list-disc ml-5 text-[0.9em]">
+        {resume.awards.map((a, i) => (
+          <li key={a.id} className={itemCls(a)}>
+            <b><E path={`awards.${i}.title`}>{a.title}</E></b>, <i><E path={`awards.${i}.awarder`}>{a.awarder}</E></i>, <E path={`awards.${i}.date`}>{a.date}</E>{a.summary && `. ${a.summary}`}
+          </li>
+        ))}
+      </ul>
+    </>
+  );
+  const talks = resume.talks && resume.talks.length > 0 && (
+    <><H>{L.talks}</H>
+      <ul className="list-disc ml-5 text-[0.9em]">
+        {resume.talks.map((tk, i) => (
+          <li key={tk.id} className={itemCls(tk)}>
+            <b><E path={`talks.${i}.title`}>{tk.title}</E></b>
+            {tk.venue && <>, <i><E path={`talks.${i}.venue`}>{tk.venue}</E></i></>}
+            {tk.location && <span className="text-gray-600"> · {tk.location}</span>}
+            {tk.date && <span className="text-gray-600"> ({tk.date})</span>}
+          </li>
+        ))}
+      </ul>
+    </>
+  );
+  const teaching = resume.teaching && resume.teaching.length > 0 && (
+    <><H>{L.teaching}</H>
+      {resume.teaching.map((tg, i) => (
+        <div key={tg.id} className={itemCls(tg, "mb-1.5 text-[0.9em]")}>
+          <div className="flex justify-between">
+            <div><b><E path={`teaching.${i}.course`}>{tg.course}</E></b>{tg.institution && <>, <i><E path={`teaching.${i}.institution`}>{tg.institution}</E></i></>}{tg.role && <span className="text-gray-600"> · <E path={`teaching.${i}.role`}>{tg.role}</E></span>}</div>
+            <div className="text-gray-600">{range(tg.startDate, tg.endDate)}</div>
+          </div>
+          {tg.summary && <div className="text-gray-700"><E path={`teaching.${i}.summary`} multiline>{tg.summary}</E></div>}
+        </div>
+      ))}
+    </>
+  );
+  // `projects` is folded into publications; we reuse the "projects" key in
+  // the order map so dragging it actually moves the publications block.
+  const ordered = useOrderedSections({
+    publications: publications,
+    projects: null, // suppressed — projects already render under publications
+    work, education, awards, talks, teaching,
+  });
 
-      {resume.talks && resume.talks.length > 0 && (
-        <><H>{L.talks}</H>
-          <ul className="list-disc ml-5 text-[0.9em]">
-            {resume.talks.map((tk, i) => (
-              <li key={tk.id} className={itemCls(tk)}>
-                <b><E path={`talks.${i}.title`}>{tk.title}</E></b>
-                {tk.venue && <>, <i><E path={`talks.${i}.venue`}>{tk.venue}</E></i></>}
-                {tk.location && <span className="text-gray-600"> · {tk.location}</span>}
-                {tk.date && <span className="text-gray-600"> ({tk.date})</span>}
-              </li>
-            ))}
-          </ul>
-        </>
-      )}
+  return (
+    <div style={{ padding: "var(--pad)", fontFamily: "var(--resume-font-serif)" }}>
+      <Draggable name="header" as="header" className="flex items-start gap-4 mb-3">
+        <div className="flex-1 min-w-0">
+          <h1 className="text-[2em] font-bold"><E path="basics.name">{b.name}</E></h1>
+          <div className="text-[0.95em] italic text-gray-700"><E path="basics.label">{b.label}</E></div>
+          <div className="text-[0.82em] text-gray-600 mt-1 flex flex-wrap gap-x-3">
+            <E path="basics.email">{b.email}</E>
+            <span className="text-gray-400">·</span>
+            <E path="basics.phone">{b.phone}</E>
+            <span className="text-gray-400">·</span>
+            <E path="basics.website">{b.website}</E>
+            <span className="text-gray-400">·</span>
+            <E path="basics.location">{b.location}</E>
+          </div>
+          <Draggable name="summary"><p className="text-[0.9em] mt-2 text-gray-800"><E path="basics.summary" multiline>{b.summary}</E></p></Draggable>
+        </div>
+        <Avatar basics={b} size={88} />
+      </Draggable>
 
-      {resume.teaching && resume.teaching.length > 0 && (
-        <><H>{L.teaching}</H>
-          {resume.teaching.map((tg, i) => (
-            <div key={tg.id} className={itemCls(tg, "mb-1.5 text-[0.9em]")}>
-              <div className="flex justify-between">
-                <div><b><E path={`teaching.${i}.course`}>{tg.course}</E></b>{tg.institution && <>, <i><E path={`teaching.${i}.institution`}>{tg.institution}</E></i></>}{tg.role && <span className="text-gray-600"> · <E path={`teaching.${i}.role`}>{tg.role}</E></span>}</div>
-                <div className="text-gray-600">{range(tg.startDate, tg.endDate)}</div>
-              </div>
-              {tg.summary && <div className="text-gray-700"><E path={`teaching.${i}.summary`} multiline>{tg.summary}</E></div>}
-            </div>
-          ))}
-        </>
-      )}
+      {ordered}
 
       {(resume.skills.length > 0 || resume.languages.length > 0) && (
         <><H>{`${L.skills} & ${L.languages}`}</H>

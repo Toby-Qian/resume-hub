@@ -1,5 +1,5 @@
 "use client";
-import { TemplateProps, range, itemCls, Avatar, E, Draggable, useSectionLabels } from "./shared";
+import { TemplateProps, range, itemCls, Avatar, E, Draggable, useSectionLabels, useOrderedSections } from "./shared";
 
 /**
  * Dark hero band + light content cards. Modern startup / SaaS-portfolio
@@ -28,6 +28,60 @@ export default function DarkCard({ resume }: TemplateProps) {
       {children}
     </div>
   );
+  // Top stack — work + projects are reorderable. Skills / education /
+  // awards / languages stay in their bespoke 2-col grids at the bottom.
+  const work = resume.work.length > 0 && (
+    <>
+      <SectionH>{L.experience}</SectionH>
+      {resume.work.map((w, i) => (
+        <Card key={w.id} breakBefore={(w as any).breakBefore} className="text-[0.92em]">
+          <div className="flex justify-between items-baseline">
+            <div className="font-semibold"><E path={`work.${i}.position`}>{w.position}</E> <span className="font-normal text-gray-700">@ <E path={`work.${i}.company`}>{w.company}</E></span></div>
+            <div className="text-[0.82em] px-2 py-0.5 rounded-full font-medium"
+              style={{ background: "var(--resume-tint-12)", color: "var(--resume-accent)" }}>
+              {range(w.startDate, w.endDate)}
+            </div>
+          </div>
+          {w.location && <div className="text-[0.82em] text-gray-500"><E path={`work.${i}.location`}>{w.location}</E></div>}
+          <ul className="list-disc ml-5 mt-1 text-gray-800">
+            {w.highlights.filter(Boolean).map((h, j) => <li key={j}><E path={`work.${i}.highlights.${j}`}>{h}</E></li>)}
+          </ul>
+        </Card>
+      ))}
+    </>
+  );
+  const projects = resume.projects.length > 0 && (
+    <>
+      <SectionH>{L.projects}</SectionH>
+      {resume.projects.map((p, i) => (
+        <Card key={p.id} breakBefore={(p as any).breakBefore} className="text-[0.92em]">
+          <div className="flex justify-between items-baseline">
+            <div className="font-semibold"><E path={`projects.${i}.name`}>{p.name}</E></div>
+            <div className="text-[0.82em] text-gray-500 whitespace-nowrap">{range(p.startDate, p.endDate)}</div>
+          </div>
+          {p.description && <div className="text-gray-700 mt-0.5"><E path={`projects.${i}.description`} multiline>{p.description}</E></div>}
+          {p.highlights.filter(Boolean).length > 0 && (
+            <ul className="list-disc ml-5 mt-0.5 text-gray-800">
+              {p.highlights.filter(Boolean).map((h, j) => <li key={j}><E path={`projects.${i}.highlights.${j}`}>{h}</E></li>)}
+            </ul>
+          )}
+          {p.keywords && p.keywords.length > 0 && (
+            <div className="flex flex-wrap gap-1 mt-1">
+              {p.keywords.map((k, j) => (
+                <span key={j} className="text-[0.78em] px-2 py-0.5 rounded-full border"
+                  style={{
+                    borderColor: "var(--resume-tint-30)",
+                    color: "var(--resume-accent)",
+                  }}>{k}</span>
+              ))}
+            </div>
+          )}
+        </Card>
+      ))}
+    </>
+  );
+  const ordered = useOrderedSections({ work, projects });
+
   return (
     <div>
       {/* Hero band */}
@@ -61,57 +115,7 @@ export default function DarkCard({ resume }: TemplateProps) {
           </p>
         </Draggable>
 
-        {resume.work.length > 0 && (
-          <>
-            <SectionH>{L.experience}</SectionH>
-            {resume.work.map((w, i) => (
-              <Card key={w.id} breakBefore={(w as any).breakBefore} className="text-[0.92em]">
-                <div className="flex justify-between items-baseline">
-                  <div className="font-semibold"><E path={`work.${i}.position`}>{w.position}</E> <span className="font-normal text-gray-700">@ <E path={`work.${i}.company`}>{w.company}</E></span></div>
-                  <div className="text-[0.82em] px-2 py-0.5 rounded-full font-medium"
-                    style={{ background: "var(--resume-tint-12)", color: "var(--resume-accent)" }}>
-                    {range(w.startDate, w.endDate)}
-                  </div>
-                </div>
-                {w.location && <div className="text-[0.82em] text-gray-500"><E path={`work.${i}.location`}>{w.location}</E></div>}
-                <ul className="list-disc ml-5 mt-1 text-gray-800">
-                  {w.highlights.filter(Boolean).map((h, j) => <li key={j}><E path={`work.${i}.highlights.${j}`}>{h}</E></li>)}
-                </ul>
-              </Card>
-            ))}
-          </>
-        )}
-
-        {resume.projects.length > 0 && (
-          <>
-            <SectionH>{L.projects}</SectionH>
-            {resume.projects.map((p, i) => (
-              <Card key={p.id} breakBefore={(p as any).breakBefore} className="text-[0.92em]">
-                <div className="flex justify-between items-baseline">
-                  <div className="font-semibold"><E path={`projects.${i}.name`}>{p.name}</E></div>
-                  <div className="text-[0.82em] text-gray-500 whitespace-nowrap">{range(p.startDate, p.endDate)}</div>
-                </div>
-                {p.description && <div className="text-gray-700 mt-0.5"><E path={`projects.${i}.description`} multiline>{p.description}</E></div>}
-                {p.highlights.filter(Boolean).length > 0 && (
-                  <ul className="list-disc ml-5 mt-0.5 text-gray-800">
-                    {p.highlights.filter(Boolean).map((h, j) => <li key={j}><E path={`projects.${i}.highlights.${j}`}>{h}</E></li>)}
-                  </ul>
-                )}
-                {p.keywords && p.keywords.length > 0 && (
-                  <div className="flex flex-wrap gap-1 mt-1">
-                    {p.keywords.map((k, j) => (
-                      <span key={j} className="text-[0.78em] px-2 py-0.5 rounded-full border"
-                        style={{
-                          borderColor: "var(--resume-tint-30)",
-                          color: "var(--resume-accent)",
-                        }}>{k}</span>
-                    ))}
-                  </div>
-                )}
-              </Card>
-            ))}
-          </>
-        )}
+        {ordered}
 
         <div className="grid grid-cols-2 gap-4">
           {resume.education.length > 0 && (

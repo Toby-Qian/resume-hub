@@ -1,5 +1,5 @@
 "use client";
-import { TemplateProps, range, itemCls, Avatar, E, Draggable, useSectionLabels } from "./shared";
+import { TemplateProps, range, itemCls, Avatar, E, Draggable, useSectionLabels, useOrderedSections } from "./shared";
 
 /**
  * Magazine / editorial layout — inspired by The New Yorker / NYT feature
@@ -19,6 +19,95 @@ export default function Magazine({ resume }: TemplateProps) {
       {children}
     </h2>
   );
+  // Magazine has a deliberate 2-column body. Reordering applies *within*
+  // each column — work↔education on the left, projects↔awards↔skills↔
+  // languages on the right. Cross-column moves are not supported by this
+  // layout (they silently no-op).
+  const work = resume.work.length > 0 && (
+    <>
+      <Head>{L.experience}</Head>
+      {resume.work.map((w, i) => (
+        <div key={w.id} className={itemCls(w, "mb-3 text-[0.9em]")}>
+          <div className="font-semibold"><E path={`work.${i}.position`}>{w.position}</E></div>
+          <div className="italic text-gray-700"><E path={`work.${i}.company`}>{w.company}</E>{w.location && <> · <E path={`work.${i}.location`}>{w.location}</E></>}</div>
+          <div className="text-[0.82em] text-gray-500 mb-1">{range(w.startDate, w.endDate)}</div>
+          <ul className="list-disc ml-5">
+            {w.highlights.filter(Boolean).map((h, j) => <li key={j}><E path={`work.${i}.highlights.${j}`}>{h}</E></li>)}
+          </ul>
+        </div>
+      ))}
+    </>
+  );
+  const education = resume.education.length > 0 && (
+    <>
+      <Head>{L.education}</Head>
+      {resume.education.map((e, i) => (
+        <div key={e.id} className={itemCls(e, "mb-2 text-[0.9em]")}>
+          <div className="font-semibold"><E path={`education.${i}.institution`}>{e.institution}</E></div>
+          <div className="italic"><E path={`education.${i}.studyType`}>{e.studyType}</E>, <E path={`education.${i}.area`}>{e.area}</E></div>
+          <div className="text-[0.82em] text-gray-500">{range(e.startDate, e.endDate)}{e.score && <> · <E path={`education.${i}.score`}>{e.score}</E></>}</div>
+          {e.courses && e.courses.length > 0 && (
+            <div className="text-[0.85em] text-gray-600 italic">{L.coursework}: {e.courses.join("; ")}</div>
+          )}
+        </div>
+      ))}
+    </>
+  );
+  const projects = resume.projects.length > 0 && (
+    <>
+      <Head>{L.projects}</Head>
+      {resume.projects.map((p, i) => (
+        <div key={p.id} className={itemCls(p, "mb-3 text-[0.9em]")}>
+          <div className="font-semibold"><E path={`projects.${i}.name`}>{p.name}</E></div>
+          <div className="text-[0.82em] text-gray-500">{range(p.startDate, p.endDate)}</div>
+          {p.description && <div className="text-gray-800 mt-0.5"><E path={`projects.${i}.description`} multiline>{p.description}</E></div>}
+          {p.highlights.filter(Boolean).length > 0 && (
+            <ul className="list-disc ml-5 mt-0.5">
+              {p.highlights.filter(Boolean).map((h, j) => <li key={j}><E path={`projects.${i}.highlights.${j}`}>{h}</E></li>)}
+            </ul>
+          )}
+          {p.keywords && p.keywords.length > 0 && (
+            <div className="text-[0.8em] text-gray-500 italic mt-0.5">— {p.keywords.join(", ")}</div>
+          )}
+        </div>
+      ))}
+    </>
+  );
+  const awards = resume.awards.length > 0 && (
+    <>
+      <Head>{L.honorsAndAwards}</Head>
+      <ul className="list-disc ml-5 text-[0.9em] space-y-0.5">
+        {resume.awards.map((a, i) => (
+          <li key={a.id} className={itemCls(a)}>
+            <b><E path={`awards.${i}.title`}>{a.title}</E></b>, <i><E path={`awards.${i}.awarder`}>{a.awarder}</E></i> <span className="text-gray-500">(<E path={`awards.${i}.date`}>{a.date}</E>)</span>
+          </li>
+        ))}
+      </ul>
+    </>
+  );
+  const skills = resume.skills.length > 0 && (
+    <>
+      <Head>{L.skills}</Head>
+      <div className="text-[0.9em] space-y-0.5">
+        {resume.skills.map((s, i) => (
+          <div key={s.id} className={itemCls(s)}>
+            <b><E path={`skills.${i}.name`}>{s.name}</E></b> — <span className="italic text-gray-700">{s.keywords.join(", ")}</span>
+          </div>
+        ))}
+      </div>
+    </>
+  );
+  const languages = resume.languages.length > 0 && (
+    <>
+      <Head>{L.languages}</Head>
+      <div className="text-[0.9em] italic">
+        {resume.languages.map((l) => `${l.language} (${l.fluency})`).join(" · ")}
+      </div>
+    </>
+  );
+  const leftCol = useOrderedSections({ work, education });
+  const rightCol = useOrderedSections({ projects, awards, skills, languages });
+
   return (
     <div style={{ padding: "var(--pad)", fontFamily: "var(--resume-font-serif)" }}>
       <Draggable name="header" as="header" className="text-center pb-3 mb-3" >
@@ -54,99 +143,8 @@ export default function Magazine({ resume }: TemplateProps) {
       </Draggable>
 
       <div className="grid grid-cols-2 gap-x-6">
-        {/* Left column: Experience + Education */}
-        <div>
-          {resume.work.length > 0 && (
-            <>
-              <Head>{L.experience}</Head>
-              {resume.work.map((w, i) => (
-                <div key={w.id} className={itemCls(w, "mb-3 text-[0.9em]")}>
-                  <div className="font-semibold"><E path={`work.${i}.position`}>{w.position}</E></div>
-                  <div className="italic text-gray-700"><E path={`work.${i}.company`}>{w.company}</E>{w.location && <> · <E path={`work.${i}.location`}>{w.location}</E></>}</div>
-                  <div className="text-[0.82em] text-gray-500 mb-1">{range(w.startDate, w.endDate)}</div>
-                  <ul className="list-disc ml-5">
-                    {w.highlights.filter(Boolean).map((h, j) => <li key={j}><E path={`work.${i}.highlights.${j}`}>{h}</E></li>)}
-                  </ul>
-                </div>
-              ))}
-            </>
-          )}
-
-          {resume.education.length > 0 && (
-            <>
-              <Head>{L.education}</Head>
-              {resume.education.map((e, i) => (
-                <div key={e.id} className={itemCls(e, "mb-2 text-[0.9em]")}>
-                  <div className="font-semibold"><E path={`education.${i}.institution`}>{e.institution}</E></div>
-                  <div className="italic"><E path={`education.${i}.studyType`}>{e.studyType}</E>, <E path={`education.${i}.area`}>{e.area}</E></div>
-                  <div className="text-[0.82em] text-gray-500">{range(e.startDate, e.endDate)}{e.score && <> · <E path={`education.${i}.score`}>{e.score}</E></>}</div>
-                  {e.courses && e.courses.length > 0 && (
-                    <div className="text-[0.85em] text-gray-600 italic">{L.coursework}: {e.courses.join("; ")}</div>
-                  )}
-                </div>
-              ))}
-            </>
-          )}
-        </div>
-
-        {/* Right column: Projects + Awards + Skills + Languages */}
-        <div>
-          {resume.projects.length > 0 && (
-            <>
-              <Head>{L.projects}</Head>
-              {resume.projects.map((p, i) => (
-                <div key={p.id} className={itemCls(p, "mb-3 text-[0.9em]")}>
-                  <div className="font-semibold"><E path={`projects.${i}.name`}>{p.name}</E></div>
-                  <div className="text-[0.82em] text-gray-500">{range(p.startDate, p.endDate)}</div>
-                  {p.description && <div className="text-gray-800 mt-0.5"><E path={`projects.${i}.description`} multiline>{p.description}</E></div>}
-                  {p.highlights.filter(Boolean).length > 0 && (
-                    <ul className="list-disc ml-5 mt-0.5">
-                      {p.highlights.filter(Boolean).map((h, j) => <li key={j}><E path={`projects.${i}.highlights.${j}`}>{h}</E></li>)}
-                    </ul>
-                  )}
-                  {p.keywords && p.keywords.length > 0 && (
-                    <div className="text-[0.8em] text-gray-500 italic mt-0.5">— {p.keywords.join(", ")}</div>
-                  )}
-                </div>
-              ))}
-            </>
-          )}
-
-          {resume.awards.length > 0 && (
-            <>
-              <Head>{L.honorsAndAwards}</Head>
-              <ul className="list-disc ml-5 text-[0.9em] space-y-0.5">
-                {resume.awards.map((a, i) => (
-                  <li key={a.id} className={itemCls(a)}>
-                    <b><E path={`awards.${i}.title`}>{a.title}</E></b>, <i><E path={`awards.${i}.awarder`}>{a.awarder}</E></i> <span className="text-gray-500">(<E path={`awards.${i}.date`}>{a.date}</E>)</span>
-                  </li>
-                ))}
-              </ul>
-            </>
-          )}
-
-          {resume.skills.length > 0 && (
-            <>
-              <Head>{L.skills}</Head>
-              <div className="text-[0.9em] space-y-0.5">
-                {resume.skills.map((s, i) => (
-                  <div key={s.id} className={itemCls(s)}>
-                    <b><E path={`skills.${i}.name`}>{s.name}</E></b> — <span className="italic text-gray-700">{s.keywords.join(", ")}</span>
-                  </div>
-                ))}
-              </div>
-            </>
-          )}
-
-          {resume.languages.length > 0 && (
-            <>
-              <Head>{L.languages}</Head>
-              <div className="text-[0.9em] italic">
-                {resume.languages.map((l) => `${l.language} (${l.fluency})`).join(" · ")}
-              </div>
-            </>
-          )}
-        </div>
+        <div>{leftCol}</div>
+        <div>{rightCol}</div>
       </div>
     </div>
   );

@@ -19,39 +19,42 @@ const MARGIN_PRESETS: { mm: number; key: string }[] = [
 
 const PRESETS = ["#2563eb", "#dc2626", "#059669", "#7c3aed", "#ea580c", "#0891b2", "#111827"];
 
-/** Sans-serif font stacks. Each entry: [stack, zh label, en label]. The first
- *  family is what actually loads — later families are CJK / system fallbacks
- *  so a Chinese resume still renders well even when the user picked a
- *  Latin-only family at the top of the stack. */
-const SANS_FONTS: { stack: string; zh: string; en: string }[] = [
-  { stack: "'Inter', 'PingFang SC', 'Microsoft YaHei', sans-serif", zh: "Inter", en: "Inter" },
+/** Sans-serif font stacks. Each entry: [stack, zh label, en label, loaded?].
+ *  `loaded: true` means the family is fetched as a webfont in app/layout.tsx
+ *  — picking it actually changes the rendered face. `loaded: false` are
+ *  system-installed families that work on the matching OS; if the user is on
+ *  another OS the stack falls back to the next family. */
+const SANS_FONTS: { stack: string; zh: string; en: string; loaded?: boolean }[] = [
+  // Webfont-loaded — render identically across platforms.
+  { stack: "'Inter', 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif", zh: "Inter", en: "Inter", loaded: true },
+  { stack: "'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif", zh: "思源黑体 (Noto Sans SC)", en: "Noto Sans SC", loaded: true },
+  { stack: "'ZCOOL XiaoWei', 'Noto Sans SC', serif", zh: "站酷小薇 (ZCOOL XiaoWei)", en: "ZCOOL XiaoWei", loaded: true },
+  { stack: "'ZCOOL KuaiLe', 'Noto Sans SC', sans-serif", zh: "站酷快乐 (ZCOOL KuaiLe)", en: "ZCOOL KuaiLe", loaded: true },
+  { stack: "'ZCOOL QingKe HuangYou', 'Noto Sans SC', sans-serif", zh: "站酷庆科黄油 (ZCOOL QingKe HuangYou)", en: "ZCOOL QingKe HuangYou", loaded: true },
+  // System fonts — only render correctly on platforms that ship them.
+  { stack: "system-ui, -apple-system, 'PingFang SC', 'Microsoft YaHei', sans-serif", zh: "系统默认", en: "System UI" },
   { stack: "'Helvetica Neue', 'PingFang SC', 'Microsoft YaHei', sans-serif", zh: "Helvetica Neue", en: "Helvetica Neue" },
-  { stack: "'system-ui', 'PingFang SC', 'Microsoft YaHei', sans-serif", zh: "系统默认", en: "System UI" },
-  { stack: "'Noto Sans SC', 'PingFang SC', sans-serif", zh: "思源黑体 (Noto Sans SC)", en: "Noto Sans SC" },
-  { stack: "'PingFang SC', 'Microsoft YaHei', sans-serif", zh: "苹方 (PingFang SC)", en: "PingFang SC" },
-  { stack: "'Microsoft YaHei', 'PingFang SC', sans-serif", zh: "微软雅黑", en: "Microsoft YaHei" },
-  { stack: "'HarmonyOS Sans SC', 'PingFang SC', sans-serif", zh: "鸿蒙黑体", en: "HarmonyOS Sans SC" },
-  { stack: "'Alibaba PuHuiTi', 'PingFang SC', sans-serif", zh: "阿里巴巴普惠体", en: "Alibaba PuHuiTi" },
-  { stack: "'OPPOSans', 'PingFang SC', sans-serif", zh: "OPPO Sans", en: "OPPO Sans" },
-  { stack: "'MiSans', 'PingFang SC', sans-serif", zh: "小米兰亭 (MiSans)", en: "MiSans" },
-  { stack: "'HYQiHei', 'PingFang SC', sans-serif", zh: "汉仪旗黑", en: "HYQiHei" },
-  { stack: "'FZLanTingHei', 'PingFang SC', sans-serif", zh: "方正兰亭黑", en: "Founder LanTingHei" },
+  { stack: "'PingFang SC', 'Noto Sans SC', sans-serif", zh: "苹方 (PingFang SC) · macOS", en: "PingFang SC · macOS" },
+  { stack: "'Microsoft YaHei', 'Noto Sans SC', sans-serif", zh: "微软雅黑 · Windows", en: "Microsoft YaHei · Windows" },
 ];
 
-/** Serif font stacks (with CJK-flavoured Song / Ming fallbacks). */
-const SERIF_FONTS: { stack: string; zh: string; en: string }[] = [
-  { stack: "'Source Serif Pro', 'Source Han Serif SC', 'Songti SC', serif", zh: "Source Serif", en: "Source Serif Pro" },
-  { stack: "'Georgia', 'Source Han Serif SC', 'Songti SC', serif", zh: "Georgia", en: "Georgia" },
-  { stack: "'EB Garamond', 'Noto Serif SC', 'Songti SC', serif", zh: "EB Garamond", en: "EB Garamond" },
-  { stack: "'Noto Serif SC', 'Source Han Serif SC', 'Songti SC', serif", zh: "思源宋体 (Noto Serif SC)", en: "Noto Serif SC" },
-  { stack: "'Source Han Serif SC', 'Songti SC', serif", zh: "思源宋体", en: "Source Han Serif SC" },
-  { stack: "'Songti SC', 'SimSun', 'Source Han Serif SC', serif", zh: "宋体 (Songti)", en: "Songti SC" },
-  { stack: "'SimSun', 'Songti SC', serif", zh: "中易宋体 SimSun", en: "SimSun" },
-  { stack: "'STKaiti', 'KaiTi', 'KaiTi_GB2312', serif", zh: "楷体 (STKaiti)", en: "STKaiti" },
-  { stack: "'STFangsong', 'FangSong', serif", zh: "仿宋", en: "STFangsong" },
-  { stack: "'STZhongsong', 'STSong', serif", zh: "中宋", en: "STZhongsong" },
-  { stack: "'FZShuSong', 'STSong', serif", zh: "方正书宋", en: "Founder ShuSong" },
-  { stack: "'LXGW WenKai', 'Source Han Serif SC', serif", zh: "霞鹜文楷 (LXGW WenKai)", en: "LXGW WenKai" },
+/** Serif / decorative font stacks (with CJK-flavoured Song / Ming fallbacks). */
+const SERIF_FONTS: { stack: string; zh: string; en: string; loaded?: boolean }[] = [
+  // Webfont-loaded.
+  { stack: "'Source Serif 4', 'Noto Serif SC', 'Songti SC', serif", zh: "Source Serif 4", en: "Source Serif 4", loaded: true },
+  { stack: "'EB Garamond', 'Noto Serif SC', 'Songti SC', serif", zh: "EB Garamond", en: "EB Garamond", loaded: true },
+  { stack: "'Lora', 'Noto Serif SC', 'Songti SC', serif", zh: "Lora", en: "Lora", loaded: true },
+  { stack: "'Playfair Display', 'Noto Serif SC', 'Songti SC', serif", zh: "Playfair Display", en: "Playfair Display", loaded: true },
+  { stack: "'Noto Serif SC', 'Songti SC', serif", zh: "思源宋体 (Noto Serif SC)", en: "Noto Serif SC", loaded: true },
+  { stack: "'LXGW WenKai', 'Noto Serif SC', serif", zh: "霞鹜文楷 (LXGW WenKai)", en: "LXGW WenKai", loaded: true },
+  { stack: "'Ma Shan Zheng', 'Noto Serif SC', serif", zh: "马善政楷体 (Ma Shan Zheng)", en: "Ma Shan Zheng", loaded: true },
+  { stack: "'Long Cang', 'Noto Serif SC', serif", zh: "龙藏体 · 草书 (Long Cang)", en: "Long Cang", loaded: true },
+  { stack: "'Liu Jian Mao Cao', 'Noto Serif SC', serif", zh: "刘建毛草 (Liu Jian Mao Cao)", en: "Liu Jian Mao Cao", loaded: true },
+  // System.
+  { stack: "Georgia, 'Noto Serif SC', 'Songti SC', serif", zh: "Georgia", en: "Georgia" },
+  { stack: "'Songti SC', SimSun, 'Noto Serif SC', serif", zh: "宋体 (Songti / SimSun)", en: "Songti SC / SimSun" },
+  { stack: "'STKaiti', KaiTi, 'KaiTi_GB2312', serif", zh: "楷体 (STKaiti / KaiTi)", en: "STKaiti / KaiTi" },
+  { stack: "'STFangsong', FangSong, serif", zh: "仿宋 (STFangsong / FangSong)", en: "STFangsong / FangSong" },
 ];
 
 const SANS = SANS_FONTS.map((f) => f.stack);
@@ -151,26 +154,38 @@ export function StylePanel() {
       </div>
 
       <div>
-        <div className="text-xs font-semibold uppercase text-gray-500 mb-2">{L.theme.fontSans}</div>
+        <div className="flex items-center justify-between mb-2">
+          <div className="text-xs font-semibold uppercase text-gray-500">{L.theme.fontSans}</div>
+          <span className="text-[0.6rem] text-gray-400 inline-flex items-center gap-1">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+            {lang === "zh" ? "在线字体" : "Webfont"}
+          </span>
+        </div>
         <select value={theme.fontSans} onChange={(e) => setTheme({ fontSans: e.target.value })}
           className="w-full border rounded px-2 py-1.5 text-xs"
           style={{ fontFamily: theme.fontSans }}>
           {SANS_FONTS.map((f) => (
             <option key={f.stack} value={f.stack} style={{ fontFamily: f.stack }}>
-              {lang === "zh" ? f.zh : f.en}
+              {f.loaded ? "● " : "○ "}{lang === "zh" ? f.zh : f.en}
             </option>
           ))}
         </select>
       </div>
 
       <div>
-        <div className="text-xs font-semibold uppercase text-gray-500 mb-2">{L.theme.fontSerif}</div>
+        <div className="flex items-center justify-between mb-2">
+          <div className="text-xs font-semibold uppercase text-gray-500">{L.theme.fontSerif}</div>
+          <span className="text-[0.6rem] text-gray-400 inline-flex items-center gap-1">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+            {lang === "zh" ? "在线字体" : "Webfont"}
+          </span>
+        </div>
         <select value={theme.fontSerif} onChange={(e) => setTheme({ fontSerif: e.target.value })}
           className="w-full border rounded px-2 py-1.5 text-xs"
           style={{ fontFamily: theme.fontSerif }}>
           {SERIF_FONTS.map((f) => (
             <option key={f.stack} value={f.stack} style={{ fontFamily: f.stack }}>
-              {lang === "zh" ? f.zh : f.en}
+              {f.loaded ? "● " : "○ "}{lang === "zh" ? f.zh : f.en}
             </option>
           ))}
         </select>
