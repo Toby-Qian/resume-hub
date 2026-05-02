@@ -136,6 +136,22 @@ export function resumeToMarkdown(r: Resume, lang: UILang): string {
     lines.push("");
   }
 
+  // User-added custom sections — render each like its own subheading block.
+  for (const sec of r.customSections || []) {
+    if (!sec.label && sec.entries.every((e) => !e.title && !e.description)) continue;
+    heading(sec.label || "Section");
+    if (sec.description) lines.push(`*${sec.description}*`, "");
+    for (const e of sec.entries) {
+      if (!e.title && !e.description && !e.subtitle && !(e.highlights && e.highlights.some(Boolean))) continue;
+      const sub = e.subtitle ? ` · ${e.subtitle}` : "";
+      const date = e.date ? ` _(${e.date})_` : "";
+      if (e.title || e.subtitle || e.date) lines.push(`### ${(e.title || "").trim()}${sub}${date}`);
+      if (e.description) lines.push(e.description);
+      for (const h of (e.highlights || []).filter(Boolean)) lines.push(`- ${h}`);
+      lines.push("");
+    }
+  }
+
   if (r.languages.length) {
     heading(S.languages);
     for (const lg of r.languages) {

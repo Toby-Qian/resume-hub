@@ -1,5 +1,5 @@
 "use client";
-import { TemplateProps, range, itemCls, Avatar, E, Draggable, useSectionLabels, useOrderedSections, DateRange, ContactIcon, EB } from "./shared";
+import { TemplateProps, range, itemCls, Avatar, E, Draggable, useSectionLabels, useOrderedSections, DateRange, ContactIcon, EB, CustomSections } from "./shared";
 
 export default function CNCreative({ resume }: TemplateProps) {
   const b = resume.basics;
@@ -98,6 +98,7 @@ export default function CNCreative({ resume }: TemplateProps) {
       <main style={{ padding: "var(--pad)" }}>
         <Draggable name="summary"><p className="text-[0.95em] mb-5 text-gray-800"><EB b={b} field="summary" multiline /></p></Draggable>
         {ordered}
+      <CustomSections />
       </main>
     </div>
   );

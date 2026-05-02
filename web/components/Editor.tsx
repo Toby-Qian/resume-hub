@@ -252,7 +252,9 @@ const SectionTitle = ({
 };
 
 export function Editor() {
-  const { resume, update, addItem, removeItem, duplicateItem, reorderItem, reorderSection, lang } = useStore();
+  const { resume, update, addItem, removeItem, duplicateItem, reorderItem, reorderSection, lang,
+    addCustomSection, removeCustomSection, updateCustomSection,
+    addCustomEntry, updateCustomEntry, removeCustomEntry } = useStore();
   const L = t(lang);
   // Collapsible state per section (open by default).
   const [collapsed, setCollapsed] = useState<Record<string, boolean>>({});
@@ -655,6 +657,108 @@ export function Editor() {
           </div>
         </SortableCard>
       ))}
+
+      {/* User-defined sections (volunteer / hobbies / certifications / ...) */}
+      <div className="mt-6 pt-4 border-t border-dashed border-gray-200">
+        <div className="flex items-center justify-between mb-2">
+          <div className="text-xs font-semibold uppercase text-gray-500">
+            {L.customSections?.title ?? "自定义板块"}
+          </div>
+          <button
+            onClick={addCustomSection}
+            className="text-[0.7rem] px-2 py-1 rounded border border-blue-200 bg-blue-50 text-blue-700 hover:bg-blue-100 transition"
+          >
+            + {L.customSections?.add ?? "新增板块"}
+          </button>
+        </div>
+        {(resume.customSections || []).length === 0 && (
+          <div className="text-[0.7rem] text-gray-400 italic mb-2">
+            {L.customSections?.empty ?? "可以加「志愿服务」「证书」「兴趣爱好」等任意板块"}
+          </div>
+        )}
+        {(resume.customSections || []).map((sec) => (
+          <div key={sec.id} className="mb-3 p-3 rounded-lg border border-gray-200 bg-gray-50/50">
+            <div className="flex items-start gap-2 mb-2">
+              <div className="flex-1 grid grid-cols-2 gap-x-3">
+                <Field
+                  label={L.customSections?.label ?? "板块名称"}
+                  value={sec.label}
+                  onChange={(v) => updateCustomSection(sec.id, { label: v })}
+                  placeholder={L.customSections?.labelPlaceholder ?? "如：志愿服务 / 证书 / 兴趣"}
+                />
+                <Field
+                  label={L.customSections?.description ?? "副标题（可选）"}
+                  value={sec.description || ""}
+                  onChange={(v) => updateCustomSection(sec.id, { description: v })}
+                />
+              </div>
+              <button
+                onClick={() => {
+                  if (window.confirm(L.customSections?.removeConfirm ?? "删除这个板块？")) {
+                    removeCustomSection(sec.id);
+                  }
+                }}
+                title={L.customSections?.removeSection ?? "删除板块"}
+                className="text-[0.7rem] px-2 py-1 mt-[1.55rem] rounded border border-rose-200 text-rose-600 hover:bg-rose-50 transition shrink-0"
+              >
+                ✕
+              </button>
+            </div>
+            {sec.entries.map((entry) => (
+              <div key={entry.id} className="mb-2 p-2.5 rounded border border-gray-200 bg-white">
+                <div className="flex justify-between items-center mb-1.5">
+                  <span className="text-[0.65rem] uppercase tracking-wider text-gray-400">
+                    {L.customSections?.entry ?? "条目"}
+                  </span>
+                  <button
+                    onClick={() => removeCustomEntry(sec.id, entry.id)}
+                    className="text-[0.7rem] text-rose-500 hover:text-rose-700 transition"
+                    title={L.actions.remove}
+                  >
+                    ✕
+                  </button>
+                </div>
+                <div className="grid grid-cols-2 gap-x-3">
+                  <Field
+                    label={L.customSections?.entryTitle ?? "标题"}
+                    value={entry.title}
+                    onChange={(v) => updateCustomEntry(sec.id, entry.id, { title: v })}
+                  />
+                  <Field
+                    label={L.customSections?.entrySubtitle ?? "副标题"}
+                    value={entry.subtitle || ""}
+                    onChange={(v) => updateCustomEntry(sec.id, entry.id, { subtitle: v })}
+                  />
+                  <Field
+                    label={L.customSections?.entryDate ?? "时间"}
+                    value={entry.date || ""}
+                    onChange={(v) => updateCustomEntry(sec.id, entry.id, { date: v })}
+                    placeholder="2024 - Present"
+                  />
+                </div>
+                <Field
+                  textarea
+                  label={L.customSections?.entryDescription ?? "描述"}
+                  value={entry.description || ""}
+                  onChange={(v) => updateCustomEntry(sec.id, entry.id, { description: v })}
+                />
+                <BulletsField
+                  label={L.customSections?.entryHighlights ?? "要点（每行一条）"}
+                  value={entry.highlights || []}
+                  onChange={(v) => updateCustomEntry(sec.id, entry.id, { highlights: v })}
+                  hint={L.form.bulletsHint}
+                />
+              </div>
+            ))}
+            <button
+              onClick={() => addCustomEntry(sec.id)}
+              className="text-[0.7rem] px-2 py-1 rounded border border-gray-200 bg-white text-gray-600 hover:bg-gray-50 transition"
+            >
+              + {L.customSections?.addEntry ?? "新增条目"}
+            </button>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }

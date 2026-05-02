@@ -1,5 +1,5 @@
 "use client";
-import { TemplateProps, range, itemCls, Avatar, E, Draggable, useSectionLabels, useOrderedSections, DateRange, EditableLabel, SkillBar, ContactIcon, EB } from "./shared";
+import { TemplateProps, range, itemCls, Avatar, E, Draggable, useSectionLabels, useOrderedSections, DateRange, EditableLabel, SkillBar, ContactIcon, EB, CustomSections } from "./shared";
 
 /**
  * Two-column layout with a soft tinted sidebar. Feels lighter than
@@ -142,6 +142,7 @@ export default function Elegant({ resume }: TemplateProps) {
         </Draggable>
 
         {ordered}
+      <CustomSections />
       </main>
     </div>
   );

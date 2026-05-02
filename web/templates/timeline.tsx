@@ -1,5 +1,5 @@
 "use client";
-import { TemplateProps, range, itemCls, Avatar, E, Draggable, useSectionLabels, useOrderedSections, DateRange, EditableLabel, ContactIcon, EB } from "./shared";
+import { TemplateProps, range, itemCls, Avatar, E, Draggable, useSectionLabels, useOrderedSections, DateRange, EditableLabel, ContactIcon, EB, CustomSections } from "./shared";
 
 /**
  * Vertical timeline: each work/project entry has a dot on the left with a
@@ -125,6 +125,7 @@ export default function Timeline({ resume }: TemplateProps) {
       <Draggable name="summary"><p className="text-[0.93em] text-gray-800 mb-2"><EB b={b} field="summary" multiline /></p></Draggable>
 
       {ordered}
+      <CustomSections />
     </div>
   );
 }

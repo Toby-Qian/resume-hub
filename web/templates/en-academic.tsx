@@ -1,5 +1,5 @@
 "use client";
-import { TemplateProps, range, itemCls, Avatar, E, Draggable, useSectionLabels, useOrderedSections, DateRange, EditableLabel, EB } from "./shared";
+import { TemplateProps, range, itemCls, Avatar, E, Draggable, useSectionLabels, useOrderedSections, DateRange, EditableLabel, EB, CustomSections } from "./shared";
 
 export default function ENAcademic({ resume }: TemplateProps) {
   const b = resume.basics;
@@ -143,6 +143,7 @@ export default function ENAcademic({ resume }: TemplateProps) {
       <Draggable name="summary"><p className="text-[0.95em] text-justify"><EB b={b} field="summary" multiline /></p></Draggable>
 
       {ordered}
+      <CustomSections />
     </div>
   );
 }

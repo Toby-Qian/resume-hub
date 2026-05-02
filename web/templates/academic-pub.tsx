@@ -1,5 +1,5 @@
 "use client";
-import { TemplateProps, range, itemCls, Avatar, E, Draggable, useSectionLabels, useOrderedSections, DateRange, EditableLabel, EB } from "./shared";
+import { TemplateProps, range, itemCls, Avatar, E, Draggable, useSectionLabels, useOrderedSections, DateRange, EditableLabel, EB, CustomSections } from "./shared";
 
 /**
  * Publication-first CV. Projects are rendered as a numbered publication list
@@ -155,6 +155,7 @@ export default function AcademicPub({ resume }: TemplateProps) {
       </Draggable>
 
       {ordered}
+      <CustomSections />
 
       {(resume.skills.length > 0 || resume.languages.length > 0) && (
         <><H>{`${L.skills} & ${L.languages}`}</H>

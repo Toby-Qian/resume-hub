@@ -1,5 +1,5 @@
 "use client";
-import { TemplateProps, range, itemCls, Avatar, E, Draggable, useSectionLabels, useOrderedSections, DateRange, EditableLabel, ContactIcon, EB } from "./shared";
+import { TemplateProps, range, itemCls, Avatar, E, Draggable, useSectionLabels, useOrderedSections, DateRange, EditableLabel, ContactIcon, EB, CustomSections } from "./shared";
 
 /**
  * Modern academic: sans-serif, colored accent rules, left-aligned headers
@@ -138,6 +138,7 @@ export default function AcademicModern({ resume }: TemplateProps) {
       <Draggable name="summary"><p className="text-[0.93em] text-gray-800 mb-2"><EB b={b} field="summary" multiline /></p></Draggable>
 
       {ordered}
+      <CustomSections />
 
       <div className="grid grid-cols-2 gap-x-6 mt-1">
         {resume.skills.length > 0 && (

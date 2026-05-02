@@ -118,6 +118,33 @@ export interface ResumeTeaching extends BreakBefore {
   summary?: string;
 }
 
+/** A user-defined section (e.g. "Volunteering", "Hobbies", "Certifications").
+ *  Rendered after the built-in sections in every template. Distinct from the
+ *  per-template `customLabels` which only relabel an existing section — these
+ *  add entirely new sections with arbitrary content. */
+export interface CustomSection {
+  id: string;
+  /** User-supplied section heading (free text). */
+  label: string;
+  /** Optional one-line description shown below the heading (italic). */
+  description?: string;
+  entries: CustomEntry[];
+}
+
+/** A single bullet within a {@link CustomSection}. Date/title/subtitle are
+ *  free-form so the section can pose as anything from "Volunteer experience"
+ *  (date + role + org) to "Hobbies" (just a title). */
+export interface CustomEntry extends BreakBefore {
+  id: string;
+  title: string;
+  subtitle?: string;       // org / context / qualifier
+  date?: string;           // "2024 – Present", "2023.05", etc — free text
+  description?: string;
+  /** Bullet points. Behaves identically to work.highlights — empty entries
+   *  are filtered out at render time. */
+  highlights?: string[];
+}
+
 /** Free-floating text box the user can drop anywhere on the paper for layout
  *  freedom beyond the template's fixed sections. Coordinates are relative to
  *  the .paper top-left, in px at 96dpi A4 scale. */
@@ -165,12 +192,15 @@ export interface Resume {
   talks?: ResumeTalk[];
   teaching?: ResumeTeaching[];
   notes?: ResumeNote[];
+  /** User-added sections (volunteer / hobbies / certifications / etc.).
+   *  Rendered after the built-in sections in every template. */
+  customSections?: CustomSection[];
 }
 
 export const emptyResume = (): Resume => ({
   basics: { name: "", label: "", email: "", phone: "", location: "", website: "", summary: "" },
   work: [], education: [], projects: [], skills: [], awards: [], languages: [],
-  publications: [], talks: [], teaching: [], notes: [],
+  publications: [], talks: [], teaching: [], notes: [], customSections: [],
 });
 
 export type SectionKey =

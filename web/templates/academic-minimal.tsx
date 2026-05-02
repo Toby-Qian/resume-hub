@@ -1,5 +1,5 @@
 "use client";
-import { TemplateProps, range, itemCls, Avatar, E, Draggable, useSectionLabels, useOrderedSections, DateRange, EditableLabel, EB } from "./shared";
+import { TemplateProps, range, itemCls, Avatar, E, Draggable, useSectionLabels, useOrderedSections, DateRange, EditableLabel, EB, CustomSections } from "./shared";
 
 /**
  * Minimalist academic: no color, purely typographic hierarchy. Small-caps
@@ -127,6 +127,7 @@ export default function AcademicMinimal({ resume }: TemplateProps) {
       </Row>
 
       {ordered}
+      <CustomSections />
     </div>
   );
 }

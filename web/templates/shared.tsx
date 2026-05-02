@@ -539,3 +539,95 @@ export function SkillBar({
     </span>
   );
 }
+
+// ---------- User-defined custom sections ----------------------------------
+/**
+ * Renders every `resume.customSections[i]` as a templated `<Section>`. Each
+ * section heading is inline-editable via `<E>` (so the user types the new
+ * label directly into the preview), and each entry exposes title / subtitle /
+ * date / description / highlight bullets.
+ *
+ * Templates simply mount `<CustomSections />` once (typically at the end of
+ * the main column) and the loop handles the rest. When the user has no custom
+ * sections, this returns null — zero visual footprint.
+ */
+export function CustomSections({ accent = true }: { accent?: boolean }) {
+  const customSections = useStore((s) => s.resume.customSections || []);
+  const reorder = useStore((s) => s.reorderCustomEntry);
+  if (customSections.length === 0) return null;
+  return (
+    <>
+      {customSections.map((sec, i) => {
+        if (!sec.label.trim() && sec.entries.every((e) => !e.title && !e.description)) return null;
+        return (
+          <Section
+            key={sec.id}
+            title={<E path={`customSections.${i}.label`}>{sec.label || "Custom"}</E>}
+            accent={accent}
+          >
+            {sec.description && (
+              <div className="text-[0.85em] text-gray-500 italic -mt-1 mb-1">
+                <E path={`customSections.${i}.description`} multiline>{sec.description}</E>
+              </div>
+            )}
+            {sec.entries.map((entry, j) => {
+              const hasAny = entry.title || entry.subtitle || entry.date || entry.description ||
+                (entry.highlights && entry.highlights.some(Boolean));
+              if (!hasAny) return null;
+              const dragId = `custom-${sec.id}`;
+              return (
+                <div
+                  key={entry.id}
+                  className={`resume-item ${entry.breakBefore ? "page-break-before" : ""}`}
+                  data-custom-section={sec.id}
+                  data-custom-entry={entry.id}
+                  // Reorder via plain HTML5 drag — same pattern used elsewhere.
+                  draggable
+                  onDragStart={(e) => e.dataTransfer.setData(`text/x-custom-${dragId}`, entry.id)}
+                  onDragOver={(e) => e.preventDefault()}
+                  onDrop={(e) => {
+                    e.preventDefault();
+                    const fromId = e.dataTransfer.getData(`text/x-custom-${dragId}`);
+                    if (fromId && fromId !== entry.id) reorder(sec.id, fromId, entry.id);
+                  }}
+                >
+                  {(entry.title || entry.subtitle || entry.date) && (
+                    <div className="flex justify-between items-baseline gap-2">
+                      <div className="font-semibold flex items-baseline gap-1.5">
+                        <E path={`customSections.${i}.entries.${j}.title`}>{entry.title}</E>
+                        {entry.subtitle && (
+                          <span className="font-normal text-gray-600">
+                            · <E path={`customSections.${i}.entries.${j}.subtitle`}>{entry.subtitle}</E>
+                          </span>
+                        )}
+                      </div>
+                      {entry.date && (
+                        <div className="text-[0.85em] text-gray-500">
+                          <E path={`customSections.${i}.entries.${j}.date`}>{entry.date}</E>
+                        </div>
+                      )}
+                    </div>
+                  )}
+                  {entry.description && (
+                    <div className="text-[0.9em] text-gray-700">
+                      <E path={`customSections.${i}.entries.${j}.description`} multiline>{entry.description}</E>
+                    </div>
+                  )}
+                  {entry.highlights && entry.highlights.some(Boolean) && (
+                    <ul className="list-disc ml-5 mt-1 text-[0.92em]">
+                      {entry.highlights.filter(Boolean).map((h, k) => (
+                        <li key={k}>
+                          <E path={`customSections.${i}.entries.${j}.highlights.${k}`}>{h}</E>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
+              );
+            })}
+          </Section>
+        );
+      })}
+    </>
+  );
+}

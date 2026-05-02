@@ -1,5 +1,5 @@
 "use client";
-import { TemplateProps, range, itemCls, Avatar, E, Draggable, useSectionLabels, useOrderedSections, DateRange, EditableLabel, EB } from "./shared";
+import { TemplateProps, range, itemCls, Avatar, E, Draggable, useSectionLabels, useOrderedSections, DateRange, EditableLabel, EB, CustomSections } from "./shared";
 
 /**
  * The quintessential CV: serif body, "Curriculum Vitae" banner, centered
@@ -152,6 +152,7 @@ export default function AcademicClassic({ resume }: TemplateProps) {
       <Draggable name="summary"><p className="text-[0.92em] text-justify italic mb-3"><EB b={b} field="summary" multiline /></p></Draggable>
 
       {ordered}
+      <CustomSections />
     </div>
   );
 }

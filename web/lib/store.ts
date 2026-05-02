@@ -1,7 +1,7 @@
 "use client";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import { Resume, SectionKey, emptyResume, ResumeNote } from "./schema";
+import { Resume, SectionKey, emptyResume, ResumeNote, CustomSection, CustomEntry } from "./schema";
 import { sampleEN, sampleZH } from "./samples";
 import { uid } from "./uid";
 
@@ -178,6 +178,16 @@ interface State {
   /** Named restore points the user can save/load. Persisted to localStorage.
    *  See {@link Snapshot} and SNAPSHOT_LIMIT. */
   snapshots: Snapshot[];
+  // --- Custom user sections (volunteer / hobbies / certs / ...) ---
+  addCustomSection: () => void;
+  removeCustomSection: (id: string) => void;
+  updateCustomSection: (id: string, patch: Partial<Omit<CustomSection, "id" | "entries">>) => void;
+  reorderCustomSection: (fromId: string, toId: string) => void;
+  addCustomEntry: (sectionId: string) => void;
+  updateCustomEntry: (sectionId: string, entryId: string, patch: Partial<Omit<CustomEntry, "id">>) => void;
+  removeCustomEntry: (sectionId: string, entryId: string) => void;
+  reorderCustomEntry: (sectionId: string, fromId: string, toId: string) => void;
+
   saveSnapshot: (name?: string) => void;
   restoreSnapshot: (id: string) => void;
   deleteSnapshot: (id: string) => void;
@@ -482,6 +492,99 @@ export const useStore = create<State>()(
         canUndo: () => get().past.length > 0,
         canRedo: () => get().future.length > 0,
 
+        // ---- Custom sections CRUD ----
+        // All operations route through `mutate` so undo / redo and the
+        // "saved a moment ago" indicator pick them up automatically.
+        addCustomSection: () => {
+          const r = get().resume;
+          const list = r.customSections || [];
+          const next: CustomSection = {
+            id: uid(),
+            label: "",
+            entries: [{ id: uid(), title: "", description: "" }],
+          };
+          mutate({ ...r, customSections: [...list, next] });
+        },
+        removeCustomSection: (id) => {
+          const r = get().resume;
+          mutate({ ...r, customSections: (r.customSections || []).filter((s) => s.id !== id) });
+        },
+        updateCustomSection: (id, patch) => {
+          const r = get().resume;
+          mutate({
+            ...r,
+            customSections: (r.customSections || []).map((s) =>
+              s.id === id ? { ...s, ...patch } : s
+            ),
+          });
+        },
+        reorderCustomSection: (fromId, toId) => {
+          if (fromId === toId) return;
+          const r = get().resume;
+          const list = (r.customSections || []).slice();
+          const fromIdx = list.findIndex((s) => s.id === fromId);
+          const toIdx = list.findIndex((s) => s.id === toId);
+          if (fromIdx < 0 || toIdx < 0) return;
+          const [item] = list.splice(fromIdx, 1);
+          list.splice(toIdx, 0, item);
+          mutate({ ...r, customSections: list });
+        },
+        addCustomEntry: (sectionId) => {
+          const r = get().resume;
+          mutate({
+            ...r,
+            customSections: (r.customSections || []).map((s) =>
+              s.id !== sectionId
+                ? s
+                : { ...s, entries: [...s.entries, { id: uid(), title: "", description: "" }] }
+            ),
+          });
+        },
+        updateCustomEntry: (sectionId, entryId, patch) => {
+          const r = get().resume;
+          mutate({
+            ...r,
+            customSections: (r.customSections || []).map((s) =>
+              s.id !== sectionId
+                ? s
+                : {
+                    ...s,
+                    entries: s.entries.map((e) =>
+                      e.id === entryId ? { ...e, ...patch } : e
+                    ),
+                  }
+            ),
+          });
+        },
+        removeCustomEntry: (sectionId, entryId) => {
+          const r = get().resume;
+          mutate({
+            ...r,
+            customSections: (r.customSections || []).map((s) =>
+              s.id !== sectionId
+                ? s
+                : { ...s, entries: s.entries.filter((e) => e.id !== entryId) }
+            ),
+          });
+        },
+        reorderCustomEntry: (sectionId, fromId, toId) => {
+          if (fromId === toId) return;
+          const r = get().resume;
+          mutate({
+            ...r,
+            customSections: (r.customSections || []).map((s) => {
+              if (s.id !== sectionId) return s;
+              const list = s.entries.slice();
+              const fromIdx = list.findIndex((e) => e.id === fromId);
+              const toIdx = list.findIndex((e) => e.id === toId);
+              if (fromIdx < 0 || toIdx < 0) return s;
+              const [item] = list.splice(fromIdx, 1);
+              list.splice(toIdx, 0, item);
+              return { ...s, entries: list };
+            }),
+          });
+        },
+
         snapshots: [],
         saveSnapshot: (name) => {
           const s = get();
@@ -556,6 +659,10 @@ export const useStore = create<State>()(
           p.resume.publications = p.resume.publications ?? [];
           p.resume.talks = p.resume.talks ?? [];
           p.resume.teaching = p.resume.teaching ?? [];
+        }
+        // Backfill custom sections so older saves don't crash render code.
+        if (p.resume) {
+          p.resume.customSections = p.resume.customSections ?? [];
         }
         // Backfill / extend persisted sectionOrder so users coming from an
         // older version don't lose any section, and any newly-introduced

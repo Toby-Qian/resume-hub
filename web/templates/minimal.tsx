@@ -1,5 +1,5 @@
 "use client";
-import { TemplateProps, range, itemCls, Avatar, E, Draggable, useSectionLabels, useOrderedSections, DateRange, EditableLabel, SkillBar, EB } from "./shared";
+import { TemplateProps, range, itemCls, Avatar, E, Draggable, useSectionLabels, useOrderedSections, DateRange, EditableLabel, SkillBar, EB, CustomSections } from "./shared";
 
 export default function Minimal({ resume }: TemplateProps) {
   const b = resume.basics;
@@ -92,6 +92,7 @@ export default function Minimal({ resume }: TemplateProps) {
       </Row>
 
       {ordered}
+      <CustomSections />
     </div>
   );
 }

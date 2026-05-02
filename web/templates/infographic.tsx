@@ -1,5 +1,5 @@
 "use client";
-import { TemplateProps, range, itemCls, Avatar, E, Draggable, useSectionLabels, useOrderedSections, DateRange, EditableLabel, ContactIcon, EB } from "./shared";
+import { TemplateProps, range, itemCls, Avatar, E, Draggable, useSectionLabels, useOrderedSections, DateRange, EditableLabel, ContactIcon, EB, CustomSections } from "./shared";
 
 /**
  * Infographic resume — skill bars, language proficiency dots, ribbon-style
@@ -201,6 +201,7 @@ export default function Infographic({ resume }: TemplateProps) {
       <main style={{ padding: "var(--pad)" }}>
         <Draggable name="summary"><p className="text-[0.95em] text-gray-800 leading-relaxed mb-2"><EB b={b} field="summary" multiline /></p></Draggable>
         {ordered}
+      <CustomSections />
       </main>
     </div>
   );

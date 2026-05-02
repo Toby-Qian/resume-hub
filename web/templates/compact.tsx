@@ -1,5 +1,5 @@
 "use client";
-import { TemplateProps, range, itemCls, Avatar, E, Draggable, useSectionLabels, useOrderedSections, DateRange, EditableLabel, SkillBar, EB } from "./shared";
+import { TemplateProps, range, itemCls, Avatar, E, Draggable, useSectionLabels, useOrderedSections, DateRange, EditableLabel, SkillBar, EB, CustomSections } from "./shared";
 
 /**
  * Single-column, tight-leading, small-type resume — built for senior
@@ -129,6 +129,7 @@ export default function Compact({ resume }: TemplateProps) {
       <Draggable name="summary"><p className="text-[0.88em] text-gray-800 mb-1"><EB b={b} field="summary" multiline /></p></Draggable>
 
       {ordered}
+      <CustomSections />
     </div>
   );
 }

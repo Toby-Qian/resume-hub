@@ -1,5 +1,5 @@
 "use client";
-import { TemplateProps, range, itemCls, Avatar, E, Draggable, useSectionLabels, useOrderedSections, DateRange, EditableLabel, SkillBar, ContactIcon, EB } from "./shared";
+import { TemplateProps, range, itemCls, Avatar, E, Draggable, useSectionLabels, useOrderedSections, DateRange, EditableLabel, SkillBar, ContactIcon, EB, CustomSections } from "./shared";
 
 /**
  * Dark hero band + light content cards. Modern startup / SaaS-portfolio
@@ -116,6 +116,7 @@ export default function DarkCard({ resume }: TemplateProps) {
         </Draggable>
 
         {ordered}
+      <CustomSections />
 
         <div className="grid grid-cols-2 gap-4">
           {resume.education.length > 0 && (

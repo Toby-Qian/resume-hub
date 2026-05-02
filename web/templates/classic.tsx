@@ -1,5 +1,5 @@
 "use client";
-import { TemplateProps, Section, range, itemCls, Avatar, E, Draggable, useSectionLabels, useOrderedSections, DateRange, SkillBar, EB } from "./shared";
+import { TemplateProps, Section, range, itemCls, Avatar, E, Draggable, useSectionLabels, useOrderedSections, DateRange, SkillBar, EB, CustomSections } from "./shared";
 
 export default function Classic({ resume }: TemplateProps) {
   const b = resume.basics;
@@ -107,6 +107,7 @@ export default function Classic({ resume }: TemplateProps) {
       <Draggable name="summary"><p className="mb-5 text-[0.95em] italic text-center"><EB b={b} field="summary" multiline /></p></Draggable>
 
       {ordered}
+      <CustomSections />
     </div>
   );
 }

@@ -1,5 +1,5 @@
 "use client";
-import { TemplateProps, range, itemCls, Avatar, E, Draggable, useSectionLabels, useOrderedSections, DateRange, EditableLabel, EB } from "./shared";
+import { TemplateProps, range, itemCls, Avatar, E, Draggable, useSectionLabels, useOrderedSections, DateRange, EditableLabel, EB, CustomSections } from "./shared";
 
 /**
  * Magazine / editorial layout — inspired by The New Yorker / NYT feature
@@ -146,6 +146,7 @@ export default function Magazine({ resume }: TemplateProps) {
         <div>{leftCol}</div>
         <div>{rightCol}</div>
       </div>
+      <CustomSections />
     </div>
   );
 }

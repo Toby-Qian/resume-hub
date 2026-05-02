@@ -1,5 +1,5 @@
 "use client";
-import { TemplateProps, range, itemCls, Avatar, E, Draggable, useSectionLabels, useOrderedSections, DateRange, EditableLabel, SkillBar, EB } from "./shared";
+import { TemplateProps, range, itemCls, Avatar, E, Draggable, useSectionLabels, useOrderedSections, DateRange, EditableLabel, SkillBar, EB, CustomSections } from "./shared";
 
 export default function CNFormal({ resume }: TemplateProps) {
   const b = resume.basics;
@@ -112,6 +112,7 @@ export default function CNFormal({ resume }: TemplateProps) {
       <Draggable name="summary"><H><EditableLabel k="summary" fallback={L.summary} /></H><p className="text-[0.95em]"><EB b={b} field="summary" multiline /></p></Draggable>
 
       {ordered}
+      <CustomSections />
     </div>
   );
 }

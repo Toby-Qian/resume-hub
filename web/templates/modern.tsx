@@ -1,5 +1,5 @@
 "use client";
-import { TemplateProps, Section, range, itemCls, Avatar, E, Draggable, useSectionLabels, useOrderedSections, DateRange, SkillBar, ContactIcon, EB } from "./shared";
+import { TemplateProps, Section, range, itemCls, Avatar, E, Draggable, useSectionLabels, useOrderedSections, DateRange, SkillBar, ContactIcon, EB, CustomSections } from "./shared";
 
 export default function Modern({ resume }: TemplateProps) {
   const b = resume.basics;
@@ -116,6 +116,7 @@ export default function Modern({ resume }: TemplateProps) {
       </Draggable>
 
       {ordered}
+      <CustomSections />
     </div>
   );
 }

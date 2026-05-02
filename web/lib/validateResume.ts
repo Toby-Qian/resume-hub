@@ -57,5 +57,21 @@ export function validateAndNormalize(input: unknown): Resume {
     talks:        ensureIds(arr("talks")),
     teaching:     ensureIds(arr("teaching")),
     notes:        ensureIds(arr("notes")),
+    // Custom sections — refresh missing ids on the section AND its entries.
+    customSections: arr("customSections")
+      .filter((x): x is Record<string, unknown> => !!x && typeof x === "object" && !Array.isArray(x))
+      .map((x) => ({
+        id: typeof x.id === "string" && x.id ? x.id : uid(),
+        label: typeof x.label === "string" ? x.label : "",
+        description: typeof x.description === "string" ? x.description : undefined,
+        entries: Array.isArray(x.entries)
+          ? (x.entries as unknown[])
+              .filter((e): e is Record<string, unknown> => !!e && typeof e === "object" && !Array.isArray(e))
+              .map((e) => ({
+                ...(e as object),
+                id: typeof e.id === "string" && e.id ? e.id : uid(),
+              })) as any
+          : [],
+      })),
   };
 }
