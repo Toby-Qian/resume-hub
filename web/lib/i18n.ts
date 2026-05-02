@@ -32,7 +32,7 @@ export const T = {
     },
     actions: {
       add: "添加", remove: "删除", loadSample: "加载示例", reset: "清空", print: "导出 PDF",
-      importJson: "导入 JSON", exportJson: "导出 JSON",
+      importJson: "导入 JSON", exportJson: "导出 JSON", exportMarkdown: "导出 Markdown",
       undo: "撤销", redo: "重做",
       duplicate: "复制此条", expandAll: "全部展开", collapseAll: "全部折叠",
       savedJustNow: "已保存", savedSecondsAgo: "{n} 秒前已保存", savedMinutesAgo: "{n} 分钟前已保存",
@@ -150,6 +150,7 @@ export const T = {
       snapshotSaved: "快照已保存",
       snapshotRestored: "已恢复快照",
       snapshotDeleted: "快照已删除",
+      markdownExported: "Markdown 已下载",
     },
     dropzone: {
       title: "松开即可导入 JSON",
@@ -235,7 +236,7 @@ export const T = {
     },
     actions: {
       add: "Add", remove: "Remove", loadSample: "Load sample", reset: "Reset", print: "Export PDF",
-      importJson: "Import JSON", exportJson: "Export JSON",
+      importJson: "Import JSON", exportJson: "Export JSON", exportMarkdown: "Export Markdown",
       undo: "Undo", redo: "Redo",
       duplicate: "Duplicate", expandAll: "Expand all", collapseAll: "Collapse all",
       savedJustNow: "Saved", savedSecondsAgo: "Saved {n}s ago", savedMinutesAgo: "Saved {n}m ago",
@@ -353,6 +354,7 @@ export const T = {
       snapshotSaved: "Snapshot saved",
       snapshotRestored: "Snapshot restored",
       snapshotDeleted: "Snapshot deleted",
+      markdownExported: "Markdown downloaded",
     },
     dropzone: {
       title: "Drop to import JSON",

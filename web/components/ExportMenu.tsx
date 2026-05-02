@@ -3,6 +3,8 @@ import { useEffect, useRef, useState } from "react";
 import { useStore, PageSize } from "@/lib/store";
 import { t } from "@/lib/i18n";
 import { printResume } from "@/lib/printResume";
+import { downloadMarkdown } from "@/lib/exportMarkdown";
+import { toast } from "@/lib/toast";
 
 /** A4 / Letter dropdown for the print/export action.
  *  - Click "导出 PDF" → fires window.print() with current setup.
@@ -110,6 +112,21 @@ export function ExportMenu() {
             className="mt-2.5 w-full text-xs px-3 py-1.5 rounded bg-blue-600 text-white hover:bg-blue-700 transition"
           >
             {L.actions.print}
+          </button>
+          {/* Markdown export — useful for backups, sharing in PRs / READMEs,
+              or feeding the resume into another tool. Lossy: strips theme
+              and avatar; keeps free-text content untouched.                */}
+          <button
+            onClick={() => {
+              setOpen(false);
+              downloadMarkdown(resume, lang);
+              toast.success(L.toast.markdownExported ?? "Markdown downloaded");
+            }}
+            className="mt-1.5 w-full text-xs px-3 py-1.5 rounded border border-gray-200 text-gray-700 hover:bg-gray-50 transition flex items-center justify-center gap-1.5"
+            title={E.markdownHint ?? "导出为 Markdown 文件（备份 / README / 粘贴到其它工具）"}
+          >
+            <span className="text-[0.85em] opacity-80">📝</span>
+            {L.actions.exportMarkdown ?? "导出 Markdown"}
           </button>
         </div>
       )}

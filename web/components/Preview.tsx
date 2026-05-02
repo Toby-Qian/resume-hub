@@ -427,7 +427,9 @@ function HelpOverlay({ lang, onClose }: { lang: "zh" | "en"; onClose: () => void
   const rows: Array<{ keys: string; desc: string; group?: string }> = [
     { group: zh ? "全局" : "Global",     keys: "Ctrl+Z",        desc: zh ? "撤销" : "Undo" },
     { group: zh ? "全局" : "Global",     keys: "Ctrl+Shift+Z",  desc: zh ? "重做" : "Redo" },
+    { group: zh ? "全局" : "Global",     keys: "Ctrl+S",        desc: zh ? "导出 PDF（任意位置可触发）" : "Export PDF (works anywhere)" },
     { group: zh ? "全局" : "Global",     keys: "Ctrl+V",        desc: zh ? "粘贴剪贴板里的图片到简历画布" : "Paste image from clipboard onto the paper" },
+    { group: zh ? "全局" : "Global",     keys: zh ? "拖入 .json" : "Drop .json", desc: zh ? "把 JSON 文件拖到页面任意位置即可导入（自动识别 jsonresume.org）" : "Drop a JSON file anywhere on the page to import (jsonresume.org auto-detected)" },
     { group: zh ? "全局" : "Global",     keys: "Ctrl + 滚轮",   desc: zh ? "缩放预览画布（40% – 150%）" : "Zoom the preview canvas (40% – 150%)" },
     { group: zh ? "全局" : "Global",     keys: "Ctrl+0",        desc: zh ? "重置缩放为 100%" : "Reset zoom to 100%" },
     { group: zh ? "全局" : "Global",     keys: "Ctrl++ / Ctrl+-", desc: zh ? "放大 / 缩小" : "Zoom in / out" },
