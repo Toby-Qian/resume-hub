@@ -93,6 +93,10 @@ export const T = {
       sectionOrderHint: "拖动调整简历中各节区的先后顺序",
       sectionOrderReset: "恢复默认顺序",
       sectionOrderReorderable: "现已支持全部 16 个模板。带侧栏的（中式创意 / 优雅 / 信息图 / 学术·现代）会保留侧栏元素的位置，主栏顺序按你的设置渲染。",
+      resetAllOffsets: "复位所有板块位置",
+      resetAllOffsetsHint: "撤销所有手动拖动的位移（不会影响节区顺序、隐藏状态等）",
+      resetAllLabels: "恢复默认标题",
+      resetAllLabelsHint: "把所有自定义节区名清回默认翻译",
     },
     footer: {
       privacy: "所有内容仅保存在你的浏览器本地，不会上传到任何服务器。",
@@ -143,6 +147,7 @@ export const T = {
       confirmReset: "这将抹掉所有已填内容（基本信息、工作经历、项目等），此操作仅可通过 Ctrl+Z 撤销。建议先「导出 JSON」备份。",
       cancel: "取消",
       avatarTooLarge: "图片过大（请小于 800KB），或改用 URL。",
+      chipsHint: "Enter 或逗号添加 · Backspace 移除最后一项",
     },
     preview: {
       pageHint: "灰色分隔线为分页边界（A4 / Letter）；打印/导出 PDF 时浏览器会自动换页",
@@ -260,6 +265,10 @@ export const T = {
       sectionOrderHint: "Drag to reorder sections in the resume",
       sectionOrderReset: "Restore default order",
       sectionOrderReorderable: "All 16 templates now respect the order. Templates with a fixed sidebar (CN-Creative / Elegant / Infographic / Academic-Modern) keep sidebar items in place; the main column reorders.",
+      resetAllOffsets: "Reset all block positions",
+      resetAllOffsetsHint: "Undo every manual drag offset (section order / visibility / titles unaffected)",
+      resetAllLabels: "Restore default headings",
+      resetAllLabelsHint: "Clear every custom section title back to its localised default",
     },
     footer: {
       privacy: "Everything you type stays in your browser's local storage — nothing is uploaded.",
@@ -310,6 +319,7 @@ export const T = {
       confirmReset: "This will erase all entered content (basics, work, projects, …). Undo only works via Ctrl+Z. Consider exporting JSON first as a backup.",
       cancel: "Cancel",
       avatarTooLarge: "Image too large (< 800KB), or use a URL instead.",
+      chipsHint: "Press Enter or , to add · Backspace removes the last tag",
     },
     preview: {
       pageHint: "Dashed lines mark page boundaries — print / PDF export will split automatically",

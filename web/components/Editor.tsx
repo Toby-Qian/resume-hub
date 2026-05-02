@@ -4,6 +4,7 @@ import { useStore } from "@/lib/store";
 import { SectionKey, Resume } from "@/lib/schema";
 import { t } from "@/lib/i18n";
 import { Field } from "./Field";
+import { ChipsField } from "./ChipsField";
 import { DateField } from "./DateField";
 import { toast } from "@/lib/toast";
 import { compressToDataURL } from "@/lib/imageCompress";
@@ -449,8 +450,13 @@ export function Editor() {
             <DateField label={L.fields.startDate} value={e.startDate} onChange={(v) => patch("education", e.id, "startDate", v)} />
             <DateField label={L.fields.endDate} value={e.endDate} allowPresent onChange={(v) => patch("education", e.id, "endDate", v)} />
           </div>
-          <Field label={L.fields.courses} value={(e.courses || []).join(", ")}
-            onChange={(v) => patch("education", e.id, "courses", v.split(",").map((x) => x.trim()).filter(Boolean))} />
+          <ChipsField
+            label={L.fields.courses}
+            value={e.courses || []}
+            onChange={(next) => patch("education", e.id, "courses", next)}
+            placeholder={L.fields.courses}
+            hint={(L.form as any).chipsHint ?? "Enter / 逗号 添加 · Backspace 移除"}
+          />
         </SortableCard>
       ))}
 
@@ -471,8 +477,13 @@ export function Editor() {
           <Field label={L.fields.description} value={p.description} onChange={(v) => patch("projects", p.id, "description", v)} />
           <Field textarea rows={3} label={L.fields.highlights} value={(p.highlights || []).join("\n")}
             onChange={(v) => patch("projects", p.id, "highlights", v.split("\n"))} />
-          <Field label={L.fields.keywords} value={(p.keywords || []).join(", ")}
-            onChange={(v) => patch("projects", p.id, "keywords", v.split(",").map((x) => x.trim()).filter(Boolean))} />
+          <ChipsField
+            label={L.fields.keywords}
+            value={p.keywords || []}
+            onChange={(next) => patch("projects", p.id, "keywords", next)}
+            placeholder={L.fields.keywords}
+            hint={(L.form as any).chipsHint ?? "Enter / 逗号 添加 · Backspace 移除"}
+          />
         </SortableCard>
       ))}
 
@@ -488,8 +499,13 @@ export function Editor() {
             <Field label={L.fields.skillName} value={s.name} onChange={(v) => patch("skills", s.id, "name", v)} />
             <Field label={L.fields.level} value={s.level} onChange={(v) => patch("skills", s.id, "level", v)} />
           </div>
-          <Field label={L.fields.keywords} value={s.keywords.join(", ")}
-            onChange={(v) => patch("skills", s.id, "keywords", v.split(",").map((x) => x.trim()).filter(Boolean))} />
+          <ChipsField
+            label={L.fields.keywords}
+            value={s.keywords || []}
+            onChange={(next) => patch("skills", s.id, "keywords", next)}
+            placeholder={L.fields.keywords}
+            hint={(L.form as any).chipsHint ?? "Enter / 逗号 添加 · Backspace 移除"}
+          />
         </SortableCard>
       ))}
 

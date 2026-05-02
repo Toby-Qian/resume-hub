@@ -81,7 +81,20 @@ function isMatchingPreset(theme: ThemeTokens, p: Preset) {
 export function StylePanel() {
   const { theme, setTheme, lang, pageSetup, setPageSetup,
           hiddenSections, toggleSectionVisibility,
-          sectionOrder, reorderSection, setSectionOrder } = useStore();
+          sectionOrder, reorderSection, setSectionOrder,
+          resume, setResume } = useStore();
+  const blockOffsetCount = Object.keys(resume.basics.blockOffsets || {}).length;
+  const customLabelCount = Object.keys(resume.customLabels || {}).filter(
+    (k) => (resume.customLabels as any)[k]
+  ).length;
+  const resetAllOffsets = () => {
+    if (blockOffsetCount === 0) return;
+    setResume({ ...resume, basics: { ...resume.basics, blockOffsets: {} } });
+  };
+  const resetAllLabels = () => {
+    if (customLabelCount === 0) return;
+    setResume({ ...resume, customLabels: {} });
+  };
   const L = t(lang);
   const S = (L as any).style ?? {};
   const E = (L as any).exportMenu ?? {};
@@ -415,6 +428,54 @@ export function StylePanel() {
         <div className="text-[0.65rem] text-gray-400 mt-1.5 leading-snug">
           {S.sectionOrderReorderable ?? ""}
         </div>
+      </div>
+
+      {/* Maintenance: bulk-reset positions / custom titles. Buttons are
+          disabled when there's nothing to reset (so the panel doesn't
+          encourage destructive clicks). */}
+      <div className="space-y-1.5">
+        <button
+          type="button"
+          disabled={blockOffsetCount === 0}
+          onClick={resetAllOffsets}
+          title={S.resetAllOffsetsHint ?? ""}
+          className={`w-full text-left px-2.5 py-1.5 rounded-lg border text-xs transition flex items-center justify-between ${
+            blockOffsetCount === 0
+              ? "border-gray-200 bg-gray-50 text-gray-300 cursor-not-allowed"
+              : "border-rose-200 bg-rose-50/60 text-rose-700 hover:bg-rose-100"
+          }`}
+        >
+          <span className="flex items-center gap-2">
+            <span className="text-base leading-none">↺</span>
+            {S.resetAllOffsets ?? "复位所有板块位置"}
+          </span>
+          {blockOffsetCount > 0 && (
+            <span className="text-[0.6rem] font-mono px-1.5 py-px rounded-full bg-rose-100 text-rose-600">
+              {blockOffsetCount}
+            </span>
+          )}
+        </button>
+        <button
+          type="button"
+          disabled={customLabelCount === 0}
+          onClick={resetAllLabels}
+          title={S.resetAllLabelsHint ?? ""}
+          className={`w-full text-left px-2.5 py-1.5 rounded-lg border text-xs transition flex items-center justify-between ${
+            customLabelCount === 0
+              ? "border-gray-200 bg-gray-50 text-gray-300 cursor-not-allowed"
+              : "border-amber-200 bg-amber-50/60 text-amber-700 hover:bg-amber-100"
+          }`}
+        >
+          <span className="flex items-center gap-2">
+            <span className="text-base leading-none">↺</span>
+            {S.resetAllLabels ?? "恢复默认标题"}
+          </span>
+          {customLabelCount > 0 && (
+            <span className="text-[0.6rem] font-mono px-1.5 py-px rounded-full bg-amber-100 text-amber-700">
+              {customLabelCount}
+            </span>
+          )}
+        </button>
       </div>
 
       {/* Section visibility toggles — hide a section from the rendered
