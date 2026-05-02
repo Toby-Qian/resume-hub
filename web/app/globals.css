@@ -260,6 +260,24 @@ body {
 .resume-section h3 { break-after: avoid; page-break-after: avoid; }
 .page-break-before { break-before: page; page-break-before: always; }
 
+/* Tighten widow / orphan control. Bullets are the most common orphan
+   offender — a single bullet at the bottom of a printed page next to a
+   different entry's bullets above looks broken. `break-inside: avoid` keeps
+   each <li> together, and `orphans/widows: 3` asks the print engine for at
+   least 3 lines of any paragraph to stay with its neighbour.
+
+   `.draggable-block` covers section-level wrappers (work/projects/...) that
+   would otherwise split right after a heading even with the h2 rule above —
+   the wrapper is taller than just the heading. Browsers honour this for
+   blocks that fit on one page; oversize blocks fall back gracefully. */
+.resume-section li { break-inside: avoid; page-break-inside: avoid; }
+.resume-section p,
+.resume-section ul,
+.resume-section ol { orphans: 3; widows: 3; }
+.resume-section .resume-item + .resume-item { /* hint: keep adjacent items
+  from breaking mid-pair when both are tiny */ break-before: auto; }
+.draggable-block { break-inside: avoid; page-break-inside: avoid; }
+
 /* ---------- Mobile responsive tweaks ------------------------------------- */
 /* On phones we let the .paper keep its A4 width and allow horizontal scroll
    inside the preview pane — trying to shrink-to-fit tends to look bad and
@@ -719,6 +737,16 @@ body {
     margin: 0 !important;
   }
   .resume-section { break-inside: avoid !important; }
+  /* Print-grade pagination: enforce avoid rules with !important so template
+     specificity / utility classes can't override on paper. */
+  .resume-item,
+  .resume-section li,
+  .draggable-block { break-inside: avoid !important; page-break-inside: avoid !important; }
+  .resume-section h1,
+  .resume-section h2,
+  .resume-section h3 { break-after: avoid !important; page-break-after: avoid !important; }
+  /* Avatar / images never split */
+  img { break-inside: avoid !important; page-break-inside: avoid !important; }
 
   /* Print-only running footer: name + email + page numbers. Lives outside
      the .paper but inside .print-footer. position:fixed bottom anchors it
