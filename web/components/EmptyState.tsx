@@ -10,7 +10,7 @@ import { toast } from "@/lib/toast";
 export function EmptyState() {
   const { resume, lang, loadSample, setResume } = useStore();
   const L = t(lang);
-  const E = (L as any).empty ?? {};
+  const E = L.empty ?? {};
   const fileRef = useRef<HTMLInputElement>(null);
 
   const isEmpty =

@@ -9,7 +9,7 @@ import { DisclaimerModal } from "./DisclaimerModal";
 export function Footer() {
   const lang = useStore((s) => s.lang);
   const L = t(lang);
-  const F = (L as any).footer ?? {};
+  const F = L.footer ?? {};
   const [open, setOpen] = useState(false);
   return (
     <>

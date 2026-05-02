@@ -32,7 +32,7 @@ export function Completeness() {
   const resume = useStore((s) => s.resume);
   const lang = useStore((s) => s.lang);
   const L = t(lang);
-  const C = (L as any).completeness ?? {};
+  const C = L.completeness ?? {};
   const { pct, missing } = score(resume);
 
   const tone =

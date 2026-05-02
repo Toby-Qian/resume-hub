@@ -271,15 +271,15 @@ export function Editor() {
     update("basics", { ...resume.basics, [field]: value });
 
   // Stable strings to pass into module-scope sub-components.
-  const reorderHint = (L.actions as any).reorderHint ?? "拖动以排序 / drag to reorder";
-  const reorderSectionHint = ((L as any).style?.sectionOrderHint) ?? "拖动调整节区顺序";
+  const reorderHint = L.actions.reorderHint ?? "拖动以排序 / drag to reorder";
+  const reorderSectionHint = (L.style?.sectionOrderHint) ?? "拖动调整节区顺序";
   const onReorderSection = (fromKey: string, toKey: string) =>
     reorderSection(fromKey as SectionKey, toKey as SectionKey);
-  const customizedLabel = (L.actions as any).customized ?? "已自定义";
+  const customizedLabel = L.actions.customized ?? "已自定义";
   const isCustomized = (k: string) => !!(resume.customLabels && resume.customLabels[k]);
   const breakLabel  = L.form.breakBefore;
   const removeLabel = L.actions.remove;
-  const duplicateLabel = (L.actions as any).duplicate ?? "Duplicate";
+  const duplicateLabel = L.actions.duplicate ?? "Duplicate";
   const addLabel    = L.actions.add;
   const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const validateEmail = (v: string) => (!v || emailRe.test(v) ? null : L.form.invalidEmail);
@@ -291,11 +291,11 @@ export function Editor() {
           type="button"
           onClick={allCollapsed ? expandAll : collapseAll}
           className="text-[0.7rem] text-gray-500 hover:text-blue-600 transition px-2 py-1 rounded hover:bg-gray-50"
-          title={allCollapsed ? ((L.actions as any).expandAll ?? "Expand all") : ((L.actions as any).collapseAll ?? "Collapse all")}
+          title={allCollapsed ? (L.actions.expandAll ?? "Expand all") : (L.actions.collapseAll ?? "Collapse all")}
         >
           {allCollapsed
-            ? `▾ ${(L.actions as any).expandAll ?? "Expand all"}`
-            : `▴ ${(L.actions as any).collapseAll ?? "Collapse all"}`}
+            ? `▾ ${L.actions.expandAll ?? "Expand all"}`
+            : `▴ ${L.actions.collapseAll ?? "Collapse all"}`}
         </button>
       </div>
       <SectionTitle sectionKey="basics" open={isOpen("basics")} onToggle={() => toggle("basics")} addLabel={addLabel}>{L.sections.basics}</SectionTitle>
@@ -344,7 +344,7 @@ export function Editor() {
               const dataUrl = await compressToDataURL(f, { maxBytes: 700 * 1024, maxDim: 800 });
               patchBasics("avatar", dataUrl);
               if (f.size > 700 * 1024) {
-                toast.success((L.toast as any).imageCompressed ?? "已自动压缩图片");
+                toast.success(L.toast.imageCompressed ?? "已自动压缩图片");
               }
             } catch {
               toast.error(L.form.avatarTooLarge);
@@ -365,13 +365,13 @@ export function Editor() {
       {resume.basics.showAvatar && resume.basics.avatar && (
         <div className="border border-gray-200 rounded p-3 mb-3 bg-gray-50 space-y-2">
           <div>
-            <div className="text-[0.7rem] text-gray-600 mb-1">{(L.fields as any).avatarShape}</div>
+            <div className="text-[0.7rem] text-gray-600 mb-1">{L.fields.avatarShape}</div>
             <div className="flex flex-wrap gap-1">
               {([
-                ["circle", (L.fields as any).shapeCircle],
-                ["rounded", (L.fields as any).shapeRounded],
-                ["square", (L.fields as any).shapeSquare],
-                ["portrait", (L.fields as any).shapePortrait],
+                ["circle", L.fields.shapeCircle],
+                ["rounded", L.fields.shapeRounded],
+                ["square", L.fields.shapeSquare],
+                ["portrait", L.fields.shapePortrait],
               ] as const).map(([key, lbl]) => {
                 const active = (resume.basics.avatarShape || "circle") === key;
                 return (
@@ -386,7 +386,7 @@ export function Editor() {
           </div>
           <div>
             <div className="text-[0.7rem] text-gray-600 mb-1">
-              {(L.fields as any).avatarSize}: {resume.basics.avatarSize ?? 88}px
+              {L.fields.avatarSize}: {resume.basics.avatarSize ?? 88}px
             </div>
             <input
               type="range" min={48} max={160} step={4}
@@ -397,7 +397,7 @@ export function Editor() {
           </div>
           <div className="flex items-center justify-between text-[0.7rem] text-gray-600 pt-1 border-t border-gray-200">
             <span>
-              {(L.fields as any).avatarPositionHint}
+              {L.fields.avatarPositionHint}
               {((resume.basics.avatarOffsetX || 0) !== 0 || (resume.basics.avatarOffsetY || 0) !== 0) && (
                 <span className="ml-1 font-mono text-gray-500">
                   ({resume.basics.avatarOffsetX || 0}, {resume.basics.avatarOffsetY || 0})
@@ -408,7 +408,7 @@ export function Editor() {
               type="button"
               onClick={() => { patchBasics("avatarOffsetX", 0); patchBasics("avatarOffsetY", 0); }}
               className="px-2 py-0.5 rounded border border-gray-300 hover:bg-gray-100">
-              {(L.fields as any).avatarReset}
+              {L.fields.avatarReset}
             </button>
           </div>
         </div>
@@ -418,12 +418,12 @@ export function Editor() {
           only when at least one offset is non-zero, so 99% of users never see it. */}
       {resume.basics.blockOffsets && Object.values(resume.basics.blockOffsets).some((o: any) => (o?.x || 0) !== 0 || (o?.y || 0) !== 0) && (
         <div className="border border-amber-200 bg-amber-50 rounded-md p-2 text-[0.72rem] text-amber-900 flex items-center justify-between">
-          <span>{(L.fields as any).blockOffsetsNotice ?? "文本区块有拖动位移"}</span>
+          <span>{L.fields.blockOffsetsNotice ?? "文本区块有拖动位移"}</span>
           <button
             type="button"
             onClick={() => patchBasics("blockOffsets", {} as any)}
             className="px-2 py-0.5 rounded border border-amber-300 hover:bg-amber-100">
-            {(L.fields as any).blockOffsetsReset ?? "全部复位"}
+            {L.fields.blockOffsetsReset ?? "全部复位"}
           </button>
         </div>
       )}
@@ -449,8 +449,8 @@ export function Editor() {
             label={L.fields.highlights}
             value={w.highlights || []}
             onChange={(next) => patch("work", w.id, "highlights", next)}
-            placeholder={(L.fields as any).highlightPlaceholder ?? "一条职责或成果…"}
-            hint={(L.form as any).bulletsHint ?? "Enter 新增 · Backspace 删空行 · Alt+↑/↓ 调序"}
+            placeholder={L.fields.highlightPlaceholder ?? "一条职责或成果…"}
+            hint={L.form.bulletsHint ?? "Enter 新增 · Backspace 删空行 · Alt+↑/↓ 调序"}
           />
         </SortableCard>
       ))}
@@ -476,7 +476,7 @@ export function Editor() {
             value={e.courses || []}
             onChange={(next) => patch("education", e.id, "courses", next)}
             placeholder={L.fields.courses}
-            hint={(L.form as any).chipsHint ?? "Enter / 逗号 添加 · Backspace 移除"}
+            hint={L.form.chipsHint ?? "Enter / 逗号 添加 · Backspace 移除"}
           />
         </SortableCard>
       ))}
@@ -500,15 +500,15 @@ export function Editor() {
             label={L.fields.highlights}
             value={p.highlights || []}
             onChange={(next) => patch("projects", p.id, "highlights", next)}
-            placeholder={(L.fields as any).highlightPlaceholder ?? "一条职责或成果…"}
-            hint={(L.form as any).bulletsHint ?? "Enter 新增 · Backspace 删空行 · Alt+↑/↓ 调序"}
+            placeholder={L.fields.highlightPlaceholder ?? "一条职责或成果…"}
+            hint={L.form.bulletsHint ?? "Enter 新增 · Backspace 删空行 · Alt+↑/↓ 调序"}
           />
           <ChipsField
             label={L.fields.keywords}
             value={p.keywords || []}
             onChange={(next) => patch("projects", p.id, "keywords", next)}
             placeholder={L.fields.keywords}
-            hint={(L.form as any).chipsHint ?? "Enter / 逗号 添加 · Backspace 移除"}
+            hint={L.form.chipsHint ?? "Enter / 逗号 添加 · Backspace 移除"}
           />
         </SortableCard>
       ))}
@@ -530,7 +530,7 @@ export function Editor() {
               free-text `level` untouched for ATS/text export. */}
           <div className="flex items-center gap-2 mt-1.5 mb-1">
             <span className="text-[0.7rem] text-gray-500 select-none">
-              {(L.fields as any).levelValue ?? "等级 / Proficiency"}
+              {L.fields.levelValue ?? "等级 / Proficiency"}
             </span>
             <div className="inline-flex rounded-md border border-gray-200 overflow-hidden">
               {[0, 1, 2, 3, 4, 5].map((n) => {
@@ -558,7 +558,7 @@ export function Editor() {
             value={s.keywords || []}
             onChange={(next) => patch("skills", s.id, "keywords", next)}
             placeholder={L.fields.keywords}
-            hint={(L.form as any).chipsHint ?? "Enter / 逗号 添加 · Backspace 移除"}
+            hint={L.form.chipsHint ?? "Enter / 逗号 添加 · Backspace 移除"}
           />
         </SortableCard>
       ))}
@@ -599,7 +599,7 @@ export function Editor() {
           actively render these, but the editor exposes them universally so a
           user on, say, "modern" who switches to "academic-pub" later won't
           have to re-key data. Empty arrays are silently skipped by templates. */}
-      <SectionTitle sectionKey="publications" count={(resume.publications || []).length} open={isOpen("publications")} onToggle={() => toggle("publications")} addLabel={addLabel} onAdd={() => addItem("publications")} onReorderSection={onReorderSection} reorderSectionHint={reorderSectionHint} customized={isCustomized("publications")} customizedLabel={customizedLabel}>{(L.sections as any).publications}</SectionTitle>
+      <SectionTitle sectionKey="publications" count={(resume.publications || []).length} open={isOpen("publications")} onToggle={() => toggle("publications")} addLabel={addLabel} onAdd={() => addItem("publications")} onReorderSection={onReorderSection} reorderSectionHint={reorderSectionHint} customized={isCustomized("publications")} customizedLabel={customizedLabel}>{L.sections.publications}</SectionTitle>
       {isOpen("publications") && (resume.publications || []).map((p) => (
         <SortableCard key={p.id} section="publications" id={p.id}
           onRemove={() => removeItem("publications", p.id)}
@@ -607,19 +607,19 @@ export function Editor() {
           breakBefore={p.breakBefore}
           onToggleBreak={(v) => patch("publications", p.id, "breakBefore", v)}
           onReorder={reorderItem} reorderHint={reorderHint} breakLabel={breakLabel} removeLabel={removeLabel} duplicateLabel={duplicateLabel}>
-          <Field label={(L.fields as any).pubTitle} value={p.title} onChange={(v) => patch("publications", p.id, "title", v)} />
-          <Field label={(L.fields as any).pubAuthors} value={p.authors || ""} onChange={(v) => patch("publications", p.id, "authors", v)} />
+          <Field label={L.fields.pubTitle} value={p.title} onChange={(v) => patch("publications", p.id, "title", v)} />
+          <Field label={L.fields.pubAuthors} value={p.authors || ""} onChange={(v) => patch("publications", p.id, "authors", v)} />
           <div className="grid grid-cols-2 gap-x-3">
-            <Field label={(L.fields as any).pubVenue} value={p.venue || ""} onChange={(v) => patch("publications", p.id, "venue", v)} />
+            <Field label={L.fields.pubVenue} value={p.venue || ""} onChange={(v) => patch("publications", p.id, "venue", v)} />
             <DateField label={L.fields.date} value={p.date || ""} onChange={(v) => patch("publications", p.id, "date", v)} />
-            <Field label={(L.fields as any).pubDoi} value={p.doi || ""} onChange={(v) => patch("publications", p.id, "doi", v)} />
+            <Field label={L.fields.pubDoi} value={p.doi || ""} onChange={(v) => patch("publications", p.id, "doi", v)} />
             <Field label={L.fields.url} value={p.url || ""} onChange={(v) => patch("publications", p.id, "url", v)} />
           </div>
           <Field label={L.fields.summary} value={p.summary || ""} onChange={(v) => patch("publications", p.id, "summary", v)} />
         </SortableCard>
       ))}
 
-      <SectionTitle sectionKey="talks" count={(resume.talks || []).length} open={isOpen("talks")} onToggle={() => toggle("talks")} addLabel={addLabel} onAdd={() => addItem("talks")} onReorderSection={onReorderSection} reorderSectionHint={reorderSectionHint} customized={isCustomized("talks")} customizedLabel={customizedLabel}>{(L.sections as any).talks}</SectionTitle>
+      <SectionTitle sectionKey="talks" count={(resume.talks || []).length} open={isOpen("talks")} onToggle={() => toggle("talks")} addLabel={addLabel} onAdd={() => addItem("talks")} onReorderSection={onReorderSection} reorderSectionHint={reorderSectionHint} customized={isCustomized("talks")} customizedLabel={customizedLabel}>{L.sections.talks}</SectionTitle>
       {isOpen("talks") && (resume.talks || []).map((tk) => (
         <SortableCard key={tk.id} section="talks" id={tk.id}
           onRemove={() => removeItem("talks", tk.id)}
@@ -627,9 +627,9 @@ export function Editor() {
           breakBefore={tk.breakBefore}
           onToggleBreak={(v) => patch("talks", tk.id, "breakBefore", v)}
           onReorder={reorderItem} reorderHint={reorderHint} breakLabel={breakLabel} removeLabel={removeLabel} duplicateLabel={duplicateLabel}>
-          <Field label={(L.fields as any).talkTitle} value={tk.title} onChange={(v) => patch("talks", tk.id, "title", v)} />
+          <Field label={L.fields.talkTitle} value={tk.title} onChange={(v) => patch("talks", tk.id, "title", v)} />
           <div className="grid grid-cols-2 gap-x-3">
-            <Field label={(L.fields as any).talkVenue} value={tk.venue || ""} onChange={(v) => patch("talks", tk.id, "venue", v)} />
+            <Field label={L.fields.talkVenue} value={tk.venue || ""} onChange={(v) => patch("talks", tk.id, "venue", v)} />
             <DateField label={L.fields.date} value={tk.date || ""} onChange={(v) => patch("talks", tk.id, "date", v)} />
             <Field label={L.fields.location} value={tk.location || ""} onChange={(v) => patch("talks", tk.id, "location", v)} />
             <Field label={L.fields.url} value={tk.url || ""} onChange={(v) => patch("talks", tk.id, "url", v)} />
@@ -637,7 +637,7 @@ export function Editor() {
         </SortableCard>
       ))}
 
-      <SectionTitle sectionKey="teaching" count={(resume.teaching || []).length} open={isOpen("teaching")} onToggle={() => toggle("teaching")} addLabel={addLabel} onAdd={() => addItem("teaching")} onReorderSection={onReorderSection} reorderSectionHint={reorderSectionHint} customized={isCustomized("teaching")} customizedLabel={customizedLabel}>{(L.sections as any).teaching}</SectionTitle>
+      <SectionTitle sectionKey="teaching" count={(resume.teaching || []).length} open={isOpen("teaching")} onToggle={() => toggle("teaching")} addLabel={addLabel} onAdd={() => addItem("teaching")} onReorderSection={onReorderSection} reorderSectionHint={reorderSectionHint} customized={isCustomized("teaching")} customizedLabel={customizedLabel}>{L.sections.teaching}</SectionTitle>
       {isOpen("teaching") && (resume.teaching || []).map((tg) => (
         <SortableCard key={tg.id} section="teaching" id={tg.id}
           onRemove={() => removeItem("teaching", tg.id)}
@@ -646,9 +646,9 @@ export function Editor() {
           onToggleBreak={(v) => patch("teaching", tg.id, "breakBefore", v)}
           onReorder={reorderItem} reorderHint={reorderHint} breakLabel={breakLabel} removeLabel={removeLabel} duplicateLabel={duplicateLabel}>
           <div className="grid grid-cols-2 gap-x-3">
-            <Field label={(L.fields as any).teachCourse} value={tg.course} onChange={(v) => patch("teaching", tg.id, "course", v)} />
-            <Field label={(L.fields as any).teachInstitution} value={tg.institution || ""} onChange={(v) => patch("teaching", tg.id, "institution", v)} />
-            <Field label={(L.fields as any).teachRole} value={tg.role || ""} onChange={(v) => patch("teaching", tg.id, "role", v)} />
+            <Field label={L.fields.teachCourse} value={tg.course} onChange={(v) => patch("teaching", tg.id, "course", v)} />
+            <Field label={L.fields.teachInstitution} value={tg.institution || ""} onChange={(v) => patch("teaching", tg.id, "institution", v)} />
+            <Field label={L.fields.teachRole} value={tg.role || ""} onChange={(v) => patch("teaching", tg.id, "role", v)} />
             <Field label={L.fields.summary} value={tg.summary || ""} onChange={(v) => patch("teaching", tg.id, "summary", v)} />
             <DateField label={L.fields.startDate} value={tg.startDate || ""} onChange={(v) => patch("teaching", tg.id, "startDate", v)} />
             <DateField label={L.fields.endDate} value={tg.endDate || ""} allowPresent onChange={(v) => patch("teaching", tg.id, "endDate", v)} />

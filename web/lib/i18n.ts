@@ -355,4 +355,19 @@ export const T = {
   },
 } as const;
 
-export const t = (lang: UILang) => T[lang];
+/**
+ * Recursively widen a literal-typed dict so every nested object also accepts
+ * arbitrary string keys (returning `any`). Use case: the i18n table is
+ * declared `as const`, which gives nice autocomplete on known keys but errors
+ * on lookups for keys that exist in only one language or were added late.
+ *
+ * `DeepLoose<typeof T.en>` keeps the literal shape (autocomplete still works
+ * for `L.actions.undo`) AND adds an index signature so `L.actions.reorderHint`
+ * type-checks even when TS can't see the key in this branch — falling back to
+ * `any`. Pair with `?? "fallback"` at call sites to keep runtime safe.
+ */
+type DeepLoose<T> = T extends object
+  ? { [K in keyof T]: DeepLoose<T[K]> } & { [k: string]: any }
+  : T;
+export const t = (lang: UILang): DeepLoose<typeof T.en> =>
+  T[lang] as DeepLoose<typeof T.en>;

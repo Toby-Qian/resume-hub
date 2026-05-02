@@ -85,7 +85,7 @@ export function StylePanel() {
           resume, setResume } = useStore();
   const blockOffsetCount = Object.keys(resume.basics.blockOffsets || {}).length;
   const customLabelCount = Object.keys(resume.customLabels || {}).filter(
-    (k) => (resume.customLabels as any)[k]
+    (k) => resume.customLabels?.[k]
   ).length;
   const resetAllOffsets = () => {
     if (blockOffsetCount === 0) return;
@@ -96,8 +96,8 @@ export function StylePanel() {
     setResume({ ...resume, customLabels: {} });
   };
   const L = t(lang);
-  const S = (L as any).style ?? {};
-  const E = (L as any).exportMenu ?? {};
+  const S = L.style ?? {};
+  const E = L.exportMenu ?? {};
   const onResetTheme = () => setTheme({ ...defaultTheme });
   const currentMargin = normalizeMargin(pageSetup.margin);
   const setMargin = (mm: number) =>
@@ -273,7 +273,7 @@ export function StylePanel() {
       {/* Line height — body & list-item line-height (unitless) ------------ */}
       <div>
         <div className="text-xs font-semibold uppercase text-gray-500 mb-2">
-          {(L.theme as any).lineHeight ?? "行间距"} — {(theme.lineHeight ?? 1.55).toFixed(2)}
+          {L.theme.lineHeight ?? "行间距"} — {(theme.lineHeight ?? 1.55).toFixed(2)}
         </div>
         <input
           type="range"
@@ -305,39 +305,39 @@ export function StylePanel() {
       <div>
         <div className="flex items-center justify-between mb-2">
           <div className="text-xs font-semibold uppercase text-gray-500">
-            {(L.theme as any).bullet ?? "项目符号"}
+            {L.theme.bullet ?? "项目符号"}
           </div>
           {/* Independent bullet color — falls back to accent when unset. */}
           <div className="flex items-center gap-1.5">
             <span className="text-[0.65rem] text-gray-500">
-              {(L.theme as any).bulletColor ?? "颜色"}
+              {L.theme.bulletColor ?? "颜色"}
             </span>
             <input
               type="color"
               value={theme.bulletColor ?? theme.accent}
               onChange={(e) => setTheme({ bulletColor: e.target.value })}
               className="w-6 h-6 rounded border border-gray-300 cursor-pointer p-0"
-              title={(L.theme as any).bulletColor ?? "项目符号颜色"}
+              title={L.theme.bulletColor ?? "项目符号颜色"}
             />
             {theme.bulletColor && (
               <button
                 type="button"
                 onClick={() => setTheme({ bulletColor: undefined })}
                 className="text-[0.65rem] text-gray-400 hover:text-gray-600 underline"
-                title={(L.theme as any).bulletColorReset ?? "跟随主色"}
+                title={L.theme.bulletColorReset ?? "跟随主色"}
               >
-                {(L.theme as any).bulletColorReset ?? "跟随主色"}
+                {L.theme.bulletColorReset ?? "跟随主色"}
               </button>
             )}
           </div>
         </div>
         <div className="grid grid-cols-5 gap-1">
           {([
-            { id: "disc",   glyph: "•",  label: (L.theme as any).bulletDisc   ?? "圆点" },
-            { id: "circle", glyph: "○",  label: (L.theme as any).bulletCircle ?? "空心" },
-            { id: "square", glyph: "■",  label: (L.theme as any).bulletSquare ?? "方块" },
-            { id: "dash",   glyph: "—",  label: (L.theme as any).bulletDash   ?? "破折号" },
-            { id: "none",   glyph: "∅",  label: (L.theme as any).bulletNone   ?? "无" },
+            { id: "disc",   glyph: "•",  label: L.theme.bulletDisc   ?? "圆点" },
+            { id: "circle", glyph: "○",  label: L.theme.bulletCircle ?? "空心" },
+            { id: "square", glyph: "■",  label: L.theme.bulletSquare ?? "方块" },
+            { id: "dash",   glyph: "—",  label: L.theme.bulletDash   ?? "破折号" },
+            { id: "none",   glyph: "∅",  label: L.theme.bulletNone   ?? "无" },
           ] as const).map((b) => {
             const active = (theme.bulletStyle ?? "disc") === b.id;
             return (

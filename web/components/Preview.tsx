@@ -121,7 +121,7 @@ export function Preview() {
       addImageNote(dataUrl);
       // Quietly let the user know if we compressed (helps debug "image looks soft").
       if (f.size > 700 * 1024) {
-        toast.success((L.toast as any).imageCompressed ?? `已自动压缩图片 (${(f.size / 1024 / 1024).toFixed(1)} MB → 已优化)`);
+        toast.success(L.toast.imageCompressed ?? `已自动压缩图片 (${(f.size / 1024 / 1024).toFixed(1)} MB → 已优化)`);
       }
     } catch {
       toast.error(L.form.avatarTooLarge);
@@ -146,7 +146,7 @@ export function Preview() {
             try {
               const dataUrl = await compressToDataURL(file);
               addImageNote(dataUrl);
-              toast.success((L.preview as any).pastedImage ?? "已粘贴图片");
+              toast.success(L.preview.pastedImage ?? "已粘贴图片");
             } catch {
               toast.error(L.form.avatarTooLarge);
             }
@@ -233,19 +233,19 @@ export function Preview() {
           type="button"
           onClick={addNote}
           className="text-xs px-3 py-1 rounded-full border border-amber-300 bg-amber-50 text-amber-800 hover:bg-amber-100 transition flex items-center gap-1"
-          title={(L.preview as any).addNoteHint ?? "在简历上添加一个自由文本框"}
+          title={L.preview.addNoteHint ?? "在简历上添加一个自由文本框"}
         >
           <span className="text-amber-600">＋</span>
-          {(L.preview as any).addNote ?? "文本框"}
+          {L.preview.addNote ?? "文本框"}
         </button>
         <button
           type="button"
           onClick={() => imgRef.current?.click()}
           className="text-xs px-3 py-1 rounded-full border border-amber-300 bg-amber-50 text-amber-800 hover:bg-amber-100 transition flex items-center gap-1"
-          title={(L.preview as any).addImageHint ?? "在简历上插入一张图片（可拖动、缩放）"}
+          title={L.preview.addImageHint ?? "在简历上插入一张图片（可拖动、缩放）"}
         >
           <span className="text-amber-600">＋</span>
-          {(L.preview as any).addImage ?? "图片"}
+          {L.preview.addImage ?? "图片"}
         </button>
         <input ref={imgRef} type="file" accept="image/*" className="hidden"
           onChange={(e) => { const f = e.target.files?.[0]; if (f) onPickImage(f); e.target.value = ""; }} />
@@ -253,38 +253,38 @@ export function Preview() {
           type="button"
           onClick={() => addShapeNote("line")}
           className="text-xs px-2 py-1 rounded-full border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 transition"
-          title={(L.preview as any).addLineHint ?? "插入分隔线"}
+          title={L.preview.addLineHint ?? "插入分隔线"}
         >─</button>
         <button
           type="button"
           onClick={() => addShapeNote("rect")}
           className="text-xs px-2 py-1 rounded-full border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 transition"
-          title={(L.preview as any).addRectHint ?? "插入矩形"}
+          title={L.preview.addRectHint ?? "插入矩形"}
         >▭</button>
         <button
           type="button"
           onClick={() => addShapeNote("circle")}
           className="text-xs px-2 py-1 rounded-full border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 transition"
-          title={(L.preview as any).addCircleHint ?? "插入圆"}
+          title={L.preview.addCircleHint ?? "插入圆"}
         >○</button>
         <span className="w-px h-4 bg-gray-200 mx-1" />
         <button type="button" onClick={() => setZoomClamped(zoom / 1.1)}
           className="text-xs w-6 h-6 rounded-full border border-gray-300 bg-white text-gray-600 hover:bg-gray-100 transition flex items-center justify-center"
-          title={(L.preview as any).zoomOutHint ?? "缩小 (Ctrl+-)"} aria-label="zoom out">−</button>
+          title={L.preview.zoomOutHint ?? "缩小 (Ctrl+-)"} aria-label="zoom out">−</button>
         <button type="button" onClick={() => setZoom(1)}
           className="text-[0.65rem] px-2 h-6 rounded-full border border-gray-300 bg-white text-gray-700 hover:bg-gray-100 transition font-mono w-12 text-center"
-          title={(L.preview as any).zoomResetHint ?? "重置 (Ctrl+0)"}>{Math.round(zoom * 100)}%</button>
+          title={L.preview.zoomResetHint ?? "重置 (Ctrl+0)"}>{Math.round(zoom * 100)}%</button>
         <button type="button" onClick={() => setZoomClamped(zoom * 1.1)}
           className="text-xs w-6 h-6 rounded-full border border-gray-300 bg-white text-gray-600 hover:bg-gray-100 transition flex items-center justify-center"
-          title={(L.preview as any).zoomInHint ?? "放大 (Ctrl++)"} aria-label="zoom in">+</button>
+          title={L.preview.zoomInHint ?? "放大 (Ctrl++)"} aria-label="zoom in">+</button>
         <span className="w-px h-4 bg-gray-200 mx-1" />
         <span
           className="text-[0.65rem] px-2 h-6 rounded-full border border-gray-200 bg-gray-50 text-gray-600 font-mono flex items-center gap-1"
-          title={(L.preview as any).pageCountHint ?? "当前页数（按 A4 / Letter 计算）"}
+          title={L.preview.pageCountHint ?? "当前页数（按 A4 / Letter 计算）"}
         >
           <span className="text-gray-400">📄</span>
           <span>
-            {((L.preview as any).pages ?? "{m} 页").replace("{m}", String(totalPages))}
+            {(L.preview.pages ?? "{m} 页").replace("{m}", String(totalPages))}
           </span>
         </span>
         {/* Single second-page toggle — capped at 2. Active styling makes the
@@ -299,16 +299,16 @@ export function Preview() {
           }`}
           title={
             secondPage
-              ? ((L.preview as any).disableSecondPageHint ?? "关闭第 2 页画布")
-              : ((L.preview as any).enableSecondPageHint ?? "启用第 2 页画布 — 内容超出第 1 页时自动流到第 2 页，也可往上面拖文本框/图片/形状")
+              ? (L.preview.disableSecondPageHint ?? "关闭第 2 页画布")
+              : (L.preview.enableSecondPageHint ?? "启用第 2 页画布 — 内容超出第 1 页时自动流到第 2 页，也可往上面拖文本框/图片/形状")
           }
           aria-pressed={secondPage}
         >
           {secondPage ? <span>✓</span> : <span className="text-blue-600">＋</span>}
           <span>
             {secondPage
-              ? ((L.preview as any).secondPageOn ?? "第 2 页已启用")
-              : ((L.preview as any).enableSecondPage ?? "启用第 2 页")}
+              ? (L.preview.secondPageOn ?? "第 2 页已启用")
+              : (L.preview.enableSecondPage ?? "启用第 2 页")}
           </span>
         </button>
         <span className="w-px h-4 bg-gray-200 mx-1" />
@@ -316,7 +316,7 @@ export function Preview() {
           type="button"
           onClick={() => setShowHelp((v) => !v)}
           className="text-xs w-6 h-6 rounded-full border border-gray-300 bg-white text-gray-600 hover:bg-gray-100 transition flex items-center justify-center"
-          title={(L.preview as any).helpHint ?? "查看快捷键 (?)"}
+          title={L.preview.helpHint ?? "查看快捷键 (?)"}
           aria-label="show shortcuts"
         >
           ?
@@ -374,7 +374,7 @@ export function Preview() {
             <>
               <div className="page-break-overlay" style={{ top: 0 }} aria-hidden>
                 <span className="page-break-label page-break-label--page1">
-                  {(L.preview as any).pageLabel?.replace("{n}", "1").replace("{m}", String(totalPages)) ?? `Page 1 / ${totalPages}`}
+                  {L.preview.pageLabel?.replace("{n}", "1").replace("{m}", String(totalPages)) ?? `Page 1 / ${totalPages}`}
                 </span>
               </div>
               {Array.from({ length: Math.min(20, Math.max(0, totalPages - 1)) }).map((_, i) => (
@@ -385,7 +385,7 @@ export function Preview() {
                   aria-hidden
                 >
                   <span className="page-break-label">
-                    {(L.preview as any).pageLabel?.replace("{n}", String(i + 2)).replace("{m}", String(totalPages)) ?? `Page ${i + 2} / ${totalPages}`}
+                    {L.preview.pageLabel?.replace("{n}", String(i + 2)).replace("{m}", String(totalPages)) ?? `Page ${i + 2} / ${totalPages}`}
                   </span>
                 </div>
               ))}
@@ -412,9 +412,9 @@ export function Preview() {
       {/* @page rules are injected once via useEffect to <head> (see above)
           to avoid Edge's print preview hanging on JSX-driven re-injection. */}
       <div className="text-[0.7rem] text-gray-400 mt-2 mb-4 px-4 text-center max-w-[794px] no-print space-y-0.5">
-        <div>{(L.preview as any).editHint ?? "点击任意文字即可在预览中直接编辑；悬停文本区块左侧可拖动整段位置"}</div>
-        <div>{(L.preview as any).noteHint ?? "文本框 / 图片：点击选中，拖动或 Alt+拖移动，方向键微移，Delete 删除，Ctrl+D 复制"}</div>
-        <div>{(L.preview as any).pasteHint ?? "Ctrl+V 直接粘贴剪贴板里的图片到画布；按 ? 查看全部快捷键"}</div>
+        <div>{L.preview.editHint ?? "点击任意文字即可在预览中直接编辑；悬停文本区块左侧可拖动整段位置"}</div>
+        <div>{L.preview.noteHint ?? "文本框 / 图片：点击选中，拖动或 Alt+拖移动，方向键微移，Delete 删除，Ctrl+D 复制"}</div>
+        <div>{L.preview.pasteHint ?? "Ctrl+V 直接粘贴剪贴板里的图片到画布；按 ? 查看全部快捷键"}</div>
         <div>{L.preview.pageHint}</div>
       </div>
       {showHelp && <HelpOverlay lang={lang} onClose={() => setShowHelp(false)} />}

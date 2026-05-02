@@ -9,7 +9,7 @@ import { t } from "@/lib/i18n";
 export function ExportMenu() {
   const { lang, pageSetup, setPageSetup } = useStore();
   const L = t(lang);
-  const E = (L as any).exportMenu ?? {};
+  const E = L.exportMenu ?? {};
   const [open, setOpen] = useState(false);
   const wrapRef = useRef<HTMLDivElement>(null);
 

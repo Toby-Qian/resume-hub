@@ -97,10 +97,10 @@ export function Toolbar() {
   }, []);
   const savedLabel = useMemo(() => {
     const diff = Math.max(0, Math.floor((now - savedAt) / 1000));
-    if (diff < 5)  return (L.actions as any).savedJustNow ?? "Saved";
-    if (diff < 60) return ((L.actions as any).savedSecondsAgo ?? "Saved {n}s ago").replace("{n}", String(diff));
+    if (diff < 5)  return L.actions.savedJustNow ?? "Saved";
+    if (diff < 60) return (L.actions.savedSecondsAgo ?? "Saved {n}s ago").replace("{n}", String(diff));
     const m = Math.floor(diff / 60);
-    return ((L.actions as any).savedMinutesAgo ?? "Saved {n}m ago").replace("{n}", String(m));
+    return (L.actions.savedMinutesAgo ?? "Saved {n}m ago").replace("{n}", String(m));
   }, [savedAt, now, L]);
 
   return (
@@ -119,13 +119,13 @@ export function Toolbar() {
     <div className="flex flex-wrap items-center gap-2">
       <div className="inline-flex items-center rounded-lg border border-gray-200 bg-white overflow-hidden mr-1">
         <button onClick={undo} disabled={!canUndo}
-          title={`${(L.actions as any).undo ?? "撤销"} (Ctrl+Z)`}
+          title={`${L.actions.undo ?? "撤销"} (Ctrl+Z)`}
           className={`text-xs px-2 py-1.5 transition ${canUndo ? "text-gray-700 hover:bg-gray-50" : "text-gray-300 cursor-not-allowed"}`}>
           ↶
         </button>
         <span className="w-px h-4 bg-gray-200" />
         <button onClick={redo} disabled={!canRedo}
-          title={`${(L.actions as any).redo ?? "重做"} (Ctrl+Shift+Z)`}
+          title={`${L.actions.redo ?? "重做"} (Ctrl+Shift+Z)`}
           className={`text-xs px-2 py-1.5 transition ${canRedo ? "text-gray-700 hover:bg-gray-50" : "text-gray-300 cursor-not-allowed"}`}>
           ↷
         </button>
@@ -137,7 +137,7 @@ export function Toolbar() {
       <ExportMenu />
       <button
         onClick={togglePreviewMode}
-        title={(L.actions as any).previewModeHint ?? "切换预览/编辑模式 — 隐藏所有编辑提示，让画布看起来像最终 PDF"}
+        title={L.actions.previewModeHint ?? "切换预览/编辑模式 — 隐藏所有编辑提示，让画布看起来像最终 PDF"}
         className={`text-xs px-3 py-1.5 rounded-lg border transition-all flex items-center gap-1.5 ${
           previewMode
             ? "bg-violet-600 text-white border-violet-600 hover:bg-violet-700 shadow-sm"
@@ -146,8 +146,8 @@ export function Toolbar() {
       >
         <span className="text-[0.85em] opacity-90">{previewMode ? "👁" : "✎"}</span>
         {previewMode
-          ? ((L.actions as any).previewMode ?? "预览模式")
-          : ((L.actions as any).editMode ?? "编辑模式")}
+          ? (L.actions.previewMode ?? "预览模式")
+          : (L.actions.editMode ?? "编辑模式")}
       </button>
       <div className="ml-auto inline-flex items-center bg-gray-100 rounded-lg p-0.5">
         <button onClick={() => setLang("zh")}
@@ -164,10 +164,10 @@ export function Toolbar() {
     </div>
     <ConfirmModal
       open={resetOpen}
-      title={(L.actions as any).reset ?? "清空"}
-      message={(L.form as any).confirmReset}
-      confirmLabel={(L.actions as any).reset ?? "清空"}
-      cancelLabel={(L.form as any).cancel ?? "取消"}
+      title={L.actions.reset ?? "清空"}
+      message={L.form.confirmReset}
+      confirmLabel={L.actions.reset ?? "清空"}
+      cancelLabel={L.form.cancel ?? "取消"}
       tone="danger"
       onConfirm={doReset}
       onClose={() => setResetOpen(false)}

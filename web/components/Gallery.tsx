@@ -273,7 +273,7 @@ export function Gallery() {
       </div>
       <div className="flex flex-wrap gap-2 items-center mb-4">
         <span className="text-xs text-gray-500">{L.gallery.filterLang}:</span>
-        {LANGS.map((s) => <Pill key={s} active={flang === s} onClick={() => setFLang(s)}>{(L.gallery as any)[s] ?? s}</Pill>)}
+        {LANGS.map((s) => <Pill key={s} active={flang === s} onClick={() => setFLang(s)}>{L.gallery[s] ?? s}</Pill>)}
         <input value={q} onChange={(e) => setQ(e.target.value)} placeholder={L.gallery.search}
           className="ml-auto border rounded px-3 py-1.5 text-xs w-full sm:w-72" />
       </div>
