@@ -366,14 +366,21 @@ export function StylePanel() {
                 if (!e.dataTransfer.types.includes("text/x-section-key")) return;
                 e.preventDefault();
                 e.dataTransfer.dropEffect = "move";
-                (e.currentTarget as HTMLElement).classList.add("ring-2", "ring-amber-400");
+                const el = e.currentTarget as HTMLElement;
+                const rect = el.getBoundingClientRect();
+                const top = e.clientY < rect.top + rect.height / 2;
+                el.classList.add("drop-indicator");
+                el.classList.toggle("drop-indicator-top", top);
+                el.classList.toggle("drop-indicator-bottom", !top);
               }}
               onDragLeave={(e) => {
-                (e.currentTarget as HTMLElement).classList.remove("ring-2", "ring-amber-400");
+                const el = e.currentTarget as HTMLElement;
+                el.classList.remove("drop-indicator", "drop-indicator-top", "drop-indicator-bottom");
               }}
               onDrop={(e) => {
                 e.preventDefault();
-                (e.currentTarget as HTMLElement).classList.remove("ring-2", "ring-amber-400");
+                const el = e.currentTarget as HTMLElement;
+                el.classList.remove("drop-indicator", "drop-indicator-top", "drop-indicator-bottom");
                 const fromKey = e.dataTransfer.getData("text/x-section-key");
                 if (!fromKey || fromKey === k) return;
                 reorderSection(fromKey as any, k);

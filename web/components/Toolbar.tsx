@@ -81,7 +81,16 @@ export function Toolbar() {
   // timestamp of the last change; tick a clock so the relative label updates.
   const [savedAt, setSavedAt] = useState<number>(() => Date.now());
   const [now, setNow] = useState(() => Date.now());
-  useEffect(() => { setSavedAt(Date.now()); }, [resume]);
+  // `pulseKey` bumps each time we save — used to retrigger the CSS pulse
+  // animation by remounting via React `key`.
+  const [pulseKey, setPulseKey] = useState(0);
+  // First effect run is on mount, not a real save — skip the pulse there.
+  const firstSave = useRef(true);
+  useEffect(() => {
+    setSavedAt(Date.now());
+    if (firstSave.current) { firstSave.current = false; return; }
+    setPulseKey((k) => k + 1);
+  }, [resume]);
   useEffect(() => {
     const t = setInterval(() => setNow(Date.now()), 15_000);
     return () => clearInterval(t);
@@ -99,7 +108,8 @@ export function Toolbar() {
     <div className="flex items-center justify-between gap-2">
       <div className="flex-1"><Completeness /></div>
       <span
-        className="shrink-0 inline-flex items-center gap-1 text-[0.65rem] text-emerald-700 bg-emerald-50 border border-emerald-200/70 rounded-full px-2 py-0.5"
+        key={pulseKey}
+        className="saved-pulse shrink-0 inline-flex items-center gap-1 text-[0.65rem] text-emerald-700 bg-emerald-50 border border-emerald-200/70 rounded-full px-2 py-0.5"
         title={L.footer.privacy}
       >
         <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />

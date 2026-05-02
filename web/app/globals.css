@@ -11,7 +11,85 @@
 }
 
 html, body { height: 100%; }
-body { background: #f3f4f6; color: #111827; font-family: var(--resume-font-sans); }
+body {
+  background:
+    radial-gradient(1100px 600px at 8% -10%, rgba(59, 130, 246, 0.06), transparent 60%),
+    radial-gradient(900px 500px at 105% 5%, rgba(168, 85, 247, 0.05), transparent 55%),
+    #f4f5f7;
+  color: #111827;
+  font-family: var(--resume-font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ---------- Custom scrollbars (subtle, only on hover) -------------------- */
+@media (pointer: fine) {
+  .pane-editor::-webkit-scrollbar,
+  .pane-style::-webkit-scrollbar,
+  .pane-preview::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  .pane-editor::-webkit-scrollbar-thumb,
+  .pane-style::-webkit-scrollbar-thumb,
+  .pane-preview::-webkit-scrollbar-thumb {
+    background: transparent;
+    border: 2px solid transparent;
+    border-radius: 999px;
+    background-clip: padding-box;
+    transition: background-color 0.2s;
+  }
+  .pane-editor:hover::-webkit-scrollbar-thumb,
+  .pane-style:hover::-webkit-scrollbar-thumb,
+  .pane-preview:hover::-webkit-scrollbar-thumb {
+    background-color: rgba(15, 23, 42, 0.18);
+  }
+  .pane-editor::-webkit-scrollbar-thumb:hover,
+  .pane-style::-webkit-scrollbar-thumb:hover,
+  .pane-preview::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(15, 23, 42, 0.32);
+  }
+  .pane-editor::-webkit-scrollbar-track,
+  .pane-style::-webkit-scrollbar-track,
+  .pane-preview::-webkit-scrollbar-track {
+    background: transparent;
+  }
+}
+
+/* ---------- Global focus-visible styling --------------------------------- */
+*:focus-visible {
+  outline: 2px solid rgba(59, 130, 246, 0.55);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* ---------- Saved-indicator pulse: short ping when something changed ---- */
+@keyframes saved-pulse {
+  0%   { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.45); }
+  70%  { box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+}
+.saved-pulse { animation: saved-pulse 0.9s ease-out; }
+
+/* ---------- Drop indicator (single horizontal bar) ----------------------- */
+/* Used by Editor SortableCard and StylePanel section-order list to show
+   the user *where* a dragged item will land instead of a vague ring. */
+.drop-indicator {
+  position: relative;
+}
+.drop-indicator::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(to right, #f59e0b, #ef4444);
+  border-radius: 2px;
+  pointer-events: none;
+  box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.18);
+}
+.drop-indicator-top::before { top: -4px; }
+.drop-indicator-bottom::before { bottom: -4px; }
 
 /* ---------- Paper (A4 default; Letter via .paper-letter) ----------------- */
 /* A4:     794 × 1123 px at 96dpi ≈ 210 × 297 mm                             */
@@ -41,7 +119,12 @@ body { background: #f3f4f6; color: #111827; font-family: var(--resume-font-sans)
   width: var(--page-w);
   min-height: var(--page-h);
   background: white;
-  box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+  /* Layered shadow: a tight contact shadow + a softer ambient one + a 1px
+     hairline so the paper edge reads cleanly on any background. */
+  box-shadow:
+    0 1px 0 rgba(15, 23, 42, 0.04),
+    0 2px 6px rgba(15, 23, 42, 0.06),
+    0 18px 42px -12px rgba(15, 23, 42, 0.18);
   font-size: calc(14px * var(--resume-font-scale));
   line-height: var(--resume-line-height);
   color: #111827;

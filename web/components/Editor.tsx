@@ -83,14 +83,21 @@ const SortableCard = ({
     if (!e.dataTransfer.types.includes("text/x-resume-item")) return;
     e.preventDefault();
     e.dataTransfer.dropEffect = "move";
-    (e.currentTarget as HTMLElement).classList.add("ring-2", "ring-amber-400");
+    const el = e.currentTarget as HTMLElement;
+    const rect = el.getBoundingClientRect();
+    const top = e.clientY < rect.top + rect.height / 2;
+    el.classList.add("drop-indicator");
+    el.classList.toggle("drop-indicator-top", top);
+    el.classList.toggle("drop-indicator-bottom", !top);
   };
   const onDragLeave = (e: React.DragEvent) => {
-    (e.currentTarget as HTMLElement).classList.remove("ring-2", "ring-amber-400");
+    const el = e.currentTarget as HTMLElement;
+    el.classList.remove("drop-indicator", "drop-indicator-top", "drop-indicator-bottom");
   };
   const onDrop = (e: React.DragEvent) => {
     e.preventDefault();
-    (e.currentTarget as HTMLElement).classList.remove("ring-2", "ring-amber-400");
+    const el = e.currentTarget as HTMLElement;
+    el.classList.remove("drop-indicator", "drop-indicator-top", "drop-indicator-bottom");
     const raw = e.dataTransfer.getData("text/x-resume-item");
     if (!raw) return;
     const [srcSection, srcId] = raw.split(":");
@@ -143,20 +150,69 @@ interface SectionTitleProps {
   open: boolean;
   onToggle?: () => void;
   addLabel: string;
+  /** When provided, this section participates in section-order DnD. */
+  onReorderSection?: (fromKey: string, toKey: string) => void;
+  reorderSectionHint?: string;
 }
 
-const SectionTitle = ({ children, onAdd, sectionKey, count, open, onToggle, addLabel }: SectionTitleProps) => {
+const SectionTitle = ({
+  children, onAdd, sectionKey, count, open, onToggle, addLabel,
+  onReorderSection, reorderSectionHint,
+}: SectionTitleProps) => {
   const collapsible = !!sectionKey;
   const icon = sectionKey ? SECTION_ICONS[sectionKey] : null;
+  const reorderable = !!onReorderSection && !!sectionKey;
+
+  const onDragStart = (e: React.DragEvent) => {
+    e.dataTransfer.setData("text/x-section-key", sectionKey!);
+    e.dataTransfer.effectAllowed = "move";
+    e.stopPropagation();
+  };
+  const onDragOver = (e: React.DragEvent) => {
+    if (!reorderable) return;
+    if (!e.dataTransfer.types.includes("text/x-section-key")) return;
+    e.preventDefault();
+    e.dataTransfer.dropEffect = "move";
+    const el = e.currentTarget as HTMLElement;
+    const rect = el.getBoundingClientRect();
+    const top = e.clientY < rect.top + rect.height / 2;
+    el.classList.add("drop-indicator");
+    el.classList.toggle("drop-indicator-top", top);
+    el.classList.toggle("drop-indicator-bottom", !top);
+  };
+  const clearDrop = (el: HTMLElement) => {
+    el.classList.remove("drop-indicator", "drop-indicator-top", "drop-indicator-bottom");
+  };
   return (
+    <div
+      onDragOver={onDragOver}
+      onDragLeave={(e) => clearDrop(e.currentTarget as HTMLElement)}
+      onDrop={(e) => {
+        if (!reorderable) return;
+        e.preventDefault();
+        clearDrop(e.currentTarget as HTMLElement);
+        const fromKey = e.dataTransfer.getData("text/x-section-key");
+        if (!fromKey || fromKey === sectionKey) return;
+        onReorderSection!(fromKey, sectionKey!);
+      }}
+    >
     <button
       type="button"
       onClick={() => collapsible && onToggle?.()}
-      className={`w-full flex justify-between items-center mt-4 mb-2 px-2 py-1.5 rounded-lg transition-colors ${
+      className={`group w-full flex justify-between items-center mt-4 mb-2 px-2 py-1.5 rounded-lg transition-colors ${
         collapsible ? "hover:bg-gray-50 cursor-pointer" : "cursor-default"
       }`}
     >
       <div className="flex items-center gap-2">
+        {reorderable && (
+          <span
+            draggable
+            onDragStart={onDragStart}
+            onClick={(e) => e.stopPropagation()}
+            className="text-gray-300 group-hover:text-amber-500 hover:!text-amber-600 cursor-grab active:cursor-grabbing select-none text-sm leading-none transition-colors -ml-1"
+            title={reorderSectionHint ?? "拖动以调整节区顺序"}
+          >⋮⋮</span>
+        )}
         {icon && <span className="text-base leading-none">{icon}</span>}
         <h3 className="text-[0.78rem] font-semibold text-gray-700 uppercase tracking-wider">
           {children}
@@ -176,11 +232,12 @@ const SectionTitle = ({ children, onAdd, sectionKey, count, open, onToggle, addL
         )}
       </div>
     </button>
+    </div>
   );
 };
 
 export function Editor() {
-  const { resume, update, addItem, removeItem, duplicateItem, reorderItem, lang } = useStore();
+  const { resume, update, addItem, removeItem, duplicateItem, reorderItem, reorderSection, lang } = useStore();
   const L = t(lang);
   // Collapsible state per section (open by default).
   const [collapsed, setCollapsed] = useState<Record<string, boolean>>({});
@@ -200,6 +257,9 @@ export function Editor() {
 
   // Stable strings to pass into module-scope sub-components.
   const reorderHint = (L.actions as any).reorderHint ?? "拖动以排序 / drag to reorder";
+  const reorderSectionHint = ((L as any).style?.sectionOrderHint) ?? "拖动调整节区顺序";
+  const onReorderSection = (fromKey: string, toKey: string) =>
+    reorderSection(fromKey as SectionKey, toKey as SectionKey);
   const breakLabel  = L.form.breakBefore;
   const removeLabel = L.actions.remove;
   const duplicateLabel = (L.actions as any).duplicate ?? "Duplicate";
@@ -353,7 +413,7 @@ export function Editor() {
 
       </>}
 
-      <SectionTitle sectionKey="work" count={resume.work.length} open={isOpen("work")} onToggle={() => toggle("work")} addLabel={addLabel} onAdd={() => addItem("work")}>{L.sections.work}</SectionTitle>
+      <SectionTitle sectionKey="work" count={resume.work.length} open={isOpen("work")} onToggle={() => toggle("work")} addLabel={addLabel} onAdd={() => addItem("work")} onReorderSection={onReorderSection} reorderSectionHint={reorderSectionHint}>{L.sections.work}</SectionTitle>
       {isOpen("work") && resume.work.map((w) => (
         <SortableCard key={w.id} section="work" id={w.id}
           onRemove={() => removeItem("work", w.id)}
@@ -373,7 +433,7 @@ export function Editor() {
         </SortableCard>
       ))}
 
-      <SectionTitle sectionKey="education" count={resume.education.length} open={isOpen("education")} onToggle={() => toggle("education")} addLabel={addLabel} onAdd={() => addItem("education")}>{L.sections.education}</SectionTitle>
+      <SectionTitle sectionKey="education" count={resume.education.length} open={isOpen("education")} onToggle={() => toggle("education")} addLabel={addLabel} onAdd={() => addItem("education")} onReorderSection={onReorderSection} reorderSectionHint={reorderSectionHint}>{L.sections.education}</SectionTitle>
       {isOpen("education") && resume.education.map((e) => (
         <SortableCard key={e.id} section="education" id={e.id}
           onRemove={() => removeItem("education", e.id)}
@@ -394,7 +454,7 @@ export function Editor() {
         </SortableCard>
       ))}
 
-      <SectionTitle sectionKey="projects" count={resume.projects.length} open={isOpen("projects")} onToggle={() => toggle("projects")} addLabel={addLabel} onAdd={() => addItem("projects")}>{L.sections.projects}</SectionTitle>
+      <SectionTitle sectionKey="projects" count={resume.projects.length} open={isOpen("projects")} onToggle={() => toggle("projects")} addLabel={addLabel} onAdd={() => addItem("projects")} onReorderSection={onReorderSection} reorderSectionHint={reorderSectionHint}>{L.sections.projects}</SectionTitle>
       {isOpen("projects") && resume.projects.map((p) => (
         <SortableCard key={p.id} section="projects" id={p.id}
           onRemove={() => removeItem("projects", p.id)}
@@ -416,7 +476,7 @@ export function Editor() {
         </SortableCard>
       ))}
 
-      <SectionTitle sectionKey="skills" count={resume.skills.length} open={isOpen("skills")} onToggle={() => toggle("skills")} addLabel={addLabel} onAdd={() => addItem("skills")}>{L.sections.skills}</SectionTitle>
+      <SectionTitle sectionKey="skills" count={resume.skills.length} open={isOpen("skills")} onToggle={() => toggle("skills")} addLabel={addLabel} onAdd={() => addItem("skills")} onReorderSection={onReorderSection} reorderSectionHint={reorderSectionHint}>{L.sections.skills}</SectionTitle>
       {isOpen("skills") && resume.skills.map((s) => (
         <SortableCard key={s.id} section="skills" id={s.id}
           onRemove={() => removeItem("skills", s.id)}
@@ -433,7 +493,7 @@ export function Editor() {
         </SortableCard>
       ))}
 
-      <SectionTitle sectionKey="awards" count={resume.awards.length} open={isOpen("awards")} onToggle={() => toggle("awards")} addLabel={addLabel} onAdd={() => addItem("awards")}>{L.sections.awards}</SectionTitle>
+      <SectionTitle sectionKey="awards" count={resume.awards.length} open={isOpen("awards")} onToggle={() => toggle("awards")} addLabel={addLabel} onAdd={() => addItem("awards")} onReorderSection={onReorderSection} reorderSectionHint={reorderSectionHint}>{L.sections.awards}</SectionTitle>
       {isOpen("awards") && resume.awards.map((a) => (
         <SortableCard key={a.id} section="awards" id={a.id}
           onRemove={() => removeItem("awards", a.id)}
@@ -450,7 +510,7 @@ export function Editor() {
         </SortableCard>
       ))}
 
-      <SectionTitle sectionKey="languages" count={resume.languages.length} open={isOpen("languages")} onToggle={() => toggle("languages")} addLabel={addLabel} onAdd={() => addItem("languages")}>{L.sections.languages}</SectionTitle>
+      <SectionTitle sectionKey="languages" count={resume.languages.length} open={isOpen("languages")} onToggle={() => toggle("languages")} addLabel={addLabel} onAdd={() => addItem("languages")} onReorderSection={onReorderSection} reorderSectionHint={reorderSectionHint}>{L.sections.languages}</SectionTitle>
       {isOpen("languages") && resume.languages.map((l) => (
         <SortableCard key={l.id} section="languages" id={l.id}
           onRemove={() => removeItem("languages", l.id)}
@@ -469,7 +529,7 @@ export function Editor() {
           actively render these, but the editor exposes them universally so a
           user on, say, "modern" who switches to "academic-pub" later won't
           have to re-key data. Empty arrays are silently skipped by templates. */}
-      <SectionTitle sectionKey="publications" count={(resume.publications || []).length} open={isOpen("publications")} onToggle={() => toggle("publications")} addLabel={addLabel} onAdd={() => addItem("publications")}>{(L.sections as any).publications}</SectionTitle>
+      <SectionTitle sectionKey="publications" count={(resume.publications || []).length} open={isOpen("publications")} onToggle={() => toggle("publications")} addLabel={addLabel} onAdd={() => addItem("publications")} onReorderSection={onReorderSection} reorderSectionHint={reorderSectionHint}>{(L.sections as any).publications}</SectionTitle>
       {isOpen("publications") && (resume.publications || []).map((p) => (
         <SortableCard key={p.id} section="publications" id={p.id}
           onRemove={() => removeItem("publications", p.id)}
@@ -489,7 +549,7 @@ export function Editor() {
         </SortableCard>
       ))}
 
-      <SectionTitle sectionKey="talks" count={(resume.talks || []).length} open={isOpen("talks")} onToggle={() => toggle("talks")} addLabel={addLabel} onAdd={() => addItem("talks")}>{(L.sections as any).talks}</SectionTitle>
+      <SectionTitle sectionKey="talks" count={(resume.talks || []).length} open={isOpen("talks")} onToggle={() => toggle("talks")} addLabel={addLabel} onAdd={() => addItem("talks")} onReorderSection={onReorderSection} reorderSectionHint={reorderSectionHint}>{(L.sections as any).talks}</SectionTitle>
       {isOpen("talks") && (resume.talks || []).map((tk) => (
         <SortableCard key={tk.id} section="talks" id={tk.id}
           onRemove={() => removeItem("talks", tk.id)}
@@ -507,7 +567,7 @@ export function Editor() {
         </SortableCard>
       ))}
 
-      <SectionTitle sectionKey="teaching" count={(resume.teaching || []).length} open={isOpen("teaching")} onToggle={() => toggle("teaching")} addLabel={addLabel} onAdd={() => addItem("teaching")}>{(L.sections as any).teaching}</SectionTitle>
+      <SectionTitle sectionKey="teaching" count={(resume.teaching || []).length} open={isOpen("teaching")} onToggle={() => toggle("teaching")} addLabel={addLabel} onAdd={() => addItem("teaching")} onReorderSection={onReorderSection} reorderSectionHint={reorderSectionHint}>{(L.sections as any).teaching}</SectionTitle>
       {isOpen("teaching") && (resume.teaching || []).map((tg) => (
         <SortableCard key={tg.id} section="teaching" id={tg.id}
           onRemove={() => removeItem("teaching", tg.id)}
