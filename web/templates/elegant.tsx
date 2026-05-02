@@ -1,5 +1,5 @@
 "use client";
-import { TemplateProps, range, itemCls, Avatar, E, Draggable, useSectionLabels, useOrderedSections, DateRange, EditableLabel, SkillBar, ContactIcon } from "./shared";
+import { TemplateProps, range, itemCls, Avatar, E, Draggable, useSectionLabels, useOrderedSections, DateRange, EditableLabel, SkillBar, ContactIcon, EB } from "./shared";
 
 /**
  * Two-column layout with a soft tinted sidebar. Feels lighter than
@@ -87,16 +87,16 @@ export default function Elegant({ resume }: TemplateProps) {
           <div className="mb-4"><Avatar basics={b} size={112} /></div>
         )}
         <Draggable name="header">
-          <h1 className="text-[1.8em] font-bold leading-tight" style={{ color: "var(--resume-accent)" }}><E path="basics.name">{b.name}</E></h1>
-          <div className="text-[0.95em] text-gray-700 mt-1"><E path="basics.label">{b.label}</E></div>
+          <h1 className="text-[1.8em] font-bold leading-tight" style={{ color: "var(--resume-accent)" }}><EB b={b} field="name" /></h1>
+          <div className="text-[0.95em] text-gray-700 mt-1"><EB b={b} field="label" /></div>
         </Draggable>
 
         <SideH><EditableLabel k="contact" fallback={L.contact} /></SideH>
         <div className="text-[0.83em] text-gray-700 space-y-1">
-          <div><ContactIcon b={b} kind="email" /> <E path="basics.email">{b.email}</E></div>
-          <div><ContactIcon b={b} kind="phone" /> <E path="basics.phone">{b.phone}</E></div>
-          <div><ContactIcon b={b} kind="location" /> <E path="basics.location">{b.location}</E></div>
-          <div className="break-all"><ContactIcon b={b} kind="website" /> <E path="basics.website">{b.website}</E></div>
+          <div><ContactIcon b={b} kind="email" /> <EB b={b} field="email" /></div>
+          <div><ContactIcon b={b} kind="phone" /> <EB b={b} field="phone" /></div>
+          <div><ContactIcon b={b} kind="location" /> <EB b={b} field="location" /></div>
+          <div className="break-all"><ContactIcon b={b} kind="website" /> <EB b={b} field="website" /></div>
         </div>
 
         {resume.skills.length > 0 && (
@@ -138,7 +138,7 @@ export default function Elegant({ resume }: TemplateProps) {
       <main style={{ padding: "var(--pad)" }}>
         <Draggable name="summary">
           <MainH><EditableLabel k="summary" fallback={L.about} /></MainH>
-          <p className="text-[0.94em] text-gray-800 leading-relaxed"><E path="basics.summary" multiline>{b.summary}</E></p>
+          <p className="text-[0.94em] text-gray-800 leading-relaxed"><EB b={b} field="summary" multiline /></p>
         </Draggable>
 
         {ordered}

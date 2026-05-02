@@ -1,5 +1,5 @@
 "use client";
-import { TemplateProps, range, itemCls, Avatar, E, Draggable, useSectionLabels, useOrderedSections, DateRange, EditableLabel} from "./shared";
+import { TemplateProps, range, itemCls, Avatar, E, Draggable, useSectionLabels, useOrderedSections, DateRange, EditableLabel, EB } from "./shared";
 
 /**
  * Publication-first CV. Projects are rendered as a numbered publication list
@@ -138,18 +138,18 @@ export default function AcademicPub({ resume }: TemplateProps) {
     <div style={{ padding: "var(--pad)", fontFamily: "var(--resume-font-serif)" }}>
       <Draggable name="header" as="header" className="flex items-start gap-4 mb-3">
         <div className="flex-1 min-w-0">
-          <h1 className="text-[2em] font-bold"><E path="basics.name">{b.name}</E></h1>
-          <div className="text-[0.95em] italic text-gray-700"><E path="basics.label">{b.label}</E></div>
+          <h1 className="text-[2em] font-bold"><EB b={b} field="name" /></h1>
+          <div className="text-[0.95em] italic text-gray-700"><EB b={b} field="label" /></div>
           <div className="text-[0.82em] text-gray-600 mt-1 flex flex-wrap gap-x-3">
-            <E path="basics.email">{b.email}</E>
+            <EB b={b} field="email" />
             <span className="text-gray-400">·</span>
-            <E path="basics.phone">{b.phone}</E>
+            <EB b={b} field="phone" />
             <span className="text-gray-400">·</span>
-            <E path="basics.website">{b.website}</E>
+            <EB b={b} field="website" />
             <span className="text-gray-400">·</span>
-            <E path="basics.location">{b.location}</E>
+            <EB b={b} field="location" />
           </div>
-          <Draggable name="summary"><p className="text-[0.9em] mt-2 text-gray-800"><E path="basics.summary" multiline>{b.summary}</E></p></Draggable>
+          <Draggable name="summary"><p className="text-[0.9em] mt-2 text-gray-800"><EB b={b} field="summary" multiline /></p></Draggable>
         </div>
         <Avatar basics={b} size={88} />
       </Draggable>

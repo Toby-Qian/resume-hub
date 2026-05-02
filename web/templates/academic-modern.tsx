@@ -1,5 +1,5 @@
 "use client";
-import { TemplateProps, range, itemCls, Avatar, E, Draggable, useSectionLabels, useOrderedSections, DateRange, EditableLabel, ContactIcon } from "./shared";
+import { TemplateProps, range, itemCls, Avatar, E, Draggable, useSectionLabels, useOrderedSections, DateRange, EditableLabel, ContactIcon, EB } from "./shared";
 
 /**
  * Modern academic: sans-serif, colored accent rules, left-aligned headers
@@ -124,18 +124,18 @@ export default function AcademicModern({ resume }: TemplateProps) {
     <div style={{ padding: "var(--pad)" }}>
       <Draggable name="header" as="header" className="flex items-start gap-5 mb-4 pb-3 border-b border-gray-200">
         <div className="flex-1 min-w-0">
-          <h1 className="text-[2em] font-bold" style={{ color: "var(--resume-accent)" }}><E path="basics.name">{b.name}</E></h1>
-          <div className="text-[1em] text-gray-700"><E path="basics.label">{b.label}</E></div>
+          <h1 className="text-[2em] font-bold" style={{ color: "var(--resume-accent)" }}><EB b={b} field="name" /></h1>
+          <div className="text-[1em] text-gray-700"><EB b={b} field="label" /></div>
           <div className="text-[0.82em] text-gray-600 mt-2 flex flex-wrap gap-x-3 gap-y-0.5">
-            <span><ContactIcon b={b} kind="email" /> <E path="basics.email">{b.email}</E></span>
-            <span><ContactIcon b={b} kind="phone" /> <E path="basics.phone">{b.phone}</E></span>
-            <span><ContactIcon b={b} kind="location" /> <E path="basics.location">{b.location}</E></span>
-            <span><ContactIcon b={b} kind="website" /> <E path="basics.website">{b.website}</E></span>
+            <span><ContactIcon b={b} kind="email" /> <EB b={b} field="email" /></span>
+            <span><ContactIcon b={b} kind="phone" /> <EB b={b} field="phone" /></span>
+            <span><ContactIcon b={b} kind="location" /> <EB b={b} field="location" /></span>
+            <span><ContactIcon b={b} kind="website" /> <EB b={b} field="website" /></span>
           </div>
         </div>
         <Avatar basics={b} size={96} />
       </Draggable>
-      <Draggable name="summary"><p className="text-[0.93em] text-gray-800 mb-2"><E path="basics.summary" multiline>{b.summary}</E></p></Draggable>
+      <Draggable name="summary"><p className="text-[0.93em] text-gray-800 mb-2"><EB b={b} field="summary" multiline /></p></Draggable>
 
       {ordered}
 

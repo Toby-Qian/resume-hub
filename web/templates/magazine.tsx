@@ -1,5 +1,5 @@
 "use client";
-import { TemplateProps, range, itemCls, Avatar, E, Draggable, useSectionLabels, useOrderedSections, DateRange, EditableLabel} from "./shared";
+import { TemplateProps, range, itemCls, Avatar, E, Draggable, useSectionLabels, useOrderedSections, DateRange, EditableLabel, EB } from "./shared";
 
 /**
  * Magazine / editorial layout — inspired by The New Yorker / NYT feature
@@ -114,21 +114,21 @@ export default function Magazine({ resume }: TemplateProps) {
         <div className="text-[0.7em] tracking-[0.4em] uppercase text-gray-500 mb-1">— {L.cv} —</div>
         <h1 className="text-[3.2em] font-bold leading-none tracking-tight"
           style={{ fontFamily: "var(--resume-font-serif)" }}>
-          <E path="basics.name">{b.name}</E>
+          <EB b={b} field="name" />
         </h1>
         <div className="flex justify-center my-2">
           <div className="h-px bg-gray-700" style={{ width: "40%" }} />
-          <div className="px-3 italic text-[0.92em] text-gray-700 -mt-2"><E path="basics.label">{b.label}</E></div>
+          <div className="px-3 italic text-[0.92em] text-gray-700 -mt-2"><EB b={b} field="label" /></div>
           <div className="h-px bg-gray-700" style={{ width: "40%" }} />
         </div>
         <div className="text-[0.82em] text-gray-700 mt-2 flex flex-wrap justify-center gap-x-3 gap-y-0.5 italic">
-          <E path="basics.email">{b.email}</E>
+          <EB b={b} field="email" />
           <span className="text-gray-400">·</span>
-          <E path="basics.phone">{b.phone}</E>
+          <EB b={b} field="phone" />
           <span className="text-gray-400">·</span>
-          <E path="basics.location">{b.location}</E>
+          <EB b={b} field="location" />
           <span className="text-gray-400">·</span>
-          <E path="basics.website">{b.website}</E>
+          <EB b={b} field="website" />
         </div>
         {b.showAvatar && b.avatar && (
           <div className="flex justify-center mt-3"><Avatar basics={b} size={108} rounded="sm" /></div>
@@ -138,7 +138,7 @@ export default function Magazine({ resume }: TemplateProps) {
       <Draggable name="summary">
         <p className="text-[0.96em] text-justify mb-4 first-letter:text-[3em] first-letter:font-bold first-letter:float-left first-letter:leading-[0.85] first-letter:mr-2 first-letter:mt-1"
           style={{ color: "#111827" }}>
-          <E path="basics.summary" multiline>{b.summary}</E>
+          <EB b={b} field="summary" multiline />
         </p>
       </Draggable>
 

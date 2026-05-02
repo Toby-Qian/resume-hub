@@ -1,5 +1,5 @@
 "use client";
-import { TemplateProps, range, itemCls, Avatar, E, Draggable, useSectionLabels, useOrderedSections, DateRange, EditableLabel, ContactIcon } from "./shared";
+import { TemplateProps, range, itemCls, Avatar, E, Draggable, useSectionLabels, useOrderedSections, DateRange, EditableLabel, ContactIcon, EB } from "./shared";
 
 /**
  * Infographic resume — skill bars, language proficiency dots, ribbon-style
@@ -124,16 +124,16 @@ export default function Infographic({ resume }: TemplateProps) {
           <div className="flex justify-center mb-3"><Avatar basics={b} size={140} rounded="full" className="ring-4 ring-white" /></div>
         )}
         <Draggable name="header">
-          <h1 className="text-[1.7em] font-bold text-center leading-tight" style={{ color: "var(--resume-accent)" }}><E path="basics.name">{b.name}</E></h1>
-          <div className="text-[0.92em] text-center text-gray-700 mt-1"><E path="basics.label">{b.label}</E></div>
+          <h1 className="text-[1.7em] font-bold text-center leading-tight" style={{ color: "var(--resume-accent)" }}><EB b={b} field="name" /></h1>
+          <div className="text-[0.92em] text-center text-gray-700 mt-1"><EB b={b} field="label" /></div>
         </Draggable>
 
         <SideTitle><EditableLabel k="contact" fallback={L.contact} /></SideTitle>
         <div className="text-[0.83em] space-y-1 text-gray-800">
-          <div><ContactIcon b={b} kind="email" /> <E path="basics.email">{b.email}</E></div>
-          <div><ContactIcon b={b} kind="phone" /> <E path="basics.phone">{b.phone}</E></div>
-          <div><ContactIcon b={b} kind="location" /> <E path="basics.location">{b.location}</E></div>
-          <div className="break-all"><ContactIcon b={b} kind="website" /> <E path="basics.website">{b.website}</E></div>
+          <div><ContactIcon b={b} kind="email" /> <EB b={b} field="email" /></div>
+          <div><ContactIcon b={b} kind="phone" /> <EB b={b} field="phone" /></div>
+          <div><ContactIcon b={b} kind="location" /> <EB b={b} field="location" /></div>
+          <div className="break-all"><ContactIcon b={b} kind="website" /> <EB b={b} field="website" /></div>
         </div>
 
         {resume.skills.length > 0 && (
@@ -199,7 +199,7 @@ export default function Infographic({ resume }: TemplateProps) {
       </aside>
 
       <main style={{ padding: "var(--pad)" }}>
-        <Draggable name="summary"><p className="text-[0.95em] text-gray-800 leading-relaxed mb-2"><E path="basics.summary" multiline>{b.summary}</E></p></Draggable>
+        <Draggable name="summary"><p className="text-[0.95em] text-gray-800 leading-relaxed mb-2"><EB b={b} field="summary" multiline /></p></Draggable>
         {ordered}
       </main>
     </div>

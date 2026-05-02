@@ -1,5 +1,5 @@
 "use client";
-import { TemplateProps, range, itemCls, Avatar, E, Draggable, useSectionLabels, useOrderedSections, DateRange, EditableLabel, SkillBar, ContactIcon } from "./shared";
+import { TemplateProps, range, itemCls, Avatar, E, Draggable, useSectionLabels, useOrderedSections, DateRange, EditableLabel, SkillBar, ContactIcon, EB } from "./shared";
 
 /**
  * Dark hero band + light content cards. Modern startup / SaaS-portfolio
@@ -95,13 +95,13 @@ export default function DarkCard({ resume }: TemplateProps) {
             <Avatar basics={b} size={104} rounded="full" className="ring-4 ring-white/40 shrink-0" />
           )}
           <div className="flex-1 min-w-0">
-            <h1 className="text-[2.2em] font-bold leading-tight"><E path="basics.name">{b.name}</E></h1>
-            <div className="text-[1em] opacity-90 mt-0.5"><E path="basics.label">{b.label}</E></div>
+            <h1 className="text-[2.2em] font-bold leading-tight"><EB b={b} field="name" /></h1>
+            <div className="text-[1em] opacity-90 mt-0.5"><EB b={b} field="label" /></div>
             <div className="text-[0.82em] opacity-95 mt-2 flex flex-wrap gap-x-4 gap-y-1">
-              <span><ContactIcon b={b} kind="email" /> <E path="basics.email">{b.email}</E></span>
-              <span><ContactIcon b={b} kind="phone" /> <E path="basics.phone">{b.phone}</E></span>
-              <span><ContactIcon b={b} kind="location" /> <E path="basics.location">{b.location}</E></span>
-              <span><ContactIcon b={b} kind="website" /> <E path="basics.website">{b.website}</E></span>
+              <span><ContactIcon b={b} kind="email" /> <EB b={b} field="email" /></span>
+              <span><ContactIcon b={b} kind="phone" /> <EB b={b} field="phone" /></span>
+              <span><ContactIcon b={b} kind="location" /> <EB b={b} field="location" /></span>
+              <span><ContactIcon b={b} kind="website" /> <EB b={b} field="website" /></span>
             </div>
           </div>
         </Draggable>
@@ -111,7 +111,7 @@ export default function DarkCard({ resume }: TemplateProps) {
         <Draggable name="summary">
           <p className="text-[0.95em] text-gray-800 leading-relaxed mt-1 mb-3"
             style={{ borderLeft: "3px solid var(--resume-accent)", paddingLeft: "0.75rem", fontStyle: "italic" }}>
-            <E path="basics.summary" multiline>{b.summary}</E>
+            <EB b={b} field="summary" multiline />
           </p>
         </Draggable>
 

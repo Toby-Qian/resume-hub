@@ -1,5 +1,5 @@
 "use client";
-import { TemplateProps, range, itemCls, Avatar, E, Draggable, useSectionLabels, useOrderedSections, DateRange, EditableLabel} from "./shared";
+import { TemplateProps, range, itemCls, Avatar, E, Draggable, useSectionLabels, useOrderedSections, DateRange, EditableLabel, EB } from "./shared";
 
 export default function ENAcademic({ resume }: TemplateProps) {
   const b = resume.basics;
@@ -129,18 +129,18 @@ export default function ENAcademic({ resume }: TemplateProps) {
         {b.showAvatar && b.avatar && (
           <div className="flex justify-center mb-2"><Avatar basics={b} size={88} rounded="full" /></div>
         )}
-        <h1 className="text-[2.2em] font-bold"><E path="basics.name">{b.name}</E></h1>
+        <h1 className="text-[2.2em] font-bold"><EB b={b} field="name" /></h1>
         <div className="text-[0.9em] text-gray-700 mt-1 flex flex-wrap justify-center gap-x-3">
-          <E path="basics.location">{b.location}</E>
+          <EB b={b} field="location" />
           <span className="text-gray-400">·</span>
-          <E path="basics.phone">{b.phone}</E>
+          <EB b={b} field="phone" />
           <span className="text-gray-400">·</span>
-          <E path="basics.email">{b.email}</E>
+          <EB b={b} field="email" />
           <span className="text-gray-400">·</span>
-          <E path="basics.website">{b.website}</E>
+          <EB b={b} field="website" />
         </div>
       </Draggable>
-      <Draggable name="summary"><p className="text-[0.95em] text-justify"><E path="basics.summary" multiline>{b.summary}</E></p></Draggable>
+      <Draggable name="summary"><p className="text-[0.95em] text-justify"><EB b={b} field="summary" multiline /></p></Draggable>
 
       {ordered}
     </div>

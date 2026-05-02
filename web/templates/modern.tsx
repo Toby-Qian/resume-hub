@@ -1,5 +1,5 @@
 "use client";
-import { TemplateProps, Section, range, itemCls, Avatar, E, Draggable, useSectionLabels, useOrderedSections, DateRange, SkillBar, ContactIcon } from "./shared";
+import { TemplateProps, Section, range, itemCls, Avatar, E, Draggable, useSectionLabels, useOrderedSections, DateRange, SkillBar, ContactIcon, EB } from "./shared";
 
 export default function Modern({ resume }: TemplateProps) {
   const b = resume.basics;
@@ -102,15 +102,15 @@ export default function Modern({ resume }: TemplateProps) {
     <div style={{ padding: "var(--pad)" }}>
       <Draggable name="header" as="header" className="mb-6 flex items-start gap-5">
         <div className="flex-1 min-w-0">
-          <h1 className="text-[2em] font-bold" style={{ color: "var(--resume-accent)" }}><E path="basics.name">{b.name}</E></h1>
-          <div className="text-[1.05em] text-gray-700 mt-1"><E path="basics.label">{b.label}</E></div>
+          <h1 className="text-[2em] font-bold" style={{ color: "var(--resume-accent)" }}><EB b={b} field="name" /></h1>
+          <div className="text-[1.05em] text-gray-700 mt-1"><EB b={b} field="label" /></div>
           <div className="text-[0.85em] text-gray-600 mt-2 flex flex-wrap gap-x-4 gap-y-1">
-            <span><ContactIcon b={b} kind="email" /> <E path="basics.email">{b.email}</E></span>
-            <span><ContactIcon b={b} kind="phone" /> <E path="basics.phone">{b.phone}</E></span>
-            <span><ContactIcon b={b} kind="location" /> <E path="basics.location">{b.location}</E></span>
-            <span><ContactIcon b={b} kind="website" /> <E path="basics.website">{b.website}</E></span>
+            <span><ContactIcon b={b} kind="email" /> <EB b={b} field="email" /></span>
+            <span><ContactIcon b={b} kind="phone" /> <EB b={b} field="phone" /></span>
+            <span><ContactIcon b={b} kind="location" /> <EB b={b} field="location" /></span>
+            <span><ContactIcon b={b} kind="website" /> <EB b={b} field="website" /></span>
           </div>
-          <p className="mt-3 text-[0.95em] text-gray-800"><E path="basics.summary" multiline>{b.summary}</E></p>
+          <p className="mt-3 text-[0.95em] text-gray-800"><EB b={b} field="summary" multiline /></p>
         </div>
         <Avatar basics={b} size={96} />
       </Draggable>

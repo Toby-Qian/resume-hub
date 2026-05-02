@@ -1,5 +1,5 @@
 "use client";
-import { TemplateProps, range, itemCls, Avatar, E, Draggable, useSectionLabels, useOrderedSections, DateRange, EditableLabel} from "./shared";
+import { TemplateProps, range, itemCls, Avatar, E, Draggable, useSectionLabels, useOrderedSections, DateRange, EditableLabel, EB } from "./shared";
 
 /**
  * The quintessential CV: serif body, "Curriculum Vitae" banner, centered
@@ -137,19 +137,19 @@ export default function AcademicClassic({ resume }: TemplateProps) {
         {b.showAvatar && b.avatar && (
           <div className="flex justify-center mb-3"><Avatar basics={b} size={96} /></div>
         )}
-        <h1 className="text-[2.1em] font-bold"><E path="basics.name">{b.name}</E></h1>
-        <div className="text-[0.95em] italic text-gray-700 mt-1"><E path="basics.label">{b.label}</E></div>
+        <h1 className="text-[2.1em] font-bold"><EB b={b} field="name" /></h1>
+        <div className="text-[0.95em] italic text-gray-700 mt-1"><EB b={b} field="label" /></div>
         <div className="text-[0.82em] text-gray-600 mt-2 flex flex-wrap justify-center gap-x-3">
-          <E path="basics.email">{b.email}</E>
+          <EB b={b} field="email" />
           <span className="text-gray-400">·</span>
-          <E path="basics.phone">{b.phone}</E>
+          <EB b={b} field="phone" />
           <span className="text-gray-400">·</span>
-          <E path="basics.location">{b.location}</E>
+          <EB b={b} field="location" />
           <span className="text-gray-400">·</span>
-          <E path="basics.website">{b.website}</E>
+          <EB b={b} field="website" />
         </div>
       </Draggable>
-      <Draggable name="summary"><p className="text-[0.92em] text-justify italic mb-3"><E path="basics.summary" multiline>{b.summary}</E></p></Draggable>
+      <Draggable name="summary"><p className="text-[0.92em] text-justify italic mb-3"><EB b={b} field="summary" multiline /></p></Draggable>
 
       {ordered}
     </div>

@@ -1,5 +1,5 @@
 "use client";
-import { TemplateProps, range, itemCls, Avatar, E, Draggable, useSectionLabels, useOrderedSections, DateRange, ContactIcon } from "./shared";
+import { TemplateProps, range, itemCls, Avatar, E, Draggable, useSectionLabels, useOrderedSections, DateRange, ContactIcon, EB } from "./shared";
 
 export default function CNCreative({ resume }: TemplateProps) {
   const b = resume.basics;
@@ -64,15 +64,15 @@ export default function CNCreative({ resume }: TemplateProps) {
           <div className="mb-4"><Avatar basics={b} size={110} rounded="full" className="ring-2 ring-white/60" /></div>
         )}
         <Draggable name="header">
-          <h1 className="text-[2em] font-bold leading-tight"><E path="basics.name">{b.name}</E></h1>
-          <div className="text-[0.95em] opacity-90 mt-1"><E path="basics.label">{b.label}</E></div>
+          <h1 className="text-[2em] font-bold leading-tight"><EB b={b} field="name" /></h1>
+          <div className="text-[0.95em] opacity-90 mt-1"><EB b={b} field="label" /></div>
         </Draggable>
         <div className="h-px bg-white/40 my-4" />
         <div className="text-[0.85em] space-y-1 opacity-95">
-          <div><ContactIcon b={b} kind="phone" /> <E path="basics.phone">{b.phone}</E></div>
-          <div><ContactIcon b={b} kind="email" /> <E path="basics.email">{b.email}</E></div>
-          <div><ContactIcon b={b} kind="location" /> <E path="basics.location">{b.location}</E></div>
-          <div><ContactIcon b={b} kind="website" /> <E path="basics.website">{b.website}</E></div>
+          <div><ContactIcon b={b} kind="phone" /> <EB b={b} field="phone" /></div>
+          <div><ContactIcon b={b} kind="email" /> <EB b={b} field="email" /></div>
+          <div><ContactIcon b={b} kind="location" /> <EB b={b} field="location" /></div>
+          <div><ContactIcon b={b} kind="website" /> <EB b={b} field="website" /></div>
         </div>
         {resume.skills.length > 0 && (
           <>
@@ -96,7 +96,7 @@ export default function CNCreative({ resume }: TemplateProps) {
       </aside>
 
       <main style={{ padding: "var(--pad)" }}>
-        <Draggable name="summary"><p className="text-[0.95em] mb-5 text-gray-800"><E path="basics.summary" multiline>{b.summary}</E></p></Draggable>
+        <Draggable name="summary"><p className="text-[0.95em] mb-5 text-gray-800"><EB b={b} field="summary" multiline /></p></Draggable>
         {ordered}
       </main>
     </div>

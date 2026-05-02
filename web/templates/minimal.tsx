@@ -1,5 +1,5 @@
 "use client";
-import { TemplateProps, range, itemCls, Avatar, E, Draggable, useSectionLabels, useOrderedSections, DateRange, EditableLabel, SkillBar } from "./shared";
+import { TemplateProps, range, itemCls, Avatar, E, Draggable, useSectionLabels, useOrderedSections, DateRange, EditableLabel, SkillBar, EB } from "./shared";
 
 export default function Minimal({ resume }: TemplateProps) {
   const b = resume.basics;
@@ -72,23 +72,23 @@ export default function Minimal({ resume }: TemplateProps) {
     <div style={{ padding: "var(--pad)" }}>
       <Draggable name="header" as="header" className="mb-8 flex items-center gap-5">
         <div className="flex-1 min-w-0">
-          <h1 className="text-[2.4em] font-light"><E path="basics.name">{b.name}</E></h1>
-          <div className="text-[1em] text-gray-500 mt-1"><E path="basics.label">{b.label}</E></div>
+          <h1 className="text-[2.4em] font-light"><EB b={b} field="name" /></h1>
+          <div className="text-[1em] text-gray-500 mt-1"><EB b={b} field="label" /></div>
         </div>
         <Avatar basics={b} size={80} rounded="sm" />
       </Draggable>
 
       <Row title={<EditableLabel k="contact" fallback={L.contact} />}>
         <div className="text-[0.9em] text-gray-700 space-y-0.5">
-          <div><E path="basics.email">{b.email}</E></div>
-          <div><E path="basics.phone">{b.phone}</E></div>
-          <div><E path="basics.location">{b.location}</E></div>
-          <div><E path="basics.website">{b.website}</E></div>
+          <div><EB b={b} field="email" /></div>
+          <div><EB b={b} field="phone" /></div>
+          <div><EB b={b} field="location" /></div>
+          <div><EB b={b} field="website" /></div>
         </div>
       </Row>
 
       <Row title={<EditableLabel k="summary" fallback={L.about} />}>
-        <Draggable name="summary"><p className="text-[0.95em]"><E path="basics.summary" multiline>{b.summary}</E></p></Draggable>
+        <Draggable name="summary"><p className="text-[0.95em]"><EB b={b} field="summary" multiline /></p></Draggable>
       </Row>
 
       {ordered}

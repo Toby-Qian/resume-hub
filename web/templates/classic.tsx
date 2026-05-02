@@ -1,5 +1,5 @@
 "use client";
-import { TemplateProps, Section, range, itemCls, Avatar, E, Draggable, useSectionLabels, useOrderedSections, DateRange, SkillBar } from "./shared";
+import { TemplateProps, Section, range, itemCls, Avatar, E, Draggable, useSectionLabels, useOrderedSections, DateRange, SkillBar, EB } from "./shared";
 
 export default function Classic({ resume }: TemplateProps) {
   const b = resume.basics;
@@ -92,19 +92,19 @@ export default function Classic({ resume }: TemplateProps) {
             <Avatar basics={b} size={90} rounded="full" />
           </div>
         )}
-        <h1 className="text-[2.2em] font-bold tracking-wider"><E path="basics.name">{b.name}</E></h1>
-        <div className="text-[1em] italic text-gray-700 mt-1"><E path="basics.label">{b.label}</E></div>
+        <h1 className="text-[2.2em] font-bold tracking-wider"><EB b={b} field="name" /></h1>
+        <div className="text-[1em] italic text-gray-700 mt-1"><EB b={b} field="label" /></div>
         <div className="text-[0.85em] text-gray-600 mt-2 flex flex-wrap justify-center gap-x-3">
-          <E path="basics.email">{b.email}</E>
+          <EB b={b} field="email" />
           <span className="text-gray-400">·</span>
-          <E path="basics.phone">{b.phone}</E>
+          <EB b={b} field="phone" />
           <span className="text-gray-400">·</span>
-          <E path="basics.location">{b.location}</E>
+          <EB b={b} field="location" />
           <span className="text-gray-400">·</span>
-          <E path="basics.website">{b.website}</E>
+          <EB b={b} field="website" />
         </div>
       </Draggable>
-      <Draggable name="summary"><p className="mb-5 text-[0.95em] italic text-center"><E path="basics.summary" multiline>{b.summary}</E></p></Draggable>
+      <Draggable name="summary"><p className="mb-5 text-[0.95em] italic text-center"><EB b={b} field="summary" multiline /></p></Draggable>
 
       {ordered}
     </div>

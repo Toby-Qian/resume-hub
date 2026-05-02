@@ -1,5 +1,5 @@
 "use client";
-import { TemplateProps, range, itemCls, Avatar, E, Draggable, useSectionLabels, useOrderedSections, DateRange, EditableLabel} from "./shared";
+import { TemplateProps, range, itemCls, Avatar, E, Draggable, useSectionLabels, useOrderedSections, DateRange, EditableLabel, EB } from "./shared";
 
 /**
  * Minimalist academic: no color, purely typographic hierarchy. Small-caps
@@ -107,23 +107,23 @@ export default function AcademicMinimal({ resume }: TemplateProps) {
     <div style={{ padding: "var(--pad)", fontFamily: "var(--resume-font-serif)" }}>
       <Draggable name="header" as="header" className="mb-6 flex items-start gap-5">
         <div className="flex-1 min-w-0">
-          <h1 className="text-[2.3em] font-light tracking-tight"><E path="basics.name">{b.name}</E></h1>
-          <div className="text-[1em] text-gray-600 italic"><E path="basics.label">{b.label}</E></div>
+          <h1 className="text-[2.3em] font-light tracking-tight"><EB b={b} field="name" /></h1>
+          <div className="text-[1em] text-gray-600 italic"><EB b={b} field="label" /></div>
           <div className="text-[0.8em] text-gray-600 mt-2 flex flex-wrap gap-x-2">
-            <E path="basics.email">{b.email}</E>
+            <EB b={b} field="email" />
             <span className="text-gray-400">·</span>
-            <E path="basics.phone">{b.phone}</E>
+            <EB b={b} field="phone" />
             <span className="text-gray-400">·</span>
-            <E path="basics.location">{b.location}</E>
+            <EB b={b} field="location" />
             <span className="text-gray-400">·</span>
-            <E path="basics.website">{b.website}</E>
+            <EB b={b} field="website" />
           </div>
         </div>
         <Avatar basics={b} size={80} />
       </Draggable>
 
       <Row label={<EditableLabel k="summary" fallback={L.summary} />}>
-        <Draggable name="summary"><p className="italic"><E path="basics.summary" multiline>{b.summary}</E></p></Draggable>
+        <Draggable name="summary"><p className="italic"><EB b={b} field="summary" multiline /></p></Draggable>
       </Row>
 
       {ordered}

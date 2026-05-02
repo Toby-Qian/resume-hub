@@ -454,6 +454,31 @@ export function Draggable({
   );
 }
 
+// ---------- Basics shorthand --------------------------------------------
+/**
+ * Shorthand for `<E path="basics.X">{b.X}</E>` — that pattern repeated ~95
+ * times across 16 templates. The keys allowed here are exactly the string
+ * fields on `ResumeBasics` so misuse fails at compile time.
+ */
+type BasicsStringField = "name" | "label" | "email" | "phone" | "location" | "website" | "summary";
+export function EB({
+  b,
+  field,
+  multiline,
+  className,
+}: {
+  b: import("@/lib/schema").ResumeBasics;
+  field: BasicsStringField;
+  multiline?: boolean;
+  className?: string;
+}) {
+  return (
+    <E path={`basics.${field}`} multiline={multiline} className={className}>
+      {b[field] || ""}
+    </E>
+  );
+}
+
 // ---------- Contact icon (editable emoji) ---------------------------------
 /**
  * Editable contact emoji with sane defaults. Replaces the repetitive
