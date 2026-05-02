@@ -1,5 +1,6 @@
 "use client";
 import { create } from "zustand";
+import { uid } from "./uid";
 
 export type ToastKind = "success" | "error" | "info";
 export interface ToastItem {
@@ -14,7 +15,6 @@ interface ToastState {
   dismiss: (id: string) => void;
 }
 
-const uid = () => Math.random().toString(36).slice(2, 9);
 
 export const useToastStore = create<ToastState>((set, get) => ({
   toasts: [],

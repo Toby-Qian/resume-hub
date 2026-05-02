@@ -1,6 +1,6 @@
 import { Resume, emptyResume } from "./schema";
+import { uid } from "./uid";
 
-const uid = () => Math.random().toString(36).slice(2, 9);
 
 /**
  * Validate and normalize a parsed JSON object into a fully-shaped `Resume`.

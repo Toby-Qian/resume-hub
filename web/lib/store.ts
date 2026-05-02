@@ -3,6 +3,7 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { Resume, SectionKey, emptyResume, ResumeNote } from "./schema";
 import { sampleEN, sampleZH } from "./samples";
+import { uid } from "./uid";
 
 export type TemplateId =
   | "modern" | "classic" | "minimal"
@@ -27,6 +28,10 @@ export interface ThemeTokens {
   bulletColor?: string;
   /** Body line-height (CSS unitless). 1.2 ~ 2.0. */
   lineHeight: number;
+  /** Override the section heading divider style globally. `solid` (default)
+   *  keeps whatever each template originally rendered. Anything else swaps
+   *  in via a `.paper.divider-X` class hook + !important — see globals.css. */
+  divider?: "solid" | "dashed" | "dotted" | "double" | "none";
 }
 
 export const defaultTheme: ThemeTokens = {
@@ -157,7 +162,6 @@ interface State {
   endBatch: () => void;
 }
 
-const uid = () => Math.random().toString(36).slice(2, 9);
 
 const blankItem = (s: SectionKey): any => {
   const id = uid();

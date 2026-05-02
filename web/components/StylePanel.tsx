@@ -361,6 +361,41 @@ export function StylePanel() {
         </div>
       </div>
 
+      {/* Section heading divider style — global override of all <h2>
+          borders inside .paper. Picks beyond "solid" force-style-cast every
+          template's heading via `.paper.divider-X` class hooks (globals.css). */}
+      <div>
+        <div className="text-xs font-semibold uppercase text-gray-500 mb-2">
+          {L.theme.divider ?? "标题分隔线"}
+        </div>
+        <div className="grid grid-cols-5 gap-1.5">
+          {([
+            { id: "solid",  preview: "──", label: L.theme.dividerSolid  ?? "实线" },
+            { id: "dashed", preview: "╌╌", label: L.theme.dividerDashed ?? "虚线" },
+            { id: "dotted", preview: "····", label: L.theme.dividerDotted ?? "点线" },
+            { id: "double", preview: "═", label: L.theme.dividerDouble ?? "双线" },
+            { id: "none",   preview: "∅", label: L.theme.dividerNone   ?? "无" },
+          ] as const).map((d) => {
+            const active = (theme.divider ?? "solid") === d.id;
+            return (
+              <button
+                key={d.id}
+                onClick={() => setTheme({ divider: d.id })}
+                title={d.label}
+                className={`flex flex-col items-center py-1.5 rounded border text-[0.65rem] transition ${
+                  active
+                    ? "border-blue-500 bg-blue-50 text-blue-700"
+                    : "border-gray-200 hover:bg-gray-50 text-gray-600"
+                }`}
+              >
+                <span className="text-sm leading-none mb-0.5">{d.preview}</span>
+                {d.label}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
       {/* Section order — drag to reorder. Templates that opted into the
           `useOrderedSections` helper render sections in this order.        */}
       <div>

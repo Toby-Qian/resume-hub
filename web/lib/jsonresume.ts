@@ -4,8 +4,8 @@
 // variants — but it never throws for unknown keys.
 
 import type { Resume } from "./schema";
+import { uid } from "./uid";
 
-const uid = () => Math.random().toString(36).slice(2, 9);
 
 const asString = (v: any): string => (typeof v === "string" ? v : v == null ? "" : String(v));
 const asArr = (v: any): any[] => (Array.isArray(v) ? v : []);

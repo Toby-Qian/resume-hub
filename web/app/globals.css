@@ -260,6 +260,16 @@ body {
 .resume-section h3 { break-after: avoid; page-break-after: avoid; }
 .page-break-before { break-before: page; page-break-before: always; }
 
+/* Section heading divider override. Templates render assorted bordered
+   <h2>s — under-line, left-rule, ribbon, etc. When the user picks a
+   non-default divider in StylePanel, force ALL h2 borders inside .paper to
+   that style. `divider-none` strips them entirely (also nukes left-rule and
+   ribbon edges since those use border-* too — that's the user's intent). */
+.paper.divider-dashed h2 { border-style: dashed !important; }
+.paper.divider-dotted h2 { border-style: dotted !important; }
+.paper.divider-double h2 { border-style: double !important; border-width: 3px !important; }
+.paper.divider-none   h2 { border: none !important; padding-bottom: 0 !important; }
+
 /* Tighten widow / orphan control. Bullets are the most common orphan
    offender — a single bullet at the bottom of a printed page next to a
    different entry's bullets above looks broken. `break-inside: avoid` keeps

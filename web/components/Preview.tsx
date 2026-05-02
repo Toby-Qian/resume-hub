@@ -332,7 +332,7 @@ export function Preview() {
       >
         <div
           ref={paperRef}
-          className={`paper paper-flow print-area density-${theme.density} ${pageSetup.size === "Letter" ? "paper-letter" : ""} ${previewMode ? "preview-mode" : ""}`}
+          className={`paper paper-flow print-area density-${theme.density} ${pageSetup.size === "Letter" ? "paper-letter" : ""} ${previewMode ? "preview-mode" : ""} ${theme.divider && theme.divider !== "solid" ? `divider-${theme.divider}` : ""}`}
           style={{
             ["--resume-accent" as any]: theme.accent,
             // Companion variables exposed to templates so they can build

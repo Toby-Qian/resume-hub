@@ -49,6 +49,9 @@ export const T = {
       bulletDisc: "圆点", bulletCircle: "空心", bulletSquare: "方块",
       bulletDash: "破折号", bulletNone: "无",
       bulletColor: "颜色", bulletColorReset: "跟随主色",
+      divider: "标题分隔线",
+      dividerSolid: "实线", dividerDashed: "虚线", dividerDotted: "点线",
+      dividerDouble: "双线", dividerNone: "无",
     },
     gallery: {
       title: "GitHub 简历模板画廊",
@@ -225,6 +228,9 @@ export const T = {
       bulletDisc: "Disc", bulletCircle: "Circle", bulletSquare: "Square",
       bulletDash: "Dash", bulletNone: "None",
       bulletColor: "Color", bulletColorReset: "Match accent",
+      divider: "Heading divider",
+      dividerSolid: "Solid", dividerDashed: "Dashed", dividerDotted: "Dotted",
+      dividerDouble: "Double", dividerNone: "None",
     },
     gallery: {
       title: "GitHub Resume Template Gallery",
