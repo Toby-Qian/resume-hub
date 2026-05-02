@@ -318,7 +318,7 @@ body {
   background: rgba(255,255,255,0.92);
   border: 1px solid #d1d5db;
   border-radius: 4px;
-  cursor: move;
+  cursor: ns-resize;
   opacity: 0;
   transition: opacity 0.15s;
   user-select: none;

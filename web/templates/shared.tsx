@@ -401,8 +401,10 @@ export function Draggable({
       if (!dragging.current) return;
       const { resume, update } = useStore.getState();
       const bo = { ...(resume.basics.blockOffsets || {}) };
+      // Lock X — vertical-only drag. Horizontal drift broke layout/ATS feel,
+      // so blocks only move up/down now.
       bo[name] = {
-        x: Math.round(dragging.current.ox + (ev.clientX - dragging.current.sx)),
+        x: 0,
         y: Math.round(dragging.current.oy + (ev.clientY - dragging.current.sy)),
       };
       update("basics", { ...resume.basics, blockOffsets: bo });
@@ -417,7 +419,7 @@ export function Draggable({
     window.addEventListener("mouseup", onUp);
   };
 
-  const moved = (off.x || 0) !== 0 || (off.y || 0) !== 0;
+  const moved = (off.y || 0) !== 0;
   const onReset = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
@@ -429,7 +431,7 @@ export function Draggable({
   return (
     <Tag
       className={`draggable-block group relative ${className}`}
-      style={{ transform: `translate(${off.x || 0}px, ${off.y || 0}px)` }}
+      style={{ transform: `translateY(${off.y || 0}px)` }}
     >
       {moved && (
         <button
@@ -443,7 +445,7 @@ export function Draggable({
       <button
         type="button"
         onMouseDown={onMouseDown}
-        title="拖动此区块 / drag this block"
+        title="上下拖动此区块 / drag block vertically"
         className="drag-handle"
         aria-label="drag block"
       >⋮⋮</button>
