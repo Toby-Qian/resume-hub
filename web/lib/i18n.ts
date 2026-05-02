@@ -148,6 +148,7 @@ export const T = {
       cancel: "取消",
       avatarTooLarge: "图片过大（请小于 800KB），或改用 URL。",
       chipsHint: "Enter 或逗号添加 · Backspace 移除最后一项",
+      bulletsHint: "Enter 新增一行 · 空行按 Backspace 删除 · Alt+↑/↓ 调序",
     },
     preview: {
       pageHint: "灰色分隔线为分页边界（A4 / Letter）；打印/导出 PDF 时浏览器会自动换页",
@@ -320,6 +321,7 @@ export const T = {
       cancel: "Cancel",
       avatarTooLarge: "Image too large (< 800KB), or use a URL instead.",
       chipsHint: "Press Enter or , to add · Backspace removes the last tag",
+      bulletsHint: "Enter to add a row · Backspace clears empty rows · Alt+↑/↓ to reorder",
     },
     preview: {
       pageHint: "Dashed lines mark page boundaries — print / PDF export will split automatically",

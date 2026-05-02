@@ -5,6 +5,7 @@ import { SectionKey, Resume } from "@/lib/schema";
 import { t } from "@/lib/i18n";
 import { Field } from "./Field";
 import { ChipsField } from "./ChipsField";
+import { BulletsField } from "./BulletsField";
 import { DateField } from "./DateField";
 import { toast } from "@/lib/toast";
 import { compressToDataURL } from "@/lib/imageCompress";
@@ -429,8 +430,13 @@ export function Editor() {
             <DateField label={L.fields.endDate} value={w.endDate} allowPresent onChange={(v) => patch("work", w.id, "endDate", v)} />
           </div>
           <Field label={L.fields.location} value={w.location || ""} onChange={(v) => patch("work", w.id, "location", v)} />
-          <Field textarea rows={4} label={L.fields.highlights} value={(w.highlights || []).join("\n")}
-            onChange={(v) => patch("work", w.id, "highlights", v.split("\n"))} />
+          <BulletsField
+            label={L.fields.highlights}
+            value={w.highlights || []}
+            onChange={(next) => patch("work", w.id, "highlights", next)}
+            placeholder={(L.fields as any).highlightPlaceholder ?? "一条职责或成果…"}
+            hint={(L.form as any).bulletsHint ?? "Enter 新增 · Backspace 删空行 · Alt+↑/↓ 调序"}
+          />
         </SortableCard>
       ))}
 
@@ -475,8 +481,13 @@ export function Editor() {
             <DateField label={L.fields.endDate} value={p.endDate || ""} allowPresent onChange={(v) => patch("projects", p.id, "endDate", v)} />
           </div>
           <Field label={L.fields.description} value={p.description} onChange={(v) => patch("projects", p.id, "description", v)} />
-          <Field textarea rows={3} label={L.fields.highlights} value={(p.highlights || []).join("\n")}
-            onChange={(v) => patch("projects", p.id, "highlights", v.split("\n"))} />
+          <BulletsField
+            label={L.fields.highlights}
+            value={p.highlights || []}
+            onChange={(next) => patch("projects", p.id, "highlights", next)}
+            placeholder={(L.fields as any).highlightPlaceholder ?? "一条职责或成果…"}
+            hint={(L.form as any).bulletsHint ?? "Enter 新增 · Backspace 删空行 · Alt+↑/↓ 调序"}
+          />
           <ChipsField
             label={L.fields.keywords}
             value={p.keywords || []}

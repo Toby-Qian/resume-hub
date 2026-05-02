@@ -273,11 +273,18 @@ body {
   transition: background-color 0.15s, box-shadow 0.15s;
   cursor: text;
 }
-.editable-field:empty::before {
-  content: "点击编辑 / click to edit";
-  color: #9ca3af;
-  font-style: italic;
+/* Empty field: no placeholder text — keeps the resume looking clean. We
+   reserve a tiny clickable strip via min-width so the field is still
+   discoverable on hover (the yellow hint background appears) and focusable
+   via Tab. The previous "click to edit / 点击编辑" text was visually noisy,
+   especially when several fields were unfilled at once. */
+.editable-field:empty {
+  display: inline-block;
+  min-width: 0.5em;
+  min-height: 1em;
 }
+/* Hover lights up only when there's actual focus surface — not on a 0×0
+   inline span with no content. */
 .editable-field:hover {
   background-color: rgba(253, 224, 71, 0.18);
   box-shadow: 0 0 0 2px rgba(253, 224, 71, 0.35);
@@ -285,6 +292,13 @@ body {
 .editable-field:focus {
   background-color: rgba(254, 240, 138, 0.55);
   box-shadow: 0 0 0 2px rgba(234, 179, 8, 0.65);
+}
+/* Empty state shouldn't show any visual noise in print. */
+@media print {
+  .editable-field:empty {
+    min-width: 0 !important;
+    min-height: 0 !important;
+  }
 }
 
 /* ---------- Draggable text blocks --------------------------------------- */
@@ -370,8 +384,11 @@ body {
   box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.35);
 }
 .resume-note .note-body.empty::before {
+  /* Notes still need a discovery hint — they're free-floating, otherwise
+     a freshly-added empty note would be invisible on the canvas. Make it
+     subtle and only when not focused. */
   content: "输入文本 / type text";
-  color: #9ca3af;
+  color: #cbd5e1;
   font-style: italic;
 }
 .resume-note .note-body:focus.empty::before { content: ""; }
