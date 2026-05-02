@@ -335,34 +335,50 @@ export const useStore = create<State>()(
 
         setResume: (r) => mutate(r),
         update: (key, value) => mutate({ ...get().resume, [key]: value } as Resume),
-        addItem: (section) =>
-          mutate({ ...get().resume, [section]: [...(get().resume[section] as any[]), blankItem(section)] } as Resume),
-        removeItem: (section, id) =>
-          mutate({ ...get().resume, [section]: (get().resume[section] as any[]).filter((x) => x.id !== id) } as Resume),
-        duplicateItem: (section, id) => {
-          const list = (get().resume[section] as any[]).slice();
-          const idx = list.findIndex((x) => x.id === id);
-          if (idx < 0) return;
-          // Deep-ish clone — arrays of primitives (highlights/keywords/courses)
-          // need their own copy so editing the dup doesn't mutate the source.
-          const src = list[idx];
-          const copy: any = { ...src, id: uid() };
-          for (const k of Object.keys(copy)) {
-            if (Array.isArray(copy[k])) copy[k] = copy[k].slice();
-          }
-          list.splice(idx + 1, 0, copy);
-          mutate({ ...get().resume, [section]: list } as Resume);
-        },
-        reorderItem: (section, fromId, toId) => {
-          if (fromId === toId) return;
-          const list = (get().resume[section] as any[]).slice();
-          const fromIdx = list.findIndex((x) => x.id === fromId);
-          const toIdx = list.findIndex((x) => x.id === toId);
-          if (fromIdx < 0 || toIdx < 0) return;
-          const [item] = list.splice(fromIdx, 1);
-          list.splice(toIdx, 0, item);
-          mutate({ ...get().resume, [section]: list } as Resume);
-        },
+        ...(() => {
+          // Section CRUD shares the same shape: read the union-typed array,
+          // operate on it as `IdItem[]`, write it back. We can't avoid one
+          // localized cast at the read boundary because TS can't unify the
+          // union of element types into a single concrete one — but we get
+          // typed `.id` access inside the closure, and 4 separate `as any[]`
+          // casts collapse into a single helper.
+          type IdItem = { id: string };
+          const getList = (section: SectionKey): IdItem[] =>
+            ((get().resume[section] as unknown as IdItem[]) || []).slice();
+          const writeList = (section: SectionKey, list: IdItem[]) =>
+            mutate({ ...get().resume, [section]: list } as Resume);
+          return {
+            addItem: (section: SectionKey) =>
+              writeList(section, [...getList(section), blankItem(section) as IdItem]),
+            removeItem: (section: SectionKey, id: string) =>
+              writeList(section, getList(section).filter((x) => x.id !== id)),
+            duplicateItem: (section: SectionKey, id: string) => {
+              const list = getList(section);
+              const idx = list.findIndex((x) => x.id === id);
+              if (idx < 0) return;
+              // Deep-ish clone — arrays of primitives (highlights/keywords/
+              // courses) need their own copy so editing the dup doesn't
+              // mutate the source.
+              const src = list[idx] as Record<string, unknown>;
+              const copy: Record<string, unknown> = { ...src, id: uid() };
+              for (const k of Object.keys(copy)) {
+                if (Array.isArray(copy[k])) copy[k] = (copy[k] as unknown[]).slice();
+              }
+              list.splice(idx + 1, 0, copy as IdItem);
+              writeList(section, list);
+            },
+            reorderItem: (section: SectionKey, fromId: string, toId: string) => {
+              if (fromId === toId) return;
+              const list = getList(section);
+              const fromIdx = list.findIndex((x) => x.id === fromId);
+              const toIdx = list.findIndex((x) => x.id === toId);
+              if (fromIdx < 0 || toIdx < 0) return;
+              const [item] = list.splice(fromIdx, 1);
+              list.splice(toIdx, 0, item);
+              writeList(section, list);
+            },
+          };
+        })(),
 
         addNote: () => {
           const r = get().resume;
