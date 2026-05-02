@@ -3,6 +3,7 @@ import { useRef } from "react";
 import { useStore } from "@/lib/store";
 import { t } from "@/lib/i18n";
 import { toast } from "@/lib/toast";
+import { validateAndNormalize } from "@/lib/validateResume";
 
 /** Shown at the top of the Editor pane when the resume is essentially
  *  blank (no name + no items in any section). Three CTAs, plus a hint
@@ -26,9 +27,7 @@ export function EmptyState() {
 
   const onImport = async (f: File) => {
     try {
-      const obj = JSON.parse(await f.text());
-      if (!obj || typeof obj !== "object" || !("basics" in obj)) throw new Error("invalid");
-      setResume(obj);
+      setResume(validateAndNormalize(JSON.parse(await f.text())));
       toast.success(L.toast.imported);
     } catch {
       toast.error(L.toast.importError);
