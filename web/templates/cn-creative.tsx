@@ -1,9 +1,62 @@
 "use client";
-import { TemplateProps, range, itemCls, Avatar, E, Draggable, useSectionLabels } from "./shared";
+import { TemplateProps, range, itemCls, Avatar, E, Draggable, useSectionLabels, useOrderedSections } from "./shared";
 
 export default function CNCreative({ resume }: TemplateProps) {
   const b = resume.basics;
   const L = useSectionLabels();
+
+  const work = resume.work.length > 0 && (
+    <section className="resume-section mb-5">
+      <h2 className="text-[1em] font-bold mb-2" style={{ color: "var(--resume-accent)" }}>{L.experience}</h2>
+      {resume.work.map((w, i) => (
+        <div key={w.id} className={itemCls(w, "mb-3 text-[0.92em]")}>
+          <div className="flex justify-between"><b><E path={`work.${i}.company`}>{w.company}</E> · <E path={`work.${i}.position`}>{w.position}</E></b><span className="text-gray-500">{range(w.startDate, w.endDate)}</span></div>
+          <ul className="list-disc ml-5 mt-1">
+            {w.highlights.filter(Boolean).map((h, j) => <li key={j}><E path={`work.${i}.highlights.${j}`}>{h}</E></li>)}
+          </ul>
+        </div>
+      ))}
+    </section>
+  );
+  const projects = resume.projects.length > 0 && (
+    <section className="resume-section mb-5">
+      <h2 className="text-[1em] font-bold mb-2" style={{ color: "var(--resume-accent)" }}>{L.projects}</h2>
+      {resume.projects.map((p, i) => (
+        <div key={p.id} className={itemCls(p, "mb-3 text-[0.92em]")}>
+          <div className="flex justify-between"><b><E path={`projects.${i}.name`}>{p.name}</E></b><span className="text-gray-500">{range(p.startDate, p.endDate)}</span></div>
+          <div className="text-gray-700"><E path={`projects.${i}.description`} multiline>{p.description}</E></div>
+          <ul className="list-disc ml-5">
+            {p.highlights.filter(Boolean).map((h, j) => <li key={j}><E path={`projects.${i}.highlights.${j}`}>{h}</E></li>)}
+          </ul>
+        </div>
+      ))}
+    </section>
+  );
+  const education = resume.education.length > 0 && (
+    <section className="resume-section mb-5">
+      <h2 className="text-[1em] font-bold mb-2" style={{ color: "var(--resume-accent)" }}>{L.education}</h2>
+      {resume.education.map((e, i) => (
+        <div key={e.id} className={itemCls(e, "text-[0.92em] mb-1")}>
+          <div className="flex justify-between"><b><E path={`education.${i}.institution`}>{e.institution}</E></b><span className="text-gray-500">{range(e.startDate, e.endDate)}</span></div>
+          <div><E path={`education.${i}.studyType`}>{e.studyType}</E> · <E path={`education.${i}.area`}>{e.area}</E>{e.score ? ` · ${e.score}` : ""}</div>
+        </div>
+      ))}
+    </section>
+  );
+  const awards = resume.awards.length > 0 && (
+    <section className="resume-section">
+      <h2 className="text-[1em] font-bold mb-2" style={{ color: "var(--resume-accent)" }}>{L.awards}</h2>
+      <ul className="list-disc ml-5 text-[0.92em]">
+        {resume.awards.map((a, i) => (
+          <li key={a.id} className={itemCls(a)}><b><E path={`awards.${i}.title`}>{a.title}</E></b> · <E path={`awards.${i}.awarder`}>{a.awarder}</E> · <E path={`awards.${i}.date`}>{a.date}</E></li>
+        ))}
+      </ul>
+    </section>
+  );
+  // Skills & languages live in the sidebar in this template; they are not
+  // part of the reorderable main column.
+  const ordered = useOrderedSections({ work, projects, education, awards });
+
   return (
     <div className="grid grid-cols-[35%_1fr]" style={{ minHeight: "inherit" }}>
       <aside style={{ background: "var(--resume-accent)", color: "white", padding: "var(--pad)" }}>
@@ -44,58 +97,7 @@ export default function CNCreative({ resume }: TemplateProps) {
 
       <main style={{ padding: "var(--pad)" }}>
         <Draggable name="summary"><p className="text-[0.95em] mb-5 text-gray-800"><E path="basics.summary" multiline>{b.summary}</E></p></Draggable>
-
-        {resume.work.length > 0 && (
-          <section className="resume-section mb-5">
-            <h2 className="text-[1em] font-bold mb-2" style={{ color: "var(--resume-accent)" }}>{L.experience}</h2>
-            {resume.work.map((w, i) => (
-              <div key={w.id} className={itemCls(w, "mb-3 text-[0.92em]")}>
-                <div className="flex justify-between"><b><E path={`work.${i}.company`}>{w.company}</E> · <E path={`work.${i}.position`}>{w.position}</E></b><span className="text-gray-500">{range(w.startDate, w.endDate)}</span></div>
-                <ul className="list-disc ml-5 mt-1">
-                  {w.highlights.filter(Boolean).map((h, j) => <li key={j}><E path={`work.${i}.highlights.${j}`}>{h}</E></li>)}
-                </ul>
-              </div>
-            ))}
-          </section>
-        )}
-
-        {resume.projects.length > 0 && (
-          <section className="resume-section mb-5">
-            <h2 className="text-[1em] font-bold mb-2" style={{ color: "var(--resume-accent)" }}>{L.projects}</h2>
-            {resume.projects.map((p, i) => (
-              <div key={p.id} className={itemCls(p, "mb-3 text-[0.92em]")}>
-                <div className="flex justify-between"><b><E path={`projects.${i}.name`}>{p.name}</E></b><span className="text-gray-500">{range(p.startDate, p.endDate)}</span></div>
-                <div className="text-gray-700"><E path={`projects.${i}.description`} multiline>{p.description}</E></div>
-                <ul className="list-disc ml-5">
-                  {p.highlights.filter(Boolean).map((h, j) => <li key={j}><E path={`projects.${i}.highlights.${j}`}>{h}</E></li>)}
-                </ul>
-              </div>
-            ))}
-          </section>
-        )}
-
-        {resume.education.length > 0 && (
-          <section className="resume-section mb-5">
-            <h2 className="text-[1em] font-bold mb-2" style={{ color: "var(--resume-accent)" }}>{L.education}</h2>
-            {resume.education.map((e, i) => (
-              <div key={e.id} className={itemCls(e, "text-[0.92em] mb-1")}>
-                <div className="flex justify-between"><b><E path={`education.${i}.institution`}>{e.institution}</E></b><span className="text-gray-500">{range(e.startDate, e.endDate)}</span></div>
-                <div><E path={`education.${i}.studyType`}>{e.studyType}</E> · <E path={`education.${i}.area`}>{e.area}</E>{e.score ? ` · ${e.score}` : ""}</div>
-              </div>
-            ))}
-          </section>
-        )}
-
-        {resume.awards.length > 0 && (
-          <section className="resume-section">
-            <h2 className="text-[1em] font-bold mb-2" style={{ color: "var(--resume-accent)" }}>{L.awards}</h2>
-            <ul className="list-disc ml-5 text-[0.92em]">
-              {resume.awards.map((a, i) => (
-                <li key={a.id} className={itemCls(a)}><b><E path={`awards.${i}.title`}>{a.title}</E></b> · <E path={`awards.${i}.awarder`}>{a.awarder}</E> · <E path={`awards.${i}.date`}>{a.date}</E></li>
-              ))}
-            </ul>
-          </section>
-        )}
+        {ordered}
       </main>
     </div>
   );

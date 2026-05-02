@@ -1,5 +1,5 @@
 "use client";
-import { TemplateProps, range, itemCls, Avatar, E, Draggable, useSectionLabels } from "./shared";
+import { TemplateProps, range, itemCls, Avatar, E, Draggable, useSectionLabels, useOrderedSections } from "./shared";
 
 /**
  * Single-column, tight-leading, small-type resume — built for senior
@@ -15,6 +15,99 @@ export default function Compact({ resume }: TemplateProps) {
       {children}
     </h2>
   );
+
+  const work = resume.work.length > 0 && (
+    <>
+      <H>{L.experience}</H>
+      {resume.work.map((w, i) => (
+        <div key={w.id} className={itemCls(w, "text-[0.86em] mb-1.5")}>
+          <div className="flex justify-between">
+            <div><b><E path={`work.${i}.company`}>{w.company}</E></b> — <i><E path={`work.${i}.position`}>{w.position}</E></i>{w.location && <span className="text-gray-500"> · <E path={`work.${i}.location`}>{w.location}</E></span>}</div>
+            <div className="text-gray-500 whitespace-nowrap">{range(w.startDate, w.endDate)}</div>
+          </div>
+          {w.highlights.filter(Boolean).length > 0 && (
+            <ul className="list-[square] ml-4">
+              {w.highlights.filter(Boolean).map((h, j) => <li key={j}><E path={`work.${i}.highlights.${j}`}>{h}</E></li>)}
+            </ul>
+          )}
+        </div>
+      ))}
+    </>
+  );
+
+  const projects = resume.projects.length > 0 && (
+    <>
+      <H>{L.projects}</H>
+      {resume.projects.map((p, i) => (
+        <div key={p.id} className={itemCls(p, "text-[0.86em] mb-1")}>
+          <div className="flex justify-between">
+            <div><b><E path={`projects.${i}.name`}>{p.name}</E></b>{p.description && <span className="text-gray-700"> — <E path={`projects.${i}.description`} multiline>{p.description}</E></span>}</div>
+            <div className="text-gray-500 whitespace-nowrap">{range(p.startDate, p.endDate)}</div>
+          </div>
+          {p.highlights.filter(Boolean).length > 0 && (
+            <ul className="list-[square] ml-4">
+              {p.highlights.filter(Boolean).map((h, j) => <li key={j}><E path={`projects.${i}.highlights.${j}`}>{h}</E></li>)}
+            </ul>
+          )}
+          {p.keywords && p.keywords.length > 0 && (
+            <div className="text-[0.8em] text-gray-500">{p.keywords.join(" · ")}</div>
+          )}
+        </div>
+      ))}
+    </>
+  );
+
+  const education = resume.education.length > 0 && (
+    <>
+      <H>{L.education}</H>
+      {resume.education.map((e, i) => (
+        <div key={e.id} className={itemCls(e, "text-[0.86em]")}>
+          <div className="flex justify-between">
+            <div><b><E path={`education.${i}.institution`}>{e.institution}</E></b> — <E path={`education.${i}.studyType`}>{e.studyType}</E>, <E path={`education.${i}.area`}>{e.area}</E>{e.score && <span className="text-gray-600"> · <E path={`education.${i}.score`}>{e.score}</E></span>}</div>
+            <div className="text-gray-500 whitespace-nowrap">{range(e.startDate, e.endDate)}</div>
+          </div>
+        </div>
+      ))}
+    </>
+  );
+
+  const skills = resume.skills.length > 0 && (
+    <>
+      <H>{L.skills}</H>
+      <div className="text-[0.86em] space-y-0.5">
+        {resume.skills.map((s, i) => (
+          <div key={s.id} className={itemCls(s)}>
+            <b><E path={`skills.${i}.name`}>{s.name}</E>{s.level && ` (${s.level})`}:</b> {s.keywords.join(", ")}
+          </div>
+        ))}
+      </div>
+    </>
+  );
+
+  const awards = resume.awards.length > 0 && (
+    <>
+      <H>{L.honorsAndAwards}</H>
+      <div className="text-[0.85em] space-y-0.5">
+        {resume.awards.map((a, i) => (
+          <div key={a.id} className={itemCls(a)}>
+            <b><E path={`awards.${i}.title`}>{a.title}</E></b> · <E path={`awards.${i}.awarder`}>{a.awarder}</E> · <span className="text-gray-500"><E path={`awards.${i}.date`}>{a.date}</E></span>
+          </div>
+        ))}
+      </div>
+    </>
+  );
+
+  const languages = resume.languages.length > 0 && (
+    <>
+      <H>{L.languages}</H>
+      <div className="text-[0.85em]">
+        {resume.languages.map((l) => `${l.language} (${l.fluency})`).join(" · ")}
+      </div>
+    </>
+  );
+
+  const ordered = useOrderedSections({ work, projects, education, skills, awards, languages });
+
   return (
     <div style={{ padding: "var(--pad)", lineHeight: 1.35 }}>
       <Draggable name="header" as="header" className="flex items-start gap-4 mb-2">
@@ -35,89 +128,7 @@ export default function Compact({ resume }: TemplateProps) {
       </Draggable>
       <Draggable name="summary"><p className="text-[0.88em] text-gray-800 mb-1"><E path="basics.summary" multiline>{b.summary}</E></p></Draggable>
 
-      {resume.work.length > 0 && (
-        <>
-          <H>{L.experience}</H>
-          {resume.work.map((w, i) => (
-            <div key={w.id} className={itemCls(w, "text-[0.86em] mb-1.5")}>
-              <div className="flex justify-between">
-                <div><b><E path={`work.${i}.company`}>{w.company}</E></b> — <i><E path={`work.${i}.position`}>{w.position}</E></i>{w.location && <span className="text-gray-500"> · <E path={`work.${i}.location`}>{w.location}</E></span>}</div>
-                <div className="text-gray-500 whitespace-nowrap">{range(w.startDate, w.endDate)}</div>
-              </div>
-              {w.highlights.filter(Boolean).length > 0 && (
-                <ul className="list-[square] ml-4">
-                  {w.highlights.filter(Boolean).map((h, j) => <li key={j}><E path={`work.${i}.highlights.${j}`}>{h}</E></li>)}
-                </ul>
-              )}
-            </div>
-          ))}
-        </>
-      )}
-
-      {resume.projects.length > 0 && (
-        <>
-          <H>{L.projects}</H>
-          {resume.projects.map((p, i) => (
-            <div key={p.id} className={itemCls(p, "text-[0.86em] mb-1")}>
-              <div className="flex justify-between">
-                <div><b><E path={`projects.${i}.name`}>{p.name}</E></b>{p.description && <span className="text-gray-700"> — <E path={`projects.${i}.description`} multiline>{p.description}</E></span>}</div>
-                <div className="text-gray-500 whitespace-nowrap">{range(p.startDate, p.endDate)}</div>
-              </div>
-              {p.highlights.filter(Boolean).length > 0 && (
-                <ul className="list-[square] ml-4">
-                  {p.highlights.filter(Boolean).map((h, j) => <li key={j}><E path={`projects.${i}.highlights.${j}`}>{h}</E></li>)}
-                </ul>
-              )}
-              {p.keywords && p.keywords.length > 0 && (
-                <div className="text-[0.8em] text-gray-500">{p.keywords.join(" · ")}</div>
-              )}
-            </div>
-          ))}
-        </>
-      )}
-
-      {resume.education.length > 0 && (
-        <>
-          <H>{L.education}</H>
-          {resume.education.map((e, i) => (
-            <div key={e.id} className={itemCls(e, "text-[0.86em]")}>
-              <div className="flex justify-between">
-                <div><b><E path={`education.${i}.institution`}>{e.institution}</E></b> — <E path={`education.${i}.studyType`}>{e.studyType}</E>, <E path={`education.${i}.area`}>{e.area}</E>{e.score && <span className="text-gray-600"> · <E path={`education.${i}.score`}>{e.score}</E></span>}</div>
-                <div className="text-gray-500 whitespace-nowrap">{range(e.startDate, e.endDate)}</div>
-              </div>
-            </div>
-          ))}
-        </>
-      )}
-
-      {resume.skills.length > 0 && (
-        <>
-          <H>{L.skills}</H>
-          <div className="text-[0.86em] space-y-0.5">
-            {resume.skills.map((s, i) => (
-              <div key={s.id} className={itemCls(s)}>
-                <b><E path={`skills.${i}.name`}>{s.name}</E>{s.level && ` (${s.level})`}:</b> {s.keywords.join(", ")}
-              </div>
-            ))}
-          </div>
-        </>
-      )}
-
-      {(resume.awards.length > 0 || resume.languages.length > 0) && (
-        <>
-          <H>{`${L.honorsAndAwards} & ${L.languages}`}</H>
-          <div className="text-[0.85em] space-y-0.5">
-            {resume.awards.map((a, i) => (
-              <div key={a.id} className={itemCls(a)}>
-                <b><E path={`awards.${i}.title`}>{a.title}</E></b> · <E path={`awards.${i}.awarder`}>{a.awarder}</E> · <span className="text-gray-500"><E path={`awards.${i}.date`}>{a.date}</E></span>
-              </div>
-            ))}
-            {resume.languages.length > 0 && (
-              <div>{resume.languages.map((l, i) => `${l.language} (${l.fluency})`).join(" · ")}</div>
-            )}
-          </div>
-        </>
-      )}
+      {ordered}
     </div>
   );
 }

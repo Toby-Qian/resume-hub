@@ -89,6 +89,10 @@ export const T = {
       hideSection: "隐藏此节",
       showSection: "显示此节",
       hoverHint: "悬停可预览",
+      sectionOrder: "节区顺序",
+      sectionOrderHint: "拖动调整简历中各节区的先后顺序",
+      sectionOrderReset: "恢复默认顺序",
+      sectionOrderReorderable: "支持拖动重排的模板：现代 / 经典 / 极简 / 紧凑 / 时间线 / 中式正统 / 中式创意 / 优雅",
     },
     footer: {
       privacy: "所有内容仅保存在你的浏览器本地，不会上传到任何服务器。",
@@ -252,6 +256,10 @@ export const T = {
       hideSection: "Hide section",
       showSection: "Show section",
       hoverHint: "Hover to preview",
+      sectionOrder: "Section order",
+      sectionOrderHint: "Drag to reorder sections in the resume",
+      sectionOrderReset: "Restore default order",
+      sectionOrderReorderable: "Reorderable in: Modern / Classic / Minimal / Compact / Timeline / CN-Formal / CN-Creative / Elegant",
     },
     footer: {
       privacy: "Everything you type stays in your browser's local storage — nothing is uploaded.",

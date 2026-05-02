@@ -1,5 +1,5 @@
 "use client";
-import { useStore, defaultTheme, ThemeTokens, normalizeMargin } from "@/lib/store";
+import { useStore, defaultTheme, ThemeTokens, normalizeMargin, DEFAULT_SECTION_ORDER } from "@/lib/store";
 import type { SectionKey } from "@/lib/schema";
 import { t } from "@/lib/i18n";
 import { TemplateGrid } from "./TemplatePreview";
@@ -18,40 +18,67 @@ const MARGIN_PRESETS: { mm: number; key: string }[] = [
 ];
 
 const PRESETS = ["#2563eb", "#dc2626", "#059669", "#7c3aed", "#ea580c", "#0891b2", "#111827"];
-const SANS = [
-  "'Inter', 'PingFang SC', 'Microsoft YaHei', sans-serif",
-  "'Helvetica Neue', 'PingFang SC', sans-serif",
-  "'system-ui', 'Microsoft YaHei', sans-serif",
-  "'Noto Sans SC', sans-serif",
-];
-const SERIF = [
-  "'Source Serif Pro', 'Source Han Serif SC', serif",
-  "'Georgia', 'Source Han Serif SC', serif",
-  "'EB Garamond', 'Noto Serif SC', serif",
+
+/** Sans-serif font stacks. Each entry: [stack, zh label, en label]. The first
+ *  family is what actually loads — later families are CJK / system fallbacks
+ *  so a Chinese resume still renders well even when the user picked a
+ *  Latin-only family at the top of the stack. */
+const SANS_FONTS: { stack: string; zh: string; en: string }[] = [
+  { stack: "'Inter', 'PingFang SC', 'Microsoft YaHei', sans-serif", zh: "Inter", en: "Inter" },
+  { stack: "'Helvetica Neue', 'PingFang SC', 'Microsoft YaHei', sans-serif", zh: "Helvetica Neue", en: "Helvetica Neue" },
+  { stack: "'system-ui', 'PingFang SC', 'Microsoft YaHei', sans-serif", zh: "系统默认", en: "System UI" },
+  { stack: "'Noto Sans SC', 'PingFang SC', sans-serif", zh: "思源黑体 (Noto Sans SC)", en: "Noto Sans SC" },
+  { stack: "'PingFang SC', 'Microsoft YaHei', sans-serif", zh: "苹方 (PingFang SC)", en: "PingFang SC" },
+  { stack: "'Microsoft YaHei', 'PingFang SC', sans-serif", zh: "微软雅黑", en: "Microsoft YaHei" },
+  { stack: "'HarmonyOS Sans SC', 'PingFang SC', sans-serif", zh: "鸿蒙黑体", en: "HarmonyOS Sans SC" },
+  { stack: "'Alibaba PuHuiTi', 'PingFang SC', sans-serif", zh: "阿里巴巴普惠体", en: "Alibaba PuHuiTi" },
+  { stack: "'OPPOSans', 'PingFang SC', sans-serif", zh: "OPPO Sans", en: "OPPO Sans" },
+  { stack: "'MiSans', 'PingFang SC', sans-serif", zh: "小米兰亭 (MiSans)", en: "MiSans" },
+  { stack: "'HYQiHei', 'PingFang SC', sans-serif", zh: "汉仪旗黑", en: "HYQiHei" },
+  { stack: "'FZLanTingHei', 'PingFang SC', sans-serif", zh: "方正兰亭黑", en: "Founder LanTingHei" },
 ];
 
-/** Curated palette: one click sets accent + sans + serif to a cohesive set.   */
-type Preset = { id: string; nameZh: string; nameEn: string; accent: string; sans: string; serif: string };
+/** Serif font stacks (with CJK-flavoured Song / Ming fallbacks). */
+const SERIF_FONTS: { stack: string; zh: string; en: string }[] = [
+  { stack: "'Source Serif Pro', 'Source Han Serif SC', 'Songti SC', serif", zh: "Source Serif", en: "Source Serif Pro" },
+  { stack: "'Georgia', 'Source Han Serif SC', 'Songti SC', serif", zh: "Georgia", en: "Georgia" },
+  { stack: "'EB Garamond', 'Noto Serif SC', 'Songti SC', serif", zh: "EB Garamond", en: "EB Garamond" },
+  { stack: "'Noto Serif SC', 'Source Han Serif SC', 'Songti SC', serif", zh: "思源宋体 (Noto Serif SC)", en: "Noto Serif SC" },
+  { stack: "'Source Han Serif SC', 'Songti SC', serif", zh: "思源宋体", en: "Source Han Serif SC" },
+  { stack: "'Songti SC', 'SimSun', 'Source Han Serif SC', serif", zh: "宋体 (Songti)", en: "Songti SC" },
+  { stack: "'SimSun', 'Songti SC', serif", zh: "中易宋体 SimSun", en: "SimSun" },
+  { stack: "'STKaiti', 'KaiTi', 'KaiTi_GB2312', serif", zh: "楷体 (STKaiti)", en: "STKaiti" },
+  { stack: "'STFangsong', 'FangSong', serif", zh: "仿宋", en: "STFangsong" },
+  { stack: "'STZhongsong', 'STSong', serif", zh: "中宋", en: "STZhongsong" },
+  { stack: "'FZShuSong', 'STSong', serif", zh: "方正书宋", en: "Founder ShuSong" },
+  { stack: "'LXGW WenKai', 'Source Han Serif SC', serif", zh: "霞鹜文楷 (LXGW WenKai)", en: "LXGW WenKai" },
+];
+
+const SANS = SANS_FONTS.map((f) => f.stack);
+const SERIF = SERIF_FONTS.map((f) => f.stack);
+
+/** Curated palette: one click sets accent only. Fonts are kept independent
+ *  (changing the accent should NOT silently change the user's chosen font).  */
+type Preset = { id: string; nameZh: string; nameEn: string; accent: string };
 const THEME_PRESETS: Preset[] = [
-  { id: "modern-blue",   nameZh: "现代蓝",   nameEn: "Modern Blue",   accent: "#2563eb", sans: SANS[0], serif: SERIF[0] },
-  { id: "classic-black", nameZh: "经典黑",   nameEn: "Classic Black", accent: "#111827", sans: SANS[1], serif: SERIF[1] },
-  { id: "academic-green",nameZh: "学院绿",   nameEn: "Academic Green",accent: "#065f46", sans: SANS[0], serif: SERIF[2] },
-  { id: "bordeaux",      nameZh: "酒红",     nameEn: "Bordeaux",      accent: "#9f1239", sans: SANS[0], serif: SERIF[0] },
-  { id: "warm-orange",   nameZh: "暖橙",     nameEn: "Warm Orange",   accent: "#c2410c", sans: SANS[2], serif: SERIF[1] },
-  { id: "deep-purple",   nameZh: "深紫",     nameEn: "Deep Purple",   accent: "#5b21b6", sans: SANS[0], serif: SERIF[0] },
-  { id: "cool-slate",    nameZh: "冷灰",     nameEn: "Cool Slate",    accent: "#475569", sans: SANS[1], serif: SERIF[0] },
-  { id: "teal",          nameZh: "湖青",     nameEn: "Teal",          accent: "#0f766e", sans: SANS[0], serif: SERIF[0] },
+  { id: "modern-blue",   nameZh: "现代蓝",   nameEn: "Modern Blue",   accent: "#2563eb" },
+  { id: "classic-black", nameZh: "经典黑",   nameEn: "Classic Black", accent: "#111827" },
+  { id: "academic-green",nameZh: "学院绿",   nameEn: "Academic Green",accent: "#065f46" },
+  { id: "bordeaux",      nameZh: "酒红",     nameEn: "Bordeaux",      accent: "#9f1239" },
+  { id: "warm-orange",   nameZh: "暖橙",     nameEn: "Warm Orange",   accent: "#c2410c" },
+  { id: "deep-purple",   nameZh: "深紫",     nameEn: "Deep Purple",   accent: "#5b21b6" },
+  { id: "cool-slate",    nameZh: "冷灰",     nameEn: "Cool Slate",    accent: "#475569" },
+  { id: "teal",          nameZh: "湖青",     nameEn: "Teal",          accent: "#0f766e" },
 ];
 
 function isMatchingPreset(theme: ThemeTokens, p: Preset) {
-  return theme.accent.toLowerCase() === p.accent.toLowerCase()
-    && theme.fontSans === p.sans
-    && theme.fontSerif === p.serif;
+  return theme.accent.toLowerCase() === p.accent.toLowerCase();
 }
 
 export function StylePanel() {
   const { theme, setTheme, lang, pageSetup, setPageSetup,
-          hiddenSections, toggleSectionVisibility } = useStore();
+          hiddenSections, toggleSectionVisibility,
+          sectionOrder, reorderSection, setSectionOrder } = useStore();
   const L = t(lang);
   const S = (L as any).style ?? {};
   const E = (L as any).exportMenu ?? {};
@@ -89,7 +116,7 @@ export function StylePanel() {
             return (
               <button
                 key={p.id}
-                onClick={() => setTheme({ accent: p.accent, fontSans: p.sans, fontSerif: p.serif })}
+                onClick={() => setTheme({ accent: p.accent })}
                 className={`group flex items-center gap-2 px-2 py-1.5 rounded border text-left transition ${
                   active ? "border-blue-500 bg-blue-50 ring-1 ring-blue-300" : "border-gray-200 hover:border-gray-400 hover:bg-gray-50"
                 }`}
@@ -126,16 +153,26 @@ export function StylePanel() {
       <div>
         <div className="text-xs font-semibold uppercase text-gray-500 mb-2">{L.theme.fontSans}</div>
         <select value={theme.fontSans} onChange={(e) => setTheme({ fontSans: e.target.value })}
-          className="w-full border rounded px-2 py-1.5 text-xs">
-          {SANS.map((f) => <option key={f} value={f}>{f.split(",")[0].replace(/'/g, "")}</option>)}
+          className="w-full border rounded px-2 py-1.5 text-xs"
+          style={{ fontFamily: theme.fontSans }}>
+          {SANS_FONTS.map((f) => (
+            <option key={f.stack} value={f.stack} style={{ fontFamily: f.stack }}>
+              {lang === "zh" ? f.zh : f.en}
+            </option>
+          ))}
         </select>
       </div>
 
       <div>
         <div className="text-xs font-semibold uppercase text-gray-500 mb-2">{L.theme.fontSerif}</div>
         <select value={theme.fontSerif} onChange={(e) => setTheme({ fontSerif: e.target.value })}
-          className="w-full border rounded px-2 py-1.5 text-xs">
-          {SERIF.map((f) => <option key={f} value={f}>{f.split(",")[0].replace(/'/g, "")}</option>)}
+          className="w-full border rounded px-2 py-1.5 text-xs"
+          style={{ fontFamily: theme.fontSerif }}>
+          {SERIF_FONTS.map((f) => (
+            <option key={f.stack} value={f.stack} style={{ fontFamily: f.stack }}>
+              {lang === "zh" ? f.zh : f.en}
+            </option>
+          ))}
         </select>
       </div>
 
@@ -293,6 +330,68 @@ export function StylePanel() {
               </button>
             );
           })}
+        </div>
+      </div>
+
+      {/* Section order — drag to reorder. Templates that opted into the
+          `useOrderedSections` helper render sections in this order.        */}
+      <div>
+        <div className="flex items-center justify-between mb-2">
+          <div className="text-xs font-semibold uppercase text-gray-500">
+            {S.sectionOrder ?? "节区顺序"}
+          </div>
+          <button
+            type="button"
+            onClick={() => setSectionOrder([...DEFAULT_SECTION_ORDER])}
+            className="text-[0.7rem] text-gray-400 hover:text-gray-700 transition"
+            title={S.sectionOrderReset ?? "恢复默认顺序"}
+          >
+            ↺ {S.reset ?? "重置"}
+          </button>
+        </div>
+        <div className="space-y-1">
+          {sectionOrder.map((k) => (
+            <div
+              key={k}
+              draggable
+              onDragStart={(e) => {
+                e.dataTransfer.setData("text/x-section-key", k);
+                e.dataTransfer.effectAllowed = "move";
+                (e.currentTarget as HTMLElement).classList.add("opacity-50");
+              }}
+              onDragEnd={(e) => {
+                (e.currentTarget as HTMLElement).classList.remove("opacity-50");
+              }}
+              onDragOver={(e) => {
+                if (!e.dataTransfer.types.includes("text/x-section-key")) return;
+                e.preventDefault();
+                e.dataTransfer.dropEffect = "move";
+                (e.currentTarget as HTMLElement).classList.add("ring-2", "ring-amber-400");
+              }}
+              onDragLeave={(e) => {
+                (e.currentTarget as HTMLElement).classList.remove("ring-2", "ring-amber-400");
+              }}
+              onDrop={(e) => {
+                e.preventDefault();
+                (e.currentTarget as HTMLElement).classList.remove("ring-2", "ring-amber-400");
+                const fromKey = e.dataTransfer.getData("text/x-section-key");
+                if (!fromKey || fromKey === k) return;
+                reorderSection(fromKey as any, k);
+              }}
+              className="w-full flex items-center gap-2 px-2.5 py-1.5 rounded-lg border border-gray-200 bg-white hover:border-amber-300 hover:bg-amber-50/40 transition cursor-grab active:cursor-grabbing select-none"
+              title={S.sectionOrderHint ?? "拖动调整顺序"}
+            >
+              <span className="text-gray-300 text-sm leading-none">⋮⋮</span>
+              <span className="text-base leading-none">{SECTION_ICONS[k]}</span>
+              <span className="text-xs text-gray-700 flex-1">{L.sections[k]}</span>
+              {hiddenSections.includes(k) && (
+                <span className="text-[0.6rem] text-gray-400">({S.hideSection ?? "已隐藏"})</span>
+              )}
+            </div>
+          ))}
+        </div>
+        <div className="text-[0.65rem] text-gray-400 mt-1.5 leading-snug">
+          {S.sectionOrderReorderable ?? ""}
         </div>
       </div>
 

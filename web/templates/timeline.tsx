@@ -1,5 +1,5 @@
 "use client";
-import { TemplateProps, range, itemCls, Avatar, E, Draggable, useSectionLabels } from "./shared";
+import { TemplateProps, range, itemCls, Avatar, E, Draggable, useSectionLabels, useOrderedSections } from "./shared";
 
 /**
  * Vertical timeline: each work/project entry has a dot on the left with a
@@ -30,6 +30,83 @@ export default function Timeline({ resume }: TemplateProps) {
     </div>
   );
 
+  const work = resume.work.length > 0 && (
+    <>
+      <H>{L.experience}</H>
+      {resume.work.map((w, i) => (
+        <Node key={w.id} date={range(w.startDate, w.endDate)} breakBefore={(w as any).breakBefore}>
+          <div className="text-[0.93em]"><b><E path={`work.${i}.position`}>{w.position}</E></b> · <span className="text-gray-700"><E path={`work.${i}.company`}>{w.company}</E></span></div>
+          {w.location && <div className="text-[0.8em] text-gray-500"><E path={`work.${i}.location`}>{w.location}</E></div>}
+          <ul className="list-disc ml-5 mt-1 text-[0.9em]">
+            {w.highlights.filter(Boolean).map((h, j) => <li key={j}><E path={`work.${i}.highlights.${j}`}>{h}</E></li>)}
+          </ul>
+        </Node>
+      ))}
+    </>
+  );
+  const projects = resume.projects.length > 0 && (
+    <>
+      <H>{L.projects}</H>
+      {resume.projects.map((p, i) => (
+        <Node key={p.id} date={range(p.startDate, p.endDate)} breakBefore={(p as any).breakBefore}>
+          <div className="text-[0.93em]"><b><E path={`projects.${i}.name`}>{p.name}</E></b></div>
+          {p.description && <div className="text-[0.88em] text-gray-700"><E path={`projects.${i}.description`} multiline>{p.description}</E></div>}
+          {p.highlights.filter(Boolean).length > 0 && (
+            <ul className="list-disc ml-5 mt-1 text-[0.88em]">
+              {p.highlights.filter(Boolean).map((h, j) => <li key={j}><E path={`projects.${i}.highlights.${j}`}>{h}</E></li>)}
+            </ul>
+          )}
+          {p.keywords && p.keywords.length > 0 && (
+            <div className="text-[0.8em] text-gray-500 mt-0.5">{p.keywords.join(" · ")}</div>
+          )}
+        </Node>
+      ))}
+    </>
+  );
+  const education = resume.education.length > 0 && (
+    <>
+      <H>{L.education}</H>
+      {resume.education.map((e, i) => (
+        <Node key={e.id} date={range(e.startDate, e.endDate)} breakBefore={(e as any).breakBefore}>
+          <div className="text-[0.93em]"><b><E path={`education.${i}.institution`}>{e.institution}</E></b></div>
+          <div className="text-[0.88em]"><E path={`education.${i}.studyType`}>{e.studyType}</E> · <E path={`education.${i}.area`}>{e.area}</E>{e.score ? ` · ${e.score}` : ""}</div>
+        </Node>
+      ))}
+    </>
+  );
+  const skills = resume.skills.length > 0 && (
+    <>
+      <H>{L.skills}</H>
+      <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-[0.88em]">
+        {resume.skills.map((s, i) => (
+          <div key={s.id} className={itemCls(s)}>
+            <b><E path={`skills.${i}.name`}>{s.name}</E></b>
+            {s.keywords.length > 0 && <span className="text-gray-600"> — {s.keywords.join(", ")}</span>}
+          </div>
+        ))}
+      </div>
+    </>
+  );
+  const awards = resume.awards.length > 0 && (
+    <>
+      <H>{L.honorsAndAwards}</H>
+      <div className="text-[0.88em] space-y-0.5">
+        {resume.awards.map((a, i) => (
+          <div key={a.id} className={itemCls(a)}><b><E path={`awards.${i}.title`}>{a.title}</E></b> · <E path={`awards.${i}.awarder`}>{a.awarder}</E> · <span className="text-gray-500"><E path={`awards.${i}.date`}>{a.date}</E></span></div>
+        ))}
+      </div>
+    </>
+  );
+  const languages = resume.languages.length > 0 && (
+    <>
+      <H>{L.languages}</H>
+      <div className="text-[0.88em]">
+        {resume.languages.map((l) => `${l.language} (${l.fluency})`).join(" · ")}
+      </div>
+    </>
+  );
+  const ordered = useOrderedSections({ work, projects, education, skills, awards, languages });
+
   return (
     <div style={{ padding: "var(--pad)" }}>
       <Draggable name="header" as="header" className="flex items-center gap-4 mb-5 pb-4 border-b border-gray-200">
@@ -47,80 +124,7 @@ export default function Timeline({ resume }: TemplateProps) {
       </Draggable>
       <Draggable name="summary"><p className="text-[0.93em] text-gray-800 mb-2"><E path="basics.summary" multiline>{b.summary}</E></p></Draggable>
 
-      {resume.work.length > 0 && (
-        <>
-          <H>{L.experience}</H>
-          {resume.work.map((w, i) => (
-            <Node key={w.id} date={range(w.startDate, w.endDate)} breakBefore={(w as any).breakBefore}>
-              <div className="text-[0.93em]"><b><E path={`work.${i}.position`}>{w.position}</E></b> · <span className="text-gray-700"><E path={`work.${i}.company`}>{w.company}</E></span></div>
-              {w.location && <div className="text-[0.8em] text-gray-500"><E path={`work.${i}.location`}>{w.location}</E></div>}
-              <ul className="list-disc ml-5 mt-1 text-[0.9em]">
-                {w.highlights.filter(Boolean).map((h, j) => <li key={j}><E path={`work.${i}.highlights.${j}`}>{h}</E></li>)}
-              </ul>
-            </Node>
-          ))}
-        </>
-      )}
-
-      {resume.projects.length > 0 && (
-        <>
-          <H>{L.projects}</H>
-          {resume.projects.map((p, i) => (
-            <Node key={p.id} date={range(p.startDate, p.endDate)} breakBefore={(p as any).breakBefore}>
-              <div className="text-[0.93em]"><b><E path={`projects.${i}.name`}>{p.name}</E></b></div>
-              {p.description && <div className="text-[0.88em] text-gray-700"><E path={`projects.${i}.description`} multiline>{p.description}</E></div>}
-              {p.highlights.filter(Boolean).length > 0 && (
-                <ul className="list-disc ml-5 mt-1 text-[0.88em]">
-                  {p.highlights.filter(Boolean).map((h, j) => <li key={j}><E path={`projects.${i}.highlights.${j}`}>{h}</E></li>)}
-                </ul>
-              )}
-              {p.keywords && p.keywords.length > 0 && (
-                <div className="text-[0.8em] text-gray-500 mt-0.5">{p.keywords.join(" · ")}</div>
-              )}
-            </Node>
-          ))}
-        </>
-      )}
-
-      {resume.education.length > 0 && (
-        <>
-          <H>{L.education}</H>
-          {resume.education.map((e, i) => (
-            <Node key={e.id} date={range(e.startDate, e.endDate)} breakBefore={(e as any).breakBefore}>
-              <div className="text-[0.93em]"><b><E path={`education.${i}.institution`}>{e.institution}</E></b></div>
-              <div className="text-[0.88em]"><E path={`education.${i}.studyType`}>{e.studyType}</E> · <E path={`education.${i}.area`}>{e.area}</E>{e.score ? ` · ${e.score}` : ""}</div>
-            </Node>
-          ))}
-        </>
-      )}
-
-      {resume.skills.length > 0 && (
-        <>
-          <H>{L.skills}</H>
-          <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-[0.88em]">
-            {resume.skills.map((s, i) => (
-              <div key={s.id} className={itemCls(s)}>
-                <b><E path={`skills.${i}.name`}>{s.name}</E></b>
-                {s.keywords.length > 0 && <span className="text-gray-600"> — {s.keywords.join(", ")}</span>}
-              </div>
-            ))}
-          </div>
-        </>
-      )}
-
-      {(resume.awards.length > 0 || resume.languages.length > 0) && (
-        <>
-          <H>{`${L.honorsAndAwards} & ${L.languages}`}</H>
-          <div className="text-[0.88em] space-y-0.5">
-            {resume.awards.map((a, i) => (
-              <div key={a.id} className={itemCls(a)}><b><E path={`awards.${i}.title`}>{a.title}</E></b> · <E path={`awards.${i}.awarder`}>{a.awarder}</E> · <span className="text-gray-500"><E path={`awards.${i}.date`}>{a.date}</E></span></div>
-            ))}
-            {resume.languages.length > 0 && (
-              <div>{resume.languages.map((l, i) => `${l.language} (${l.fluency})`).join(" · ")}</div>
-            )}
-          </div>
-        </>
-      )}
+      {ordered}
     </div>
   );
 }

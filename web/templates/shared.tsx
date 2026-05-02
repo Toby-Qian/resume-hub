@@ -1,7 +1,8 @@
 "use client";
+import * as React from "react";
 import { useRef, useEffect } from "react";
-import type { Resume } from "@/lib/schema";
-import { useStore } from "@/lib/store";
+import type { Resume, SectionKey } from "@/lib/schema";
+import { useStore, DEFAULT_SECTION_ORDER } from "@/lib/store";
 
 export interface TemplateProps {
   resume: Resume;
@@ -68,6 +69,36 @@ export type SectionLabels = {
 export function useSectionLabels(): SectionLabels {
   const lang = useStore((s) => s.lang);
   return SECTION_LABELS[lang] as SectionLabels;
+}
+
+/**
+ * Render section blocks in the order the user picked in the StylePanel.
+ *
+ * `renderers` is a map from `SectionKey` → JSX (or null when empty). Templates
+ * pass *all* of their movable sections through this helper; the avatar/header/
+ * summary stays where the template put it because those aren't true sections.
+ *
+ * Any keys missing from the user's persisted `sectionOrder` (e.g. brand-new
+ * section types added in a later version) are appended at the end.
+ */
+export function useOrderedSections(
+  renderers: Partial<Record<SectionKey, React.ReactNode>>
+): React.ReactNode[] {
+  const order = useStore((s) => s.sectionOrder);
+  const seen = new Set<SectionKey>();
+  const out: React.ReactNode[] = [];
+  const push = (k: SectionKey) => {
+    if (seen.has(k)) return;
+    seen.add(k);
+    const node = renderers[k];
+    if (node) out.push(<React.Fragment key={k}>{node}</React.Fragment>);
+  };
+  for (const k of order) push(k);
+  // Append any keys the user's order forgot (forward-compat).
+  for (const k of DEFAULT_SECTION_ORDER) push(k);
+  // And any keys the renderers map has that aren't in the default list.
+  for (const k of Object.keys(renderers) as SectionKey[]) push(k);
+  return out;
 }
 
 export const fmtDate = (s?: string) => s || "";

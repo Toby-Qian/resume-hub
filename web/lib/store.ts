@@ -78,6 +78,15 @@ export function normalizeMargin(m: any): number {
 
 const HISTORY_LIMIT = 80;
 
+/** Default order in which sections appear. The store may persist a custom
+ *  order — but new section keys added in later versions are appended on top
+ *  of whatever the user had, so legacy state never loses a section.        */
+export const DEFAULT_SECTION_ORDER: SectionKey[] = [
+  "work", "education", "projects", "skills",
+  "publications", "talks", "teaching",
+  "awards", "languages",
+];
+
 interface State {
   resume: Resume;
   template: TemplateId;
@@ -91,6 +100,13 @@ interface State {
    *  hide the section automatically. */
   hiddenSections: SectionKey[];
   toggleSectionVisibility: (k: SectionKey) => void;
+  /** User-chosen section order. Templates that opt into the helper
+   *  `useOrderedSections()` will render sections in this order; any keys
+   *  missing from this array fall back to DEFAULT_SECTION_ORDER. New section
+   *  types added in future versions are auto-appended to preserve ordering. */
+  sectionOrder: SectionKey[];
+  setSectionOrder: (order: SectionKey[]) => void;
+  reorderSection: (fromKey: SectionKey, toKey: SectionKey) => void;
   past: Resume[];
   future: Resume[];
   /** When true, subsequent mutations do NOT push new history entries.
@@ -183,6 +199,18 @@ export const useStore = create<State>()(
           set({
             hiddenSections: cur.includes(k) ? cur.filter((x) => x !== k) : [...cur, k],
           });
+        },
+        sectionOrder: [...DEFAULT_SECTION_ORDER],
+        setSectionOrder: (order) => set({ sectionOrder: order.slice() }),
+        reorderSection: (fromKey, toKey) => {
+          if (fromKey === toKey) return;
+          const cur = get().sectionOrder.slice();
+          const fromIdx = cur.indexOf(fromKey);
+          const toIdx = cur.indexOf(toKey);
+          if (fromIdx < 0 || toIdx < 0) return;
+          const [item] = cur.splice(fromIdx, 1);
+          cur.splice(toIdx, 0, item);
+          set({ sectionOrder: cur });
         },
         past: [],
         future: [],
@@ -427,6 +455,7 @@ export const useStore = create<State>()(
         lang: s.lang,
         pageSetup: s.pageSetup,
         hiddenSections: s.hiddenSections,
+        sectionOrder: s.sectionOrder,
       }) as any,
       // Migrate persisted state for users who had the now-removed
       // "academic-cn" template selected. Falls back to cn-formal which is
@@ -441,6 +470,13 @@ export const useStore = create<State>()(
           p.resume.talks = p.resume.talks ?? [];
           p.resume.teaching = p.resume.teaching ?? [];
         }
+        // Backfill / extend persisted sectionOrder so users coming from an
+        // older version don't lose any section, and any newly-introduced
+        // section keys are appended automatically.
+        const existing: SectionKey[] = Array.isArray(p.sectionOrder) ? p.sectionOrder : [];
+        const filtered = existing.filter((k) => DEFAULT_SECTION_ORDER.includes(k));
+        const missing = DEFAULT_SECTION_ORDER.filter((k) => !filtered.includes(k));
+        p.sectionOrder = [...filtered, ...missing];
         return { ...current, ...p };
       },
     }
