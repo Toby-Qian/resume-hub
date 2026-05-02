@@ -1,5 +1,5 @@
 "use client";
-import { TemplateProps, range, itemCls, Avatar, E, Draggable, useSectionLabels, useOrderedSections , DateRange, EditableLabel} from "./shared";
+import { TemplateProps, range, itemCls, Avatar, E, Draggable, useSectionLabels, useOrderedSections, DateRange, EditableLabel, ContactIcon } from "./shared";
 
 /**
  * Infographic resume — skill bars, language proficiency dots, ribbon-style
@@ -130,10 +130,10 @@ export default function Infographic({ resume }: TemplateProps) {
 
         <SideTitle><EditableLabel k="contact" fallback={L.contact} /></SideTitle>
         <div className="text-[0.83em] space-y-1 text-gray-800">
-          <div><E path="basics.icons.email">{(b.icons && b.icons.email) || "✉"}</E> <E path="basics.email">{b.email}</E></div>
-          <div><E path="basics.icons.phone">{(b.icons && b.icons.phone) || "☎"}</E> <E path="basics.phone">{b.phone}</E></div>
-          <div><E path="basics.icons.location">{(b.icons && b.icons.location) || "📍"}</E> <E path="basics.location">{b.location}</E></div>
-          <div className="break-all"><E path="basics.icons.website">{(b.icons && b.icons.website) || "🔗"}</E> <E path="basics.website">{b.website}</E></div>
+          <div><ContactIcon b={b} kind="email" /> <E path="basics.email">{b.email}</E></div>
+          <div><ContactIcon b={b} kind="phone" /> <E path="basics.phone">{b.phone}</E></div>
+          <div><ContactIcon b={b} kind="location" /> <E path="basics.location">{b.location}</E></div>
+          <div className="break-all"><ContactIcon b={b} kind="website" /> <E path="basics.website">{b.website}</E></div>
         </div>
 
         {resume.skills.length > 0 && (
@@ -142,7 +142,7 @@ export default function Infographic({ resume }: TemplateProps) {
             {resume.skills.map((s, i) => {
               // Numeric levelValue (0-5) takes precedence over text level
               // mapping. 0 hides the bar entirely.
-              const lv = (s as any).levelValue as number | undefined;
+              const lv = s.levelValue as number | undefined;
               const pct = typeof lv === "number" && lv > 0 ? (lv / 5) * 100 : (lv === 0 ? 0 : levelToPct(s.level));
               return (
                 <div key={s.id} className={itemCls(s, "mb-2")}>

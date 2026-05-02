@@ -64,7 +64,7 @@ export default function CNFormal({ resume }: TemplateProps) {
       <H><EditableLabel k="skills" fallback={L.skills} /></H>
       <ul className="list-disc ml-5 text-[0.95em]">
         {resume.skills.map((s) => (
-          <li key={s.id} className={itemCls(s)}><b>{s.name}</b>{s.level && `（${s.level}）`}：{s.keywords.join("、")}<SkillBar value={(s as any).levelValue} /></li>
+          <li key={s.id} className={itemCls(s)}><b>{s.name}</b>{s.level && `（${s.level}）`}：{s.keywords.join("、")}<SkillBar value={s.levelValue} /></li>
         ))}
       </ul>
     </>

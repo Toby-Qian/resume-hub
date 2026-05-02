@@ -57,7 +57,7 @@ export default function Classic({ resume }: TemplateProps) {
       {resume.skills.map((s, i) => (
         <div key={s.id} className={itemCls(s, "text-[0.92em]")}>
           <b><E path={`skills.${i}.name`}>{s.name}</E>:</b> {s.keywords.join(", ")}
-          <SkillBar value={(s as any).levelValue} />
+          <SkillBar value={s.levelValue} />
         </div>
       ))}
     </Section>

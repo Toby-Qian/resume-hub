@@ -454,6 +454,27 @@ export function Draggable({
   );
 }
 
+// ---------- Contact icon (editable emoji) ---------------------------------
+/**
+ * Editable contact emoji with sane defaults. Replaces the repetitive
+ *   <ContactIcon b={b} kind="email" />
+ * pattern that was duplicated 28× across templates.
+ */
+const CONTACT_ICON_DEFAULTS = { email: "✉", phone: "☎", location: "📍", website: "🔗" } as const;
+export function ContactIcon({
+  b,
+  kind,
+}: {
+  b: import("@/lib/schema").ResumeBasics;
+  kind: keyof typeof CONTACT_ICON_DEFAULTS;
+}) {
+  return (
+    <E path={`basics.icons.${kind}`}>
+      {(b.icons && b.icons[kind]) || CONTACT_ICON_DEFAULTS[kind]}
+    </E>
+  );
+}
+
 // ---------- Skill proficiency bar -----------------------------------------
 /**
  * Render a 0-`max` proficiency indicator. Returns null when `value` is falsy

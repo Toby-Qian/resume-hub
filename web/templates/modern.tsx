@@ -1,5 +1,5 @@
 "use client";
-import { TemplateProps, Section, range, itemCls, Avatar, E, Draggable, useSectionLabels, useOrderedSections, DateRange, SkillBar } from "./shared";
+import { TemplateProps, Section, range, itemCls, Avatar, E, Draggable, useSectionLabels, useOrderedSections, DateRange, SkillBar, ContactIcon } from "./shared";
 
 export default function Modern({ resume }: TemplateProps) {
   const b = resume.basics;
@@ -67,7 +67,7 @@ export default function Modern({ resume }: TemplateProps) {
         <div key={s.id} className={itemCls(s, "text-[0.92em]")}>
           <span className="font-semibold"><E path={`skills.${i}.name`}>{s.name}</E></span>
           {s.level && <span className="text-gray-500"> · <E path={`skills.${i}.level`}>{s.level}</E></span>}
-          <SkillBar value={(s as any).levelValue} />
+          <SkillBar value={s.levelValue} />
           {s.keywords.length > 0 && <span className="text-gray-700"> — {s.keywords.join(", ")}</span>}
         </div>
       ))}
@@ -105,10 +105,10 @@ export default function Modern({ resume }: TemplateProps) {
           <h1 className="text-[2em] font-bold" style={{ color: "var(--resume-accent)" }}><E path="basics.name">{b.name}</E></h1>
           <div className="text-[1.05em] text-gray-700 mt-1"><E path="basics.label">{b.label}</E></div>
           <div className="text-[0.85em] text-gray-600 mt-2 flex flex-wrap gap-x-4 gap-y-1">
-            <span><E path="basics.icons.email">{(b.icons && b.icons.email) || "✉"}</E> <E path="basics.email">{b.email}</E></span>
-            <span><E path="basics.icons.phone">{(b.icons && b.icons.phone) || "☎"}</E> <E path="basics.phone">{b.phone}</E></span>
-            <span><E path="basics.icons.location">{(b.icons && b.icons.location) || "📍"}</E> <E path="basics.location">{b.location}</E></span>
-            <span><E path="basics.icons.website">{(b.icons && b.icons.website) || "🔗"}</E> <E path="basics.website">{b.website}</E></span>
+            <span><ContactIcon b={b} kind="email" /> <E path="basics.email">{b.email}</E></span>
+            <span><ContactIcon b={b} kind="phone" /> <E path="basics.phone">{b.phone}</E></span>
+            <span><ContactIcon b={b} kind="location" /> <E path="basics.location">{b.location}</E></span>
+            <span><ContactIcon b={b} kind="website" /> <E path="basics.website">{b.website}</E></span>
           </div>
           <p className="mt-3 text-[0.95em] text-gray-800"><E path="basics.summary" multiline>{b.summary}</E></p>
         </div>

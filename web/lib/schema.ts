@@ -1,6 +1,11 @@
 // Minimal subset of JSON Resume schema (https://jsonresume.org/schema/).
 // Kept flat and practical so the form UI stays simple.
 
+/** Print-pagination hint shared by every list-item type. When true, the
+ *  template inserts a hard page-break BEFORE this item in print/PDF export.
+ *  Toggled per-row via `SortableCard`'s break button in the editor. */
+interface BreakBefore { breakBefore?: boolean; }
+
 export interface ResumeBasics {
   name: string;
   label: string;          // headline / job title
@@ -24,7 +29,7 @@ export interface ResumeBasics {
   icons?: { email?: string; phone?: string; location?: string; website?: string };
 }
 
-export interface ResumeWork {
+export interface ResumeWork extends BreakBefore {
   id: string;
   company: string;
   position: string;
@@ -34,7 +39,7 @@ export interface ResumeWork {
   highlights: string[];
 }
 
-export interface ResumeEducation {
+export interface ResumeEducation extends BreakBefore {
   id: string;
   institution: string;
   area: string;
@@ -45,7 +50,7 @@ export interface ResumeEducation {
   courses?: string[];
 }
 
-export interface ResumeProject {
+export interface ResumeProject extends BreakBefore {
   id: string;
   name: string;
   description: string;
@@ -56,7 +61,7 @@ export interface ResumeProject {
   keywords?: string[];
 }
 
-export interface ResumeSkill {
+export interface ResumeSkill extends BreakBefore {
   id: string;
   name: string;
   level: string;          // Beginner / Intermediate / Advanced / Expert
@@ -66,7 +71,7 @@ export interface ResumeSkill {
   keywords: string[];
 }
 
-export interface ResumeAward {
+export interface ResumeAward extends BreakBefore {
   id: string;
   title: string;
   date: string;
@@ -74,7 +79,7 @@ export interface ResumeAward {
   summary?: string;
 }
 
-export interface ResumeLanguage {
+export interface ResumeLanguage extends BreakBefore {
   id: string;
   language: string;
   fluency: string;
@@ -83,7 +88,7 @@ export interface ResumeLanguage {
 /** Academic publication. Distinct from `projects` so academic templates can
  *  render proper citation lists (numbered, with venue/authors/DOI). Falls
  *  back to `projects` in academic templates when this array is empty. */
-export interface ResumePublication {
+export interface ResumePublication extends BreakBefore {
   id: string;
   title: string;
   authors?: string;       // free text — "A. Doe, B. Smith, C. Lee"
@@ -92,20 +97,18 @@ export interface ResumePublication {
   doi?: string;
   url?: string;
   summary?: string;
-  breakBefore?: boolean;
 }
 
-export interface ResumeTalk {
+export interface ResumeTalk extends BreakBefore {
   id: string;
   title: string;
   venue?: string;         // conference / event / institution
   date?: string;
   location?: string;
   url?: string;
-  breakBefore?: boolean;
 }
 
-export interface ResumeTeaching {
+export interface ResumeTeaching extends BreakBefore {
   id: string;
   course: string;
   institution?: string;
@@ -113,7 +116,6 @@ export interface ResumeTeaching {
   startDate?: string;
   endDate?: string;
   summary?: string;
-  breakBefore?: boolean;
 }
 
 /** Free-floating text box the user can drop anywhere on the paper for layout

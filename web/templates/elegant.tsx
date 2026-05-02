@@ -1,5 +1,5 @@
 "use client";
-import { TemplateProps, range, itemCls, Avatar, E, Draggable, useSectionLabels, useOrderedSections, DateRange, EditableLabel, SkillBar } from "./shared";
+import { TemplateProps, range, itemCls, Avatar, E, Draggable, useSectionLabels, useOrderedSections, DateRange, EditableLabel, SkillBar, ContactIcon } from "./shared";
 
 /**
  * Two-column layout with a soft tinted sidebar. Feels lighter than
@@ -93,10 +93,10 @@ export default function Elegant({ resume }: TemplateProps) {
 
         <SideH><EditableLabel k="contact" fallback={L.contact} /></SideH>
         <div className="text-[0.83em] text-gray-700 space-y-1">
-          <div><E path="basics.icons.email">{(b.icons && b.icons.email) || "✉"}</E> <E path="basics.email">{b.email}</E></div>
-          <div><E path="basics.icons.phone">{(b.icons && b.icons.phone) || "☎"}</E> <E path="basics.phone">{b.phone}</E></div>
-          <div><E path="basics.icons.location">{(b.icons && b.icons.location) || "📍"}</E> <E path="basics.location">{b.location}</E></div>
-          <div className="break-all"><E path="basics.icons.website">{(b.icons && b.icons.website) || "🔗"}</E> <E path="basics.website">{b.website}</E></div>
+          <div><ContactIcon b={b} kind="email" /> <E path="basics.email">{b.email}</E></div>
+          <div><ContactIcon b={b} kind="phone" /> <E path="basics.phone">{b.phone}</E></div>
+          <div><ContactIcon b={b} kind="location" /> <E path="basics.location">{b.location}</E></div>
+          <div className="break-all"><ContactIcon b={b} kind="website" /> <E path="basics.website">{b.website}</E></div>
         </div>
 
         {resume.skills.length > 0 && (
@@ -104,7 +104,7 @@ export default function Elegant({ resume }: TemplateProps) {
             <SideH><EditableLabel k="skills" fallback={L.skills} /></SideH>
             {resume.skills.map((s, i) => (
               <div key={s.id} className={itemCls(s, "text-[0.83em] mb-2")}>
-                <div className="font-semibold text-gray-800"><E path={`skills.${i}.name`}>{s.name}</E><SkillBar value={(s as any).levelValue} /></div>
+                <div className="font-semibold text-gray-800"><E path={`skills.${i}.name`}>{s.name}</E><SkillBar value={s.levelValue} /></div>
                 <div className="text-gray-600">{s.keywords.join(" · ")}</div>
               </div>
             ))}

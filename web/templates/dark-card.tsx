@@ -1,5 +1,5 @@
 "use client";
-import { TemplateProps, range, itemCls, Avatar, E, Draggable, useSectionLabels, useOrderedSections, DateRange, EditableLabel, SkillBar } from "./shared";
+import { TemplateProps, range, itemCls, Avatar, E, Draggable, useSectionLabels, useOrderedSections, DateRange, EditableLabel, SkillBar, ContactIcon } from "./shared";
 
 /**
  * Dark hero band + light content cards. Modern startup / SaaS-portfolio
@@ -34,7 +34,7 @@ export default function DarkCard({ resume }: TemplateProps) {
     <>
       <SectionH><EditableLabel k="work" fallback={L.experience} /></SectionH>
       {resume.work.map((w, i) => (
-        <Card key={w.id} breakBefore={(w as any).breakBefore} className="text-[0.92em]">
+        <Card key={w.id} breakBefore={w.breakBefore} className="text-[0.92em]">
           <div className="flex justify-between items-baseline">
             <div className="font-semibold"><E path={`work.${i}.position`}>{w.position}</E> <span className="font-normal text-gray-700">@ <E path={`work.${i}.company`}>{w.company}</E></span></div>
             <div className="text-[0.82em] px-2 py-0.5 rounded-full font-medium"
@@ -54,7 +54,7 @@ export default function DarkCard({ resume }: TemplateProps) {
     <>
       <SectionH><EditableLabel k="projects" fallback={L.projects} /></SectionH>
       {resume.projects.map((p, i) => (
-        <Card key={p.id} breakBefore={(p as any).breakBefore} className="text-[0.92em]">
+        <Card key={p.id} breakBefore={p.breakBefore} className="text-[0.92em]">
           <div className="flex justify-between items-baseline">
             <div className="font-semibold"><E path={`projects.${i}.name`}>{p.name}</E></div>
             <div className="text-[0.82em] text-gray-500 whitespace-nowrap">{<DateRange startPath={`projects.${i}.startDate`} endPath={`projects.${i}.endDate`} start={p.startDate} end={p.endDate} />}</div>
@@ -98,10 +98,10 @@ export default function DarkCard({ resume }: TemplateProps) {
             <h1 className="text-[2.2em] font-bold leading-tight"><E path="basics.name">{b.name}</E></h1>
             <div className="text-[1em] opacity-90 mt-0.5"><E path="basics.label">{b.label}</E></div>
             <div className="text-[0.82em] opacity-95 mt-2 flex flex-wrap gap-x-4 gap-y-1">
-              <span><E path="basics.icons.email">{(b.icons && b.icons.email) || "✉"}</E> <E path="basics.email">{b.email}</E></span>
-              <span><E path="basics.icons.phone">{(b.icons && b.icons.phone) || "☎"}</E> <E path="basics.phone">{b.phone}</E></span>
-              <span><E path="basics.icons.location">{(b.icons && b.icons.location) || "📍"}</E> <E path="basics.location">{b.location}</E></span>
-              <span><E path="basics.icons.website">{(b.icons && b.icons.website) || "🔗"}</E> <E path="basics.website">{b.website}</E></span>
+              <span><ContactIcon b={b} kind="email" /> <E path="basics.email">{b.email}</E></span>
+              <span><ContactIcon b={b} kind="phone" /> <E path="basics.phone">{b.phone}</E></span>
+              <span><ContactIcon b={b} kind="location" /> <E path="basics.location">{b.location}</E></span>
+              <span><ContactIcon b={b} kind="website" /> <E path="basics.website">{b.website}</E></span>
             </div>
           </div>
         </Draggable>
@@ -139,7 +139,7 @@ export default function DarkCard({ resume }: TemplateProps) {
                   <div key={s.id} className={itemCls(s, "mb-1")}>
                     <span className="font-semibold"><E path={`skills.${i}.name`}>{s.name}</E></span>
                     {s.level && <span className="text-gray-500 text-[0.85em]"> · {s.level}</span>}
-                    <SkillBar value={(s as any).levelValue} />
+                    <SkillBar value={s.levelValue} />
                     {s.keywords.length > 0 && <div className="text-gray-700 text-[0.88em]">{s.keywords.join(" · ")}</div>}
                   </div>
                 ))}

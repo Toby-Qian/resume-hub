@@ -1,5 +1,5 @@
 "use client";
-import { TemplateProps, range, itemCls, Avatar, E, Draggable, useSectionLabels, useOrderedSections , DateRange} from "./shared";
+import { TemplateProps, range, itemCls, Avatar, E, Draggable, useSectionLabels, useOrderedSections, DateRange, ContactIcon } from "./shared";
 
 export default function CNCreative({ resume }: TemplateProps) {
   const b = resume.basics;
@@ -69,10 +69,10 @@ export default function CNCreative({ resume }: TemplateProps) {
         </Draggable>
         <div className="h-px bg-white/40 my-4" />
         <div className="text-[0.85em] space-y-1 opacity-95">
-          <div><E path="basics.icons.phone">{(b.icons && b.icons.phone) || "📱"}</E> <E path="basics.phone">{b.phone}</E></div>
-          <div><E path="basics.icons.email">{(b.icons && b.icons.email) || "✉"}</E> <E path="basics.email">{b.email}</E></div>
-          <div><E path="basics.icons.location">{(b.icons && b.icons.location) || "📍"}</E> <E path="basics.location">{b.location}</E></div>
-          <div><E path="basics.icons.website">{(b.icons && b.icons.website) || "🔗"}</E> <E path="basics.website">{b.website}</E></div>
+          <div><ContactIcon b={b} kind="phone" /> <E path="basics.phone">{b.phone}</E></div>
+          <div><ContactIcon b={b} kind="email" /> <E path="basics.email">{b.email}</E></div>
+          <div><ContactIcon b={b} kind="location" /> <E path="basics.location">{b.location}</E></div>
+          <div><ContactIcon b={b} kind="website" /> <E path="basics.website">{b.website}</E></div>
         </div>
         {resume.skills.length > 0 && (
           <>

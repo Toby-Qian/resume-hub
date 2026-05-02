@@ -435,7 +435,7 @@ export function Editor() {
         <SortableCard key={w.id} section="work" id={w.id}
           onRemove={() => removeItem("work", w.id)}
           onDuplicate={() => duplicateItem("work", w.id)}
-          breakBefore={(w as any).breakBefore}
+          breakBefore={w.breakBefore}
           onToggleBreak={(v) => patch("work", w.id, "breakBefore", v)}
           onReorder={reorderItem} reorderHint={reorderHint} breakLabel={breakLabel} removeLabel={removeLabel} duplicateLabel={duplicateLabel}>
           <div className="grid grid-cols-2 gap-x-3">
@@ -460,7 +460,7 @@ export function Editor() {
         <SortableCard key={e.id} section="education" id={e.id}
           onRemove={() => removeItem("education", e.id)}
           onDuplicate={() => duplicateItem("education", e.id)}
-          breakBefore={(e as any).breakBefore}
+          breakBefore={e.breakBefore}
           onToggleBreak={(v) => patch("education", e.id, "breakBefore", v)}
           onReorder={reorderItem} reorderHint={reorderHint} breakLabel={breakLabel} removeLabel={removeLabel} duplicateLabel={duplicateLabel}>
           <div className="grid grid-cols-2 gap-x-3">
@@ -486,7 +486,7 @@ export function Editor() {
         <SortableCard key={p.id} section="projects" id={p.id}
           onRemove={() => removeItem("projects", p.id)}
           onDuplicate={() => duplicateItem("projects", p.id)}
-          breakBefore={(p as any).breakBefore}
+          breakBefore={p.breakBefore}
           onToggleBreak={(v) => patch("projects", p.id, "breakBefore", v)}
           onReorder={reorderItem} reorderHint={reorderHint} breakLabel={breakLabel} removeLabel={removeLabel} duplicateLabel={duplicateLabel}>
           <div className="grid grid-cols-2 gap-x-3">
@@ -518,7 +518,7 @@ export function Editor() {
         <SortableCard key={s.id} section="skills" id={s.id}
           onRemove={() => removeItem("skills", s.id)}
           onDuplicate={() => duplicateItem("skills", s.id)}
-          breakBefore={(s as any).breakBefore}
+          breakBefore={s.breakBefore}
           onToggleBreak={(v) => patch("skills", s.id, "breakBefore", v)}
           onReorder={reorderItem} reorderHint={reorderHint} breakLabel={breakLabel} removeLabel={removeLabel} duplicateLabel={duplicateLabel}>
           <div className="grid grid-cols-2 gap-x-3">
@@ -534,12 +534,12 @@ export function Editor() {
             </span>
             <div className="inline-flex rounded-md border border-gray-200 overflow-hidden">
               {[0, 1, 2, 3, 4, 5].map((n) => {
-                const active = ((s as any).levelValue || 0) === n;
+                const active = (s.levelValue || 0) === n;
                 return (
                   <button
                     key={n}
                     type="button"
-                    onClick={() => patch("skills", s.id, "levelValue" as any, n)}
+                    onClick={() => patch("skills", s.id, "levelValue", n)}
                     className={`text-[0.7rem] px-2 py-0.5 transition ${
                       active
                         ? "bg-blue-600 text-white"
@@ -568,7 +568,7 @@ export function Editor() {
         <SortableCard key={a.id} section="awards" id={a.id}
           onRemove={() => removeItem("awards", a.id)}
           onDuplicate={() => duplicateItem("awards", a.id)}
-          breakBefore={(a as any).breakBefore}
+          breakBefore={a.breakBefore}
           onToggleBreak={(v) => patch("awards", a.id, "breakBefore", v)}
           onReorder={reorderItem} reorderHint={reorderHint} breakLabel={breakLabel} removeLabel={removeLabel} duplicateLabel={duplicateLabel}>
           <div className="grid grid-cols-2 gap-x-3">
@@ -585,7 +585,7 @@ export function Editor() {
         <SortableCard key={l.id} section="languages" id={l.id}
           onRemove={() => removeItem("languages", l.id)}
           onDuplicate={() => duplicateItem("languages", l.id)}
-          breakBefore={(l as any).breakBefore}
+          breakBefore={l.breakBefore}
           onToggleBreak={(v) => patch("languages", l.id, "breakBefore", v)}
           onReorder={reorderItem} reorderHint={reorderHint} breakLabel={breakLabel} removeLabel={removeLabel} duplicateLabel={duplicateLabel}>
           <div className="grid grid-cols-2 gap-x-3">
@@ -604,7 +604,7 @@ export function Editor() {
         <SortableCard key={p.id} section="publications" id={p.id}
           onRemove={() => removeItem("publications", p.id)}
           onDuplicate={() => duplicateItem("publications", p.id)}
-          breakBefore={(p as any).breakBefore}
+          breakBefore={p.breakBefore}
           onToggleBreak={(v) => patch("publications", p.id, "breakBefore", v)}
           onReorder={reorderItem} reorderHint={reorderHint} breakLabel={breakLabel} removeLabel={removeLabel} duplicateLabel={duplicateLabel}>
           <Field label={(L.fields as any).pubTitle} value={p.title} onChange={(v) => patch("publications", p.id, "title", v)} />
@@ -624,7 +624,7 @@ export function Editor() {
         <SortableCard key={tk.id} section="talks" id={tk.id}
           onRemove={() => removeItem("talks", tk.id)}
           onDuplicate={() => duplicateItem("talks", tk.id)}
-          breakBefore={(tk as any).breakBefore}
+          breakBefore={tk.breakBefore}
           onToggleBreak={(v) => patch("talks", tk.id, "breakBefore", v)}
           onReorder={reorderItem} reorderHint={reorderHint} breakLabel={breakLabel} removeLabel={removeLabel} duplicateLabel={duplicateLabel}>
           <Field label={(L.fields as any).talkTitle} value={tk.title} onChange={(v) => patch("talks", tk.id, "title", v)} />
@@ -642,7 +642,7 @@ export function Editor() {
         <SortableCard key={tg.id} section="teaching" id={tg.id}
           onRemove={() => removeItem("teaching", tg.id)}
           onDuplicate={() => duplicateItem("teaching", tg.id)}
-          breakBefore={(tg as any).breakBefore}
+          breakBefore={tg.breakBefore}
           onToggleBreak={(v) => patch("teaching", tg.id, "breakBefore", v)}
           onReorder={reorderItem} reorderHint={reorderHint} breakLabel={breakLabel} removeLabel={removeLabel} duplicateLabel={duplicateLabel}>
           <div className="grid grid-cols-2 gap-x-3">

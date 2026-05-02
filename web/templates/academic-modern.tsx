@@ -1,5 +1,5 @@
 "use client";
-import { TemplateProps, range, itemCls, Avatar, E, Draggable, useSectionLabels, useOrderedSections , DateRange, EditableLabel} from "./shared";
+import { TemplateProps, range, itemCls, Avatar, E, Draggable, useSectionLabels, useOrderedSections, DateRange, EditableLabel, ContactIcon } from "./shared";
 
 /**
  * Modern academic: sans-serif, colored accent rules, left-aligned headers
@@ -27,7 +27,7 @@ export default function AcademicModern({ resume }: TemplateProps) {
   const education = resume.education.length > 0 && (
     <><H><EditableLabel k="education" fallback={L.education} /></H>
       {resume.education.map((e, i) => (
-        <Row key={e.id} breakBefore={(e as any).breakBefore}
+        <Row key={e.id} breakBefore={e.breakBefore}
           left={<><b><E path={`education.${i}.institution`}>{e.institution}</E></b> — <E path={`education.${i}.studyType`}>{e.studyType}</E>, <E path={`education.${i}.area`}>{e.area}</E></>}
           right={<DateRange startPath={`education.${i}.startDate`} endPath={`education.${i}.endDate`} start={e.startDate} end={e.endDate} />}>
           {e.score && <div className="text-[0.88em] text-gray-600"><E path={`education.${i}.score`}>{e.score}</E></div>}
@@ -41,7 +41,7 @@ export default function AcademicModern({ resume }: TemplateProps) {
   const work = resume.work.length > 0 && (
     <><H><EditableLabel k="work" fallback={L.appointments} /></H>
       {resume.work.map((w, i) => (
-        <Row key={w.id} breakBefore={(w as any).breakBefore}
+        <Row key={w.id} breakBefore={w.breakBefore}
           left={<><b><E path={`work.${i}.position`}>{w.position}</E></b> · <span className="text-gray-700"><E path={`work.${i}.company`}>{w.company}</E></span>{w.location && <span className="text-gray-500"> · <E path={`work.${i}.location`}>{w.location}</E></span>}</>}
           right={<DateRange startPath={`work.${i}.startDate`} endPath={`work.${i}.endDate`} start={w.startDate} end={w.endDate} />}>
           <ul className="list-disc ml-5 mt-1 text-[0.9em]">
@@ -54,7 +54,7 @@ export default function AcademicModern({ resume }: TemplateProps) {
   const projects = resume.projects.length > 0 && (
     <><H><EditableLabel k="publications" fallback={L.publications} /></H>
       {resume.projects.map((p, i) => (
-        <Row key={p.id} breakBefore={(p as any).breakBefore}
+        <Row key={p.id} breakBefore={p.breakBefore}
           left={<><b><E path={`projects.${i}.name`}>{p.name}</E></b>{p.url && <span className="text-[0.82em] text-gray-500"> — <E path={`projects.${i}.url`}>{p.url}</E></span>}</>}
           right={<DateRange startPath={`projects.${i}.startDate`} endPath={`projects.${i}.endDate`} start={p.startDate} end={p.endDate} />}>
           {p.description && <div className="text-[0.9em] text-gray-700"><E path={`projects.${i}.description`} multiline>{p.description}</E></div>}
@@ -127,10 +127,10 @@ export default function AcademicModern({ resume }: TemplateProps) {
           <h1 className="text-[2em] font-bold" style={{ color: "var(--resume-accent)" }}><E path="basics.name">{b.name}</E></h1>
           <div className="text-[1em] text-gray-700"><E path="basics.label">{b.label}</E></div>
           <div className="text-[0.82em] text-gray-600 mt-2 flex flex-wrap gap-x-3 gap-y-0.5">
-            <span><E path="basics.icons.email">{(b.icons && b.icons.email) || "✉"}</E> <E path="basics.email">{b.email}</E></span>
-            <span><E path="basics.icons.phone">{(b.icons && b.icons.phone) || "☎"}</E> <E path="basics.phone">{b.phone}</E></span>
-            <span><E path="basics.icons.location">{(b.icons && b.icons.location) || "📍"}</E> <E path="basics.location">{b.location}</E></span>
-            <span><E path="basics.icons.website">{(b.icons && b.icons.website) || "🔗"}</E> <E path="basics.website">{b.website}</E></span>
+            <span><ContactIcon b={b} kind="email" /> <E path="basics.email">{b.email}</E></span>
+            <span><ContactIcon b={b} kind="phone" /> <E path="basics.phone">{b.phone}</E></span>
+            <span><ContactIcon b={b} kind="location" /> <E path="basics.location">{b.location}</E></span>
+            <span><ContactIcon b={b} kind="website" /> <E path="basics.website">{b.website}</E></span>
           </div>
         </div>
         <Avatar basics={b} size={96} />

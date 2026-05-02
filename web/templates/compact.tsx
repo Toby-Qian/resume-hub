@@ -77,7 +77,7 @@ export default function Compact({ resume }: TemplateProps) {
       <div className="text-[0.86em] space-y-0.5">
         {resume.skills.map((s, i) => (
           <div key={s.id} className={itemCls(s)}>
-            <b><E path={`skills.${i}.name`}>{s.name}</E>{s.level && ` (${s.level})`}:</b> {s.keywords.join(", ")}<SkillBar value={(s as any).levelValue} />
+            <b><E path={`skills.${i}.name`}>{s.name}</E>{s.level && ` (${s.level})`}:</b> {s.keywords.join(", ")}<SkillBar value={s.levelValue} />
           </div>
         ))}
       </div>
