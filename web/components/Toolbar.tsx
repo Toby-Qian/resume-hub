@@ -6,6 +6,7 @@ import { toast } from "@/lib/toast";
 import { ExportMenu } from "./ExportMenu";
 import { Completeness } from "./Completeness";
 import { ConfirmModal } from "./ConfirmModal";
+import { printResume } from "@/lib/printResume";
 
 export function Toolbar() {
   const { lang, setLang, loadSample, reset, resume, setResume, undo, redo, past, future, previewMode, togglePreviewMode } = useStore();
@@ -22,7 +23,7 @@ export function Toolbar() {
     const onKey = (e: KeyboardEvent) => {
       if (!(e.ctrlKey || e.metaKey)) return;
       const k = e.key.toLowerCase();
-      if (k === "s") { e.preventDefault(); window.print(); return; }
+      if (k === "s") { e.preventDefault(); printResume(useStore.getState().resume); return; }
       const tgt = e.target as HTMLElement | null;
       if (tgt && (tgt.isContentEditable || tgt.tagName === "INPUT" || tgt.tagName === "TEXTAREA")) return;
       if (k === "z" && !e.shiftKey) { e.preventDefault(); useStore.getState().undo(); }

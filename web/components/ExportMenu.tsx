@@ -2,12 +2,14 @@
 import { useEffect, useRef, useState } from "react";
 import { useStore, PageSize } from "@/lib/store";
 import { t } from "@/lib/i18n";
+import { printResume } from "@/lib/printResume";
 
 /** A4 / Letter dropdown for the print/export action.
  *  - Click "导出 PDF" → fires window.print() with current setup.
  *  - Click the chevron → opens an options popover.                            */
 export function ExportMenu() {
-  const { lang, pageSetup, setPageSetup } = useStore();
+  const { lang, pageSetup, setPageSetup, resume } = useStore();
+  const doPrint = () => printResume(resume);
   const L = t(lang);
   const E = L.exportMenu ?? {};
   const [open, setOpen] = useState(false);
@@ -35,7 +37,7 @@ export function ExportMenu() {
   return (
     <div ref={wrapRef} className="relative inline-flex">
       <button
-        onClick={() => window.print()}
+        onClick={doPrint}
         className="text-xs px-3 py-1.5 rounded-l border border-blue-600 bg-blue-600 text-white hover:bg-blue-700 transition"
       >
         {L.actions.print}
@@ -104,7 +106,7 @@ export function ExportMenu() {
           </div>
 
           <button
-            onClick={() => { setOpen(false); window.print(); }}
+            onClick={() => { setOpen(false); doPrint(); }}
             className="mt-2.5 w-full text-xs px-3 py-1.5 rounded bg-blue-600 text-white hover:bg-blue-700 transition"
           >
             {L.actions.print}
