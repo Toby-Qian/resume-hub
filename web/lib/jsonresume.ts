@@ -103,3 +103,30 @@ export function looksLikeJsonResume(doc: any): boolean {
     doc.basics || doc.work || doc.education || doc.projects || doc.skills
   );
 }
+
+/**
+ * Distinguish a "native JSON Resume" document from a Resume Hub export of the
+ * same shape. Both share `basics`, but JSON Resume uses fields our format
+ * doesn't (`basics.profiles`, `basics.url`, `work[].name`, `education[].school`),
+ * and lacks fields ours requires (`work[].company`, `education[].institution`).
+ *
+ * Detection is conservative: any single distinguishing marker is enough,
+ * because our exporter never produces these fields. The Toolbar import path
+ * runs this on every imported file and routes to `jsonResumeToResume()` when
+ * it returns true; otherwise the file goes through `validateAndNormalize()`.
+ */
+export function isJsonResumeNative(doc: any): boolean {
+  if (!doc || typeof doc !== "object") return false;
+  const b = doc.basics;
+  if (b && typeof b === "object") {
+    if (Array.isArray(b.profiles) && b.profiles.length > 0) return true;
+    if (typeof b.url === "string" && b.url) return true;
+    // basics.location is an object in JSON Resume, a string in our format
+    if (b.location && typeof b.location === "object") return true;
+  }
+  const w = Array.isArray(doc.work) ? doc.work : [];
+  if (w.some((x: any) => x && "name" in x && !("company" in x))) return true;
+  const e = Array.isArray(doc.education) ? doc.education : [];
+  if (e.some((x: any) => x && "school" in x && !("institution" in x))) return true;
+  return false;
+}

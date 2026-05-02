@@ -8,6 +8,7 @@ import { Completeness } from "./Completeness";
 import { ConfirmModal } from "./ConfirmModal";
 import { printResume } from "@/lib/printResume";
 import { validateAndNormalize } from "@/lib/validateResume";
+import { jsonResumeToResume, isJsonResumeNative } from "@/lib/jsonresume";
 
 export function Toolbar() {
   const { lang, setLang, loadSample, reset, resume, setResume, undo, redo, past, future, previewMode, togglePreviewMode } = useStore();
@@ -37,13 +38,14 @@ export function Toolbar() {
   const onImport = async (f: File) => {
     try {
       const obj = JSON.parse(await f.text());
-      const resume = validateAndNormalize(obj);
+      // Auto-detect a native JSON Resume document and route through the
+      // converter; everything else goes through our schema validator.
+      const resume = isJsonResumeNative(obj)
+        ? jsonResumeToResume(obj)
+        : validateAndNormalize(obj);
       setResume(resume);
       toast.success(L.toast.imported);
     } catch {
-      // Catches both `JSON.parse` syntax errors and validateAndNormalize's
-      // throw cases (not_object / missing_basics). Same user-facing message —
-      // a noisier breakdown didn't survive translation review.
       toast.error(L.toast.importError);
     }
   };

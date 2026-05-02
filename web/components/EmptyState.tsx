@@ -4,6 +4,7 @@ import { useStore } from "@/lib/store";
 import { t } from "@/lib/i18n";
 import { toast } from "@/lib/toast";
 import { validateAndNormalize } from "@/lib/validateResume";
+import { jsonResumeToResume, isJsonResumeNative } from "@/lib/jsonresume";
 
 /** Shown at the top of the Editor pane when the resume is essentially
  *  blank (no name + no items in any section). Three CTAs, plus a hint
@@ -27,7 +28,8 @@ export function EmptyState() {
 
   const onImport = async (f: File) => {
     try {
-      setResume(validateAndNormalize(JSON.parse(await f.text())));
+      const obj = JSON.parse(await f.text());
+      setResume(isJsonResumeNative(obj) ? jsonResumeToResume(obj) : validateAndNormalize(obj));
       toast.success(L.toast.imported);
     } catch {
       toast.error(L.toast.importError);
