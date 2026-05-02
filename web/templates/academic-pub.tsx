@@ -1,5 +1,5 @@
 "use client";
-import { TemplateProps, range, itemCls, Avatar, E, Draggable, useSectionLabels, useOrderedSections , DateRange} from "./shared";
+import { TemplateProps, range, itemCls, Avatar, E, Draggable, useSectionLabels, useOrderedSections , DateRange, EditableLabel} from "./shared";
 
 /**
  * Publication-first CV. Projects are rendered as a numbered publication list
@@ -20,7 +20,7 @@ export default function AcademicPub({ resume }: TemplateProps) {
   // resumes still render usefully. Either way, this is the single "pub" block.
   const publications = (
     <>
-      <H>{L.publicationsOnly}</H>
+      <H><EditableLabel k="publications" fallback={L.publicationsOnly} /></H>
       {(resume.publications && resume.publications.length > 0) ? (
         <ol className="text-[0.9em] space-y-1.5">
           {resume.publications.map((p, i) => (
@@ -61,7 +61,7 @@ export default function AcademicPub({ resume }: TemplateProps) {
     </>
   );
   const education = resume.education.length > 0 && (
-    <><H>{L.education}</H>
+    <><H><EditableLabel k="education" fallback={L.education} /></H>
       {resume.education.map((e, i) => (
         <div key={e.id} className={itemCls(e, "mb-1.5 text-[0.9em]")}>
           <div className="flex justify-between">
@@ -74,7 +74,7 @@ export default function AcademicPub({ resume }: TemplateProps) {
     </>
   );
   const work = resume.work.length > 0 && (
-    <><H>{L.appointments}</H>
+    <><H><EditableLabel k="work" fallback={L.appointments} /></H>
       {resume.work.map((w, i) => (
         <div key={w.id} className={itemCls(w, "mb-2 text-[0.9em]")}>
           <div className="flex justify-between">
@@ -89,7 +89,7 @@ export default function AcademicPub({ resume }: TemplateProps) {
     </>
   );
   const awards = resume.awards.length > 0 && (
-    <><H>{L.honorsAndGrants}</H>
+    <><H><EditableLabel k="awards" fallback={L.honorsAndGrants} /></H>
       <ul className="list-disc ml-5 text-[0.9em]">
         {resume.awards.map((a, i) => (
           <li key={a.id} className={itemCls(a)}>
@@ -100,7 +100,7 @@ export default function AcademicPub({ resume }: TemplateProps) {
     </>
   );
   const talks = resume.talks && resume.talks.length > 0 && (
-    <><H>{L.talks}</H>
+    <><H><EditableLabel k="talks" fallback={L.talks} /></H>
       <ul className="list-disc ml-5 text-[0.9em]">
         {resume.talks.map((tk, i) => (
           <li key={tk.id} className={itemCls(tk)}>
@@ -114,7 +114,7 @@ export default function AcademicPub({ resume }: TemplateProps) {
     </>
   );
   const teaching = resume.teaching && resume.teaching.length > 0 && (
-    <><H>{L.teaching}</H>
+    <><H><EditableLabel k="teaching" fallback={L.teaching} /></H>
       {resume.teaching.map((tg, i) => (
         <div key={tg.id} className={itemCls(tg, "mb-1.5 text-[0.9em]")}>
           <div className="flex justify-between">

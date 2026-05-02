@@ -1,5 +1,5 @@
 "use client";
-import { TemplateProps, range, itemCls, Avatar, E, Draggable, useSectionLabels, useOrderedSections , DateRange} from "./shared";
+import { TemplateProps, range, itemCls, Avatar, E, Draggable, useSectionLabels, useOrderedSections , DateRange, EditableLabel} from "./shared";
 
 /**
  * Single-column, tight-leading, small-type resume — built for senior
@@ -18,7 +18,7 @@ export default function Compact({ resume }: TemplateProps) {
 
   const work = resume.work.length > 0 && (
     <>
-      <H>{L.experience}</H>
+      <H><EditableLabel k="work" fallback={L.experience} /></H>
       {resume.work.map((w, i) => (
         <div key={w.id} className={itemCls(w, "text-[0.86em] mb-1.5")}>
           <div className="flex justify-between">
@@ -37,7 +37,7 @@ export default function Compact({ resume }: TemplateProps) {
 
   const projects = resume.projects.length > 0 && (
     <>
-      <H>{L.projects}</H>
+      <H><EditableLabel k="projects" fallback={L.projects} /></H>
       {resume.projects.map((p, i) => (
         <div key={p.id} className={itemCls(p, "text-[0.86em] mb-1")}>
           <div className="flex justify-between">
@@ -59,7 +59,7 @@ export default function Compact({ resume }: TemplateProps) {
 
   const education = resume.education.length > 0 && (
     <>
-      <H>{L.education}</H>
+      <H><EditableLabel k="education" fallback={L.education} /></H>
       {resume.education.map((e, i) => (
         <div key={e.id} className={itemCls(e, "text-[0.86em]")}>
           <div className="flex justify-between">
@@ -73,7 +73,7 @@ export default function Compact({ resume }: TemplateProps) {
 
   const skills = resume.skills.length > 0 && (
     <>
-      <H>{L.skills}</H>
+      <H><EditableLabel k="skills" fallback={L.skills} /></H>
       <div className="text-[0.86em] space-y-0.5">
         {resume.skills.map((s, i) => (
           <div key={s.id} className={itemCls(s)}>
@@ -86,7 +86,7 @@ export default function Compact({ resume }: TemplateProps) {
 
   const awards = resume.awards.length > 0 && (
     <>
-      <H>{L.honorsAndAwards}</H>
+      <H><EditableLabel k="awards" fallback={L.honorsAndAwards} /></H>
       <div className="text-[0.85em] space-y-0.5">
         {resume.awards.map((a, i) => (
           <div key={a.id} className={itemCls(a)}>
@@ -99,7 +99,7 @@ export default function Compact({ resume }: TemplateProps) {
 
   const languages = resume.languages.length > 0 && (
     <>
-      <H>{L.languages}</H>
+      <H><EditableLabel k="languages" fallback={L.languages} /></H>
       <div className="text-[0.85em]">
         {resume.languages.map((l) => `${l.language} (${l.fluency})`).join(" · ")}
       </div>

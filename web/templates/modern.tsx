@@ -6,7 +6,7 @@ export default function Modern({ resume }: TemplateProps) {
   const L = useSectionLabels();
 
   const work = resume.work.length > 0 && (
-    <Section title={L.experience} accent>
+    <Section title={L.experience} titleKey="work" accent>
       {resume.work.map((w, i) => (
         <div key={w.id} className={itemCls(w)}>
           <div className="flex justify-between items-baseline">
@@ -23,7 +23,7 @@ export default function Modern({ resume }: TemplateProps) {
   );
 
   const projects = resume.projects.length > 0 && (
-    <Section title={L.projects} accent>
+    <Section title={L.projects} titleKey="projects" accent>
       {resume.projects.map((p, i) => (
         <div key={p.id} className={itemCls(p)}>
           <div className="flex justify-between items-baseline">
@@ -45,7 +45,7 @@ export default function Modern({ resume }: TemplateProps) {
   );
 
   const education = resume.education.length > 0 && (
-    <Section title={L.education} accent>
+    <Section title={L.education} titleKey="education" accent>
       {resume.education.map((e, i) => (
         <div key={e.id} className={itemCls(e)}>
           <div className="flex justify-between items-baseline">
@@ -62,7 +62,7 @@ export default function Modern({ resume }: TemplateProps) {
   );
 
   const skills = resume.skills.length > 0 && (
-    <Section title={L.skills} accent>
+    <Section title={L.skills} titleKey="skills" accent>
       {resume.skills.map((s, i) => (
         <div key={s.id} className={itemCls(s, "text-[0.92em]")}>
           <span className="font-semibold"><E path={`skills.${i}.name`}>{s.name}</E></span>
@@ -74,7 +74,7 @@ export default function Modern({ resume }: TemplateProps) {
   );
 
   const awards = resume.awards.length > 0 && (
-    <Section title={L.awards} accent>
+    <Section title={L.awards} titleKey="awards" accent>
       {resume.awards.map((a, i) => (
         <div key={a.id} className={itemCls(a, "text-[0.92em]")}>
           <span className="font-semibold"><E path={`awards.${i}.title`}>{a.title}</E></span>
@@ -86,7 +86,7 @@ export default function Modern({ resume }: TemplateProps) {
   );
 
   const languages = resume.languages.length > 0 && (
-    <Section title={L.languages} accent>
+    <Section title={L.languages} titleKey="languages" accent>
       <div className="flex flex-wrap gap-x-6 gap-y-1 text-[0.92em]">
         {resume.languages.map((l, i) => (
           <div key={l.id} className={itemCls(l)}><span className="font-semibold"><E path={`languages.${i}.language`}>{l.language}</E></span> · <span className="text-gray-600"><E path={`languages.${i}.fluency`}>{l.fluency}</E></span></div>

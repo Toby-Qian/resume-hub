@@ -143,6 +143,11 @@ export interface ResumeNote {
 
 export interface Resume {
   basics: ResumeBasics;
+  /** Per-key user overrides for section headings and other small labels in
+   *  the rendered preview. Keyed by an identifier the template chooses
+   *  (e.g. "work", "education", "publications"). Empty / missing → render the
+   *  template's localised default. */
+  customLabels?: Record<string, string>;
   work: ResumeWork[];
   education: ResumeEducation[];
   projects: ResumeProject[];

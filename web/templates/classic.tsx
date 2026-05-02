@@ -6,7 +6,7 @@ export default function Classic({ resume }: TemplateProps) {
   const L = useSectionLabels();
 
   const education = resume.education.length > 0 && (
-    <Section title={L.education}>
+    <Section title={L.education} titleKey="education">
       {resume.education.map((e, i) => (
         <div key={e.id} className={itemCls(e)}>
           <div className="flex justify-between">
@@ -20,7 +20,7 @@ export default function Classic({ resume }: TemplateProps) {
   );
 
   const work = resume.work.length > 0 && (
-    <Section title={L.experience}>
+    <Section title={L.experience} titleKey="work">
       {resume.work.map((w, i) => (
         <div key={w.id} className={itemCls(w)}>
           <div className="flex justify-between">
@@ -36,7 +36,7 @@ export default function Classic({ resume }: TemplateProps) {
   );
 
   const projects = resume.projects.length > 0 && (
-    <Section title={L.projects}>
+    <Section title={L.projects} titleKey="projects">
       {resume.projects.map((p, i) => (
         <div key={p.id} className={itemCls(p)}>
           <div className="flex justify-between">
@@ -53,7 +53,7 @@ export default function Classic({ resume }: TemplateProps) {
   );
 
   const skills = resume.skills.length > 0 && (
-    <Section title={L.skills}>
+    <Section title={L.skills} titleKey="skills">
       {resume.skills.map((s, i) => (
         <div key={s.id} className={itemCls(s, "text-[0.92em]")}>
           <b><E path={`skills.${i}.name`}>{s.name}</E>:</b> {s.keywords.join(", ")}
@@ -63,7 +63,7 @@ export default function Classic({ resume }: TemplateProps) {
   );
 
   const awards = resume.awards.length > 0 && (
-    <Section title={L.honorsAndAwards}>
+    <Section title={L.honorsAndAwards} titleKey="awards">
       {resume.awards.map((a, i) => (
         <div key={a.id} className={itemCls(a, "text-[0.92em]")}>
           <b><E path={`awards.${i}.title`}>{a.title}</E></b>, <E path={`awards.${i}.awarder`}>{a.awarder}</E> <span className="text-gray-600">(<E path={`awards.${i}.date`}>{a.date}</E>)</span>
@@ -74,7 +74,7 @@ export default function Classic({ resume }: TemplateProps) {
   );
 
   const languages = resume.languages.length > 0 && (
-    <Section title={L.languages}>
+    <Section title={L.languages} titleKey="languages">
       <div className="text-[0.92em]">
         {resume.languages.map((l, i) => `${l.language} (${l.fluency})`).join(" · ")}
       </div>

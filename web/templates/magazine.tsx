@@ -1,5 +1,5 @@
 "use client";
-import { TemplateProps, range, itemCls, Avatar, E, Draggable, useSectionLabels, useOrderedSections , DateRange} from "./shared";
+import { TemplateProps, range, itemCls, Avatar, E, Draggable, useSectionLabels, useOrderedSections , DateRange, EditableLabel} from "./shared";
 
 /**
  * Magazine / editorial layout — inspired by The New Yorker / NYT feature
@@ -25,7 +25,7 @@ export default function Magazine({ resume }: TemplateProps) {
   // layout (they silently no-op).
   const work = resume.work.length > 0 && (
     <>
-      <Head>{L.experience}</Head>
+      <Head><EditableLabel k="work" fallback={L.experience} /></Head>
       {resume.work.map((w, i) => (
         <div key={w.id} className={itemCls(w, "mb-3 text-[0.9em]")}>
           <div className="font-semibold"><E path={`work.${i}.position`}>{w.position}</E></div>
@@ -40,7 +40,7 @@ export default function Magazine({ resume }: TemplateProps) {
   );
   const education = resume.education.length > 0 && (
     <>
-      <Head>{L.education}</Head>
+      <Head><EditableLabel k="education" fallback={L.education} /></Head>
       {resume.education.map((e, i) => (
         <div key={e.id} className={itemCls(e, "mb-2 text-[0.9em]")}>
           <div className="font-semibold"><E path={`education.${i}.institution`}>{e.institution}</E></div>
@@ -55,7 +55,7 @@ export default function Magazine({ resume }: TemplateProps) {
   );
   const projects = resume.projects.length > 0 && (
     <>
-      <Head>{L.projects}</Head>
+      <Head><EditableLabel k="projects" fallback={L.projects} /></Head>
       {resume.projects.map((p, i) => (
         <div key={p.id} className={itemCls(p, "mb-3 text-[0.9em]")}>
           <div className="font-semibold"><E path={`projects.${i}.name`}>{p.name}</E></div>
@@ -75,7 +75,7 @@ export default function Magazine({ resume }: TemplateProps) {
   );
   const awards = resume.awards.length > 0 && (
     <>
-      <Head>{L.honorsAndAwards}</Head>
+      <Head><EditableLabel k="awards" fallback={L.honorsAndAwards} /></Head>
       <ul className="list-disc ml-5 text-[0.9em] space-y-0.5">
         {resume.awards.map((a, i) => (
           <li key={a.id} className={itemCls(a)}>
@@ -87,7 +87,7 @@ export default function Magazine({ resume }: TemplateProps) {
   );
   const skills = resume.skills.length > 0 && (
     <>
-      <Head>{L.skills}</Head>
+      <Head><EditableLabel k="skills" fallback={L.skills} /></Head>
       <div className="text-[0.9em] space-y-0.5">
         {resume.skills.map((s, i) => (
           <div key={s.id} className={itemCls(s)}>
@@ -99,7 +99,7 @@ export default function Magazine({ resume }: TemplateProps) {
   );
   const languages = resume.languages.length > 0 && (
     <>
-      <Head>{L.languages}</Head>
+      <Head><EditableLabel k="languages" fallback={L.languages} /></Head>
       <div className="text-[0.9em] italic">
         {resume.languages.map((l) => `${l.language} (${l.fluency})`).join(" · ")}
       </div>

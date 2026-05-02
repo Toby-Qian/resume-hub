@@ -1,5 +1,5 @@
 "use client";
-import { TemplateProps, range, itemCls, Avatar, E, Draggable, useSectionLabels, useOrderedSections , DateRange} from "./shared";
+import { TemplateProps, range, itemCls, Avatar, E, Draggable, useSectionLabels, useOrderedSections , DateRange, EditableLabel} from "./shared";
 
 /**
  * Minimalist academic: no color, purely typographic hierarchy. Small-caps
@@ -9,14 +9,14 @@ import { TemplateProps, range, itemCls, Avatar, E, Draggable, useSectionLabels, 
 export default function AcademicMinimal({ resume }: TemplateProps) {
   const b = resume.basics;
   const L = useSectionLabels();
-  const Row = ({ label, children }: { label: string; children: React.ReactNode }) => (
+  const Row = ({ label, children }: { label: React.ReactNode; children: React.ReactNode }) => (
     <section className="resume-section grid grid-cols-[100px_1fr] gap-5 mb-4">
       <div className="text-[0.72em] uppercase tracking-[0.25em] text-gray-500 pt-1">{label}</div>
       <div className="text-[0.92em] space-y-2">{children}</div>
     </section>
   );
   const education = resume.education.length > 0 && (
-    <Row label={L.education}>
+    <Row label={<EditableLabel k="education" fallback={L.education} />}>
       {resume.education.map((e, i) => (
         <div key={e.id} className={itemCls(e)}>
           <div><i><E path={`education.${i}.institution`}>{e.institution}</E></i>, <E path={`education.${i}.studyType`}>{e.studyType}</E>, <E path={`education.${i}.area`}>{e.area}</E> <span className="text-gray-500">· {<DateRange startPath={`education.${i}.startDate`} endPath={`education.${i}.endDate`} start={e.startDate} end={e.endDate} />}</span></div>
@@ -26,7 +26,7 @@ export default function AcademicMinimal({ resume }: TemplateProps) {
     </Row>
   );
   const work = resume.work.length > 0 && (
-    <Row label={L.appointments}>
+    <Row label={<EditableLabel k="work" fallback={L.appointments} />}>
       {resume.work.map((w, i) => (
         <div key={w.id} className={itemCls(w)}>
           <div><b><E path={`work.${i}.position`}>{w.position}</E></b>, <i><E path={`work.${i}.company`}>{w.company}</E></i> <span className="text-gray-500">· {<DateRange startPath={`work.${i}.startDate`} endPath={`work.${i}.endDate`} start={w.startDate} end={w.endDate} />}</span></div>
@@ -38,7 +38,7 @@ export default function AcademicMinimal({ resume }: TemplateProps) {
     </Row>
   );
   const projects = resume.projects.length > 0 && (
-    <Row label={L.projects}>
+    <Row label={<EditableLabel k="projects" fallback={L.projects} />}>
       {resume.projects.map((p, i) => (
         <div key={p.id} className={itemCls(p)}>
           <span className="text-gray-500 mr-1">{i + 1}.</span>
@@ -50,7 +50,7 @@ export default function AcademicMinimal({ resume }: TemplateProps) {
     </Row>
   );
   const awards = resume.awards.length > 0 && (
-    <Row label={L.awards}>
+    <Row label={<EditableLabel k="awards" fallback={L.awards} />}>
       {resume.awards.map((a, i) => (
         <div key={a.id} className={itemCls(a)}>
           <b><E path={`awards.${i}.title`}>{a.title}</E></b>, <E path={`awards.${i}.awarder`}>{a.awarder}</E> <span className="text-gray-500">· <E path={`awards.${i}.date`}>{a.date}</E></span>
@@ -59,14 +59,14 @@ export default function AcademicMinimal({ resume }: TemplateProps) {
     </Row>
   );
   const skills = resume.skills.length > 0 && (
-    <Row label={L.skills}>
+    <Row label={<EditableLabel k="skills" fallback={L.skills} />}>
       {resume.skills.map((s, i) => (
         <div key={s.id} className={itemCls(s)}><b><E path={`skills.${i}.name`}>{s.name}</E></b> — <span className="text-gray-700">{s.keywords.join(", ")}</span></div>
       ))}
     </Row>
   );
   const publications = resume.publications && resume.publications.length > 0 && (
-    <Row label={L.publicationsOnly}>
+    <Row label={<EditableLabel k="publications" fallback={L.publicationsOnly} />}>
       {resume.publications.map((p, i) => (
         <div key={p.id} className={itemCls(p)}>
           <span className="text-gray-500 mr-1">{i + 1}.</span>
@@ -79,7 +79,7 @@ export default function AcademicMinimal({ resume }: TemplateProps) {
     </Row>
   );
   const talks = resume.talks && resume.talks.length > 0 && (
-    <Row label={L.talks}>
+    <Row label={<EditableLabel k="talks" fallback={L.talks} />}>
       {resume.talks.map((tk, i) => (
         <div key={tk.id} className={itemCls(tk)}>
           <b><E path={`talks.${i}.title`}>{tk.title}</E></b>{tk.venue && <>, <i><E path={`talks.${i}.venue`}>{tk.venue}</E></i></>}{tk.date && <span className="text-gray-500"> · {tk.date}</span>}
@@ -88,7 +88,7 @@ export default function AcademicMinimal({ resume }: TemplateProps) {
     </Row>
   );
   const teaching = resume.teaching && resume.teaching.length > 0 && (
-    <Row label={L.teaching}>
+    <Row label={<EditableLabel k="teaching" fallback={L.teaching} />}>
       {resume.teaching.map((tg, i) => (
         <div key={tg.id} className={itemCls(tg)}>
           <b><E path={`teaching.${i}.course`}>{tg.course}</E></b>{tg.institution && <>, <E path={`teaching.${i}.institution`}>{tg.institution}</E></>}{tg.role && <span className="text-gray-500"> · <E path={`teaching.${i}.role`}>{tg.role}</E></span>} <span className="text-gray-500">· {<DateRange startPath={`teaching.${i}.startDate`} endPath={`teaching.${i}.endDate`} start={tg.startDate} end={tg.endDate} />}</span>
@@ -97,7 +97,7 @@ export default function AcademicMinimal({ resume }: TemplateProps) {
     </Row>
   );
   const languages = resume.languages.length > 0 && (
-    <Row label={L.languages}>
+    <Row label={<EditableLabel k="languages" fallback={L.languages} />}>
       <div>{resume.languages.map((l, i) => `${l.language} (${l.fluency})`).join(" · ")}</div>
     </Row>
   );
@@ -122,7 +122,7 @@ export default function AcademicMinimal({ resume }: TemplateProps) {
         <Avatar basics={b} size={80} />
       </Draggable>
 
-      <Row label={L.summary}>
+      <Row label={<EditableLabel k="summary" fallback={L.summary} />}>
         <Draggable name="summary"><p className="italic"><E path="basics.summary" multiline>{b.summary}</E></p></Draggable>
       </Row>
 

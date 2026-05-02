@@ -1,10 +1,10 @@
 "use client";
-import { TemplateProps, range, itemCls, Avatar, E, Draggable, useSectionLabels, useOrderedSections , DateRange} from "./shared";
+import { TemplateProps, range, itemCls, Avatar, E, Draggable, useSectionLabels, useOrderedSections , DateRange, EditableLabel} from "./shared";
 
 export default function Minimal({ resume }: TemplateProps) {
   const b = resume.basics;
   const L = useSectionLabels();
-  const Row = ({ title, children }: { title: string; children: React.ReactNode }) => (
+  const Row = ({ title, children }: { title: React.ReactNode; children: React.ReactNode }) => (
     <section className="resume-section grid grid-cols-[110px_1fr] gap-4 mb-5">
       <div className="text-[0.75em] uppercase tracking-widest text-gray-400 pt-1">{title}</div>
       <div className="space-y-3">{children}</div>
@@ -12,7 +12,7 @@ export default function Minimal({ resume }: TemplateProps) {
   );
 
   const work = resume.work.length > 0 && (
-    <Row title={L.workShort}>
+    <Row title={<EditableLabel k="work" fallback={L.workShort} />}>
       {resume.work.map((w, i) => (
         <div key={w.id} className={itemCls(w)}>
           <div className="text-[0.95em]"><b><E path={`work.${i}.position`}>{w.position}</E></b> at <E path={`work.${i}.company`}>{w.company}</E> <span className="text-gray-400">· {<DateRange startPath={`work.${i}.startDate`} endPath={`work.${i}.endDate`} start={w.startDate} end={w.endDate} />}</span></div>
@@ -25,7 +25,7 @@ export default function Minimal({ resume }: TemplateProps) {
   );
 
   const education = resume.education.length > 0 && (
-    <Row title={L.educationShort}>
+    <Row title={<EditableLabel k="education" fallback={L.educationShort} />}>
       {resume.education.map((e, i) => (
         <div key={e.id} className={itemCls(e, "text-[0.9em]")}>
           <b><E path={`education.${i}.institution`}>{e.institution}</E></b> — <E path={`education.${i}.studyType`}>{e.studyType}</E>, <E path={`education.${i}.area`}>{e.area}</E> <span className="text-gray-400">· {<DateRange startPath={`education.${i}.startDate`} endPath={`education.${i}.endDate`} start={e.startDate} end={e.endDate} />}</span>
@@ -35,7 +35,7 @@ export default function Minimal({ resume }: TemplateProps) {
   );
 
   const projects = resume.projects.length > 0 && (
-    <Row title={L.projects}>
+    <Row title={<EditableLabel k="projects" fallback={L.projects} />}>
       {resume.projects.map((p, i) => (
         <div key={p.id} className={itemCls(p, "text-[0.9em]")}>
           <b><E path={`projects.${i}.name`}>{p.name}</E></b> — <span className="text-gray-600"><E path={`projects.${i}.description`} multiline>{p.description}</E></span>
@@ -45,7 +45,7 @@ export default function Minimal({ resume }: TemplateProps) {
   );
 
   const skills = resume.skills.length > 0 && (
-    <Row title={L.skills}>
+    <Row title={<EditableLabel k="skills" fallback={L.skills} />}>
       {resume.skills.map((s, i) => (
         <div key={s.id} className={itemCls(s, "text-[0.9em]")}><b><E path={`skills.${i}.name`}>{s.name}</E></b> — {s.keywords.join(", ")}</div>
       ))}
@@ -53,7 +53,7 @@ export default function Minimal({ resume }: TemplateProps) {
   );
 
   const awards = resume.awards.length > 0 && (
-    <Row title={L.awards}>
+    <Row title={<EditableLabel k="awards" fallback={L.awards} />}>
       {resume.awards.map((a, i) => (
         <div key={a.id} className={itemCls(a, "text-[0.9em]")}><b><E path={`awards.${i}.title`}>{a.title}</E></b> — <E path={`awards.${i}.awarder`}>{a.awarder}</E> <span className="text-gray-400"><E path={`awards.${i}.date`}>{a.date}</E></span></div>
       ))}
@@ -61,7 +61,7 @@ export default function Minimal({ resume }: TemplateProps) {
   );
 
   const languages = resume.languages.length > 0 && (
-    <Row title={L.languagesShort}>
+    <Row title={<EditableLabel k="languages" fallback={L.languagesShort} />}>
       <div className="text-[0.9em]">{resume.languages.map((l, i) => `${l.language} (${l.fluency})`).join(" · ")}</div>
     </Row>
   );
@@ -78,7 +78,7 @@ export default function Minimal({ resume }: TemplateProps) {
         <Avatar basics={b} size={80} rounded="sm" />
       </Draggable>
 
-      <Row title={L.contact}>
+      <Row title={<EditableLabel k="contact" fallback={L.contact} />}>
         <div className="text-[0.9em] text-gray-700 space-y-0.5">
           <div><E path="basics.email">{b.email}</E></div>
           <div><E path="basics.phone">{b.phone}</E></div>
@@ -87,7 +87,7 @@ export default function Minimal({ resume }: TemplateProps) {
         </div>
       </Row>
 
-      <Row title={L.about}>
+      <Row title={<EditableLabel k="summary" fallback={L.about} />}>
         <Draggable name="summary"><p className="text-[0.95em]"><E path="basics.summary" multiline>{b.summary}</E></p></Draggable>
       </Row>
 

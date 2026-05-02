@@ -1,5 +1,5 @@
 "use client";
-import { TemplateProps, range, itemCls, Avatar, E, Draggable, useSectionLabels, useOrderedSections , DateRange} from "./shared";
+import { TemplateProps, range, itemCls, Avatar, E, Draggable, useSectionLabels, useOrderedSections , DateRange, EditableLabel} from "./shared";
 
 /**
  * Modern academic: sans-serif, colored accent rules, left-aligned headers
@@ -25,7 +25,7 @@ export default function AcademicModern({ resume }: TemplateProps) {
     </div>
   );
   const education = resume.education.length > 0 && (
-    <><H>{L.education}</H>
+    <><H><EditableLabel k="education" fallback={L.education} /></H>
       {resume.education.map((e, i) => (
         <Row key={e.id} breakBefore={(e as any).breakBefore}
           left={<><b><E path={`education.${i}.institution`}>{e.institution}</E></b> — <E path={`education.${i}.studyType`}>{e.studyType}</E>, <E path={`education.${i}.area`}>{e.area}</E></>}
@@ -39,7 +39,7 @@ export default function AcademicModern({ resume }: TemplateProps) {
     </>
   );
   const work = resume.work.length > 0 && (
-    <><H>{L.appointments}</H>
+    <><H><EditableLabel k="work" fallback={L.appointments} /></H>
       {resume.work.map((w, i) => (
         <Row key={w.id} breakBefore={(w as any).breakBefore}
           left={<><b><E path={`work.${i}.position`}>{w.position}</E></b> · <span className="text-gray-700"><E path={`work.${i}.company`}>{w.company}</E></span>{w.location && <span className="text-gray-500"> · <E path={`work.${i}.location`}>{w.location}</E></span>}</>}
@@ -52,7 +52,7 @@ export default function AcademicModern({ resume }: TemplateProps) {
     </>
   );
   const projects = resume.projects.length > 0 && (
-    <><H>{L.publications}</H>
+    <><H><EditableLabel k="publications" fallback={L.publications} /></H>
       {resume.projects.map((p, i) => (
         <Row key={p.id} breakBefore={(p as any).breakBefore}
           left={<><b><E path={`projects.${i}.name`}>{p.name}</E></b>{p.url && <span className="text-[0.82em] text-gray-500"> — <E path={`projects.${i}.url`}>{p.url}</E></span>}</>}
@@ -66,7 +66,7 @@ export default function AcademicModern({ resume }: TemplateProps) {
     </>
   );
   const awards = resume.awards.length > 0 && (
-    <><H>{L.honorsAndGrants}</H>
+    <><H><EditableLabel k="awards" fallback={L.honorsAndGrants} /></H>
       <ul className="list-disc ml-5 text-[0.9em] space-y-0.5">
         {resume.awards.map((a, i) => (
           <li key={a.id} className={itemCls(a)}>
@@ -77,7 +77,7 @@ export default function AcademicModern({ resume }: TemplateProps) {
     </>
   );
   const publications = resume.publications && resume.publications.length > 0 && (
-    <><H>{L.publicationsOnly}</H>
+    <><H><EditableLabel k="publications" fallback={L.publicationsOnly} /></H>
       <ol className="text-[0.92em] space-y-1 ml-1">
         {resume.publications.map((p, i) => (
           <li key={p.id} className={itemCls(p, "flex gap-2")}>
@@ -94,7 +94,7 @@ export default function AcademicModern({ resume }: TemplateProps) {
     </>
   );
   const talks = resume.talks && resume.talks.length > 0 && (
-    <><H>{L.talks}</H>
+    <><H><EditableLabel k="talks" fallback={L.talks} /></H>
       <ul className="list-disc ml-5 text-[0.9em]">
         {resume.talks.map((tk, i) => (
           <li key={tk.id} className={itemCls(tk)}>
@@ -105,7 +105,7 @@ export default function AcademicModern({ resume }: TemplateProps) {
     </>
   );
   const teaching = resume.teaching && resume.teaching.length > 0 && (
-    <><H>{L.teaching}</H>
+    <><H><EditableLabel k="teaching" fallback={L.teaching} /></H>
       {resume.teaching.map((tg, i) => (
         <div key={tg.id} className={itemCls(tg, "mb-1.5 text-[0.9em]")}>
           <div className="flex justify-between">
@@ -141,7 +141,7 @@ export default function AcademicModern({ resume }: TemplateProps) {
 
       <div className="grid grid-cols-2 gap-x-6 mt-1">
         {resume.skills.length > 0 && (
-          <div><H>{L.skills}</H>
+          <div><H><EditableLabel k="skills" fallback={L.skills} /></H>
             <div className="text-[0.88em] space-y-0.5">
               {resume.skills.map((s, i) => (
                 <div key={s.id} className={itemCls(s)}><b><E path={`skills.${i}.name`}>{s.name}</E>:</b> {s.keywords.join(", ")}</div>
@@ -150,7 +150,7 @@ export default function AcademicModern({ resume }: TemplateProps) {
           </div>
         )}
         {resume.languages.length > 0 && (
-          <div><H>{L.languages}</H>
+          <div><H><EditableLabel k="languages" fallback={L.languages} /></H>
             <div className="text-[0.88em]">
               {resume.languages.map((l, i) => `${l.language} (${l.fluency})`).join(" · ")}
             </div>

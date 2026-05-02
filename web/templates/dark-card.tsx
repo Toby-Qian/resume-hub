@@ -1,5 +1,5 @@
 "use client";
-import { TemplateProps, range, itemCls, Avatar, E, Draggable, useSectionLabels, useOrderedSections , DateRange} from "./shared";
+import { TemplateProps, range, itemCls, Avatar, E, Draggable, useSectionLabels, useOrderedSections , DateRange, EditableLabel} from "./shared";
 
 /**
  * Dark hero band + light content cards. Modern startup / SaaS-portfolio
@@ -32,7 +32,7 @@ export default function DarkCard({ resume }: TemplateProps) {
   // awards / languages stay in their bespoke 2-col grids at the bottom.
   const work = resume.work.length > 0 && (
     <>
-      <SectionH>{L.experience}</SectionH>
+      <SectionH><EditableLabel k="work" fallback={L.experience} /></SectionH>
       {resume.work.map((w, i) => (
         <Card key={w.id} breakBefore={(w as any).breakBefore} className="text-[0.92em]">
           <div className="flex justify-between items-baseline">
@@ -52,7 +52,7 @@ export default function DarkCard({ resume }: TemplateProps) {
   );
   const projects = resume.projects.length > 0 && (
     <>
-      <SectionH>{L.projects}</SectionH>
+      <SectionH><EditableLabel k="projects" fallback={L.projects} /></SectionH>
       {resume.projects.map((p, i) => (
         <Card key={p.id} breakBefore={(p as any).breakBefore} className="text-[0.92em]">
           <div className="flex justify-between items-baseline">
@@ -120,7 +120,7 @@ export default function DarkCard({ resume }: TemplateProps) {
         <div className="grid grid-cols-2 gap-4">
           {resume.education.length > 0 && (
             <div>
-              <SectionH>{L.education}</SectionH>
+              <SectionH><EditableLabel k="education" fallback={L.education} /></SectionH>
               {resume.education.map((e, i) => (
                 <Card key={e.id} className="text-[0.9em]">
                   <div className="font-semibold"><E path={`education.${i}.institution`}>{e.institution}</E></div>
@@ -133,7 +133,7 @@ export default function DarkCard({ resume }: TemplateProps) {
 
           {resume.skills.length > 0 && (
             <div>
-              <SectionH>{L.skills}</SectionH>
+              <SectionH><EditableLabel k="skills" fallback={L.skills} /></SectionH>
               <Card className="text-[0.9em]">
                 {resume.skills.map((s, i) => (
                   <div key={s.id} className={itemCls(s, "mb-1")}>
@@ -151,7 +151,7 @@ export default function DarkCard({ resume }: TemplateProps) {
           <div className="grid grid-cols-2 gap-4">
             {resume.awards.length > 0 && (
               <div>
-                <SectionH>{L.awards}</SectionH>
+                <SectionH><EditableLabel k="awards" fallback={L.awards} /></SectionH>
                 {resume.awards.map((a, i) => (
                   <Card key={a.id} className="text-[0.88em]">
                     <div className="font-semibold"><E path={`awards.${i}.title`}>{a.title}</E></div>
@@ -162,7 +162,7 @@ export default function DarkCard({ resume }: TemplateProps) {
             )}
             {resume.languages.length > 0 && (
               <div>
-                <SectionH>{L.languages}</SectionH>
+                <SectionH><EditableLabel k="languages" fallback={L.languages} /></SectionH>
                 <Card className="text-[0.9em] flex flex-wrap gap-x-3 gap-y-1">
                   {resume.languages.map((l, i) => (
                     <span key={l.id} className={itemCls(l)}>

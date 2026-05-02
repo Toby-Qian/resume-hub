@@ -1,5 +1,5 @@
 "use client";
-import { TemplateProps, range, itemCls, Avatar, E, Draggable, useSectionLabels, useOrderedSections , DateRange} from "./shared";
+import { TemplateProps, range, itemCls, Avatar, E, Draggable, useSectionLabels, useOrderedSections , DateRange, EditableLabel} from "./shared";
 
 export default function CNFormal({ resume }: TemplateProps) {
   const b = resume.basics;
@@ -10,7 +10,7 @@ export default function CNFormal({ resume }: TemplateProps) {
 
   const education = resume.education.length > 0 && (
     <>
-      <H>{L.education}</H>
+      <H><EditableLabel k="education" fallback={L.education} /></H>
       {resume.education.map((e, i) => (
         <div key={e.id} className={itemCls(e, "mb-2 text-[0.95em]")}>
           <div className="flex justify-between">
@@ -26,7 +26,7 @@ export default function CNFormal({ resume }: TemplateProps) {
 
   const work = resume.work.length > 0 && (
     <>
-      <H>{L.experience}</H>
+      <H><EditableLabel k="work" fallback={L.experience} /></H>
       {resume.work.map((w, i) => (
         <div key={w.id} className={itemCls(w, "mb-3 text-[0.95em]")}>
           <div className="flex justify-between">
@@ -43,7 +43,7 @@ export default function CNFormal({ resume }: TemplateProps) {
 
   const projects = resume.projects.length > 0 && (
     <>
-      <H>{L.projects}</H>
+      <H><EditableLabel k="projects" fallback={L.projects} /></H>
       {resume.projects.map((p, i) => (
         <div key={p.id} className={itemCls(p, "mb-3 text-[0.95em]")}>
           <div className="flex justify-between">
@@ -61,7 +61,7 @@ export default function CNFormal({ resume }: TemplateProps) {
 
   const skills = resume.skills.length > 0 && (
     <>
-      <H>{L.skills}</H>
+      <H><EditableLabel k="skills" fallback={L.skills} /></H>
       <ul className="list-disc ml-5 text-[0.95em]">
         {resume.skills.map((s) => (
           <li key={s.id} className={itemCls(s)}><b>{s.name}</b>{s.level && `（${s.level}）`}：{s.keywords.join("、")}</li>
@@ -72,7 +72,7 @@ export default function CNFormal({ resume }: TemplateProps) {
 
   const awards = resume.awards.length > 0 && (
     <>
-      <H>{L.awards}</H>
+      <H><EditableLabel k="awards" fallback={L.awards} /></H>
       <ul className="list-disc ml-5 text-[0.95em]">
         {resume.awards.map((a) => (
           <li key={a.id} className={itemCls(a)}><b>{a.title}</b> · {a.awarder} · {a.date}{a.summary && ` — ${a.summary}`}</li>
@@ -83,7 +83,7 @@ export default function CNFormal({ resume }: TemplateProps) {
 
   const languages = resume.languages.length > 0 && (
     <>
-      <H>{L.languages}</H>
+      <H><EditableLabel k="languages" fallback={L.languages} /></H>
       <div className="text-[0.95em]">
         {resume.languages.map((l) => `${l.language}（${l.fluency}）`).join(" · ")}
       </div>
@@ -109,7 +109,7 @@ export default function CNFormal({ resume }: TemplateProps) {
           <div>主页：<E path="basics.website">{b.website}</E></div>
         </div>
       </Draggable>
-      <Draggable name="summary"><H>{L.summary}</H><p className="text-[0.95em]"><E path="basics.summary" multiline>{b.summary}</E></p></Draggable>
+      <Draggable name="summary"><H><EditableLabel k="summary" fallback={L.summary} /></H><p className="text-[0.95em]"><E path="basics.summary" multiline>{b.summary}</E></p></Draggable>
 
       {ordered}
     </div>

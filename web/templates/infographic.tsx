@@ -1,5 +1,5 @@
 "use client";
-import { TemplateProps, range, itemCls, Avatar, E, Draggable, useSectionLabels, useOrderedSections , DateRange} from "./shared";
+import { TemplateProps, range, itemCls, Avatar, E, Draggable, useSectionLabels, useOrderedSections , DateRange, EditableLabel} from "./shared";
 
 /**
  * Infographic resume — skill bars, language proficiency dots, ribbon-style
@@ -52,7 +52,7 @@ export default function Infographic({ resume }: TemplateProps) {
   // Main column reorderable sections (sidebar skills/languages/awards stay).
   const work = resume.work.length > 0 && (
     <>
-      <Ribbon>{L.experience}</Ribbon>
+      <Ribbon><EditableLabel k="work" fallback={L.experience} /></Ribbon>
       {resume.work.map((w, i) => (
         <div key={w.id} className={itemCls(w, "mb-3 text-[0.92em] pl-3 border-l-2")}
           style={{ borderColor: "var(--resume-tint-35)" }}>
@@ -71,7 +71,7 @@ export default function Infographic({ resume }: TemplateProps) {
   );
   const projects = resume.projects.length > 0 && (
     <>
-      <Ribbon>{L.projects}</Ribbon>
+      <Ribbon><EditableLabel k="projects" fallback={L.projects} /></Ribbon>
       {resume.projects.map((p, i) => (
         <div key={p.id} className={itemCls(p, "mb-3 text-[0.92em] pl-3 border-l-2")}
           style={{ borderColor: "var(--resume-tint-35)" }}>
@@ -99,7 +99,7 @@ export default function Infographic({ resume }: TemplateProps) {
   );
   const education = resume.education.length > 0 && (
     <>
-      <Ribbon>{L.education}</Ribbon>
+      <Ribbon><EditableLabel k="education" fallback={L.education} /></Ribbon>
       {resume.education.map((e, i) => (
         <div key={e.id} className={itemCls(e, "mb-2 text-[0.92em] pl-3 border-l-2")}
           style={{ borderColor: "var(--resume-tint-35)" }}>
@@ -128,7 +128,7 @@ export default function Infographic({ resume }: TemplateProps) {
           <div className="text-[0.92em] text-center text-gray-700 mt-1"><E path="basics.label">{b.label}</E></div>
         </Draggable>
 
-        <SideTitle>{L.contact}</SideTitle>
+        <SideTitle><EditableLabel k="contact" fallback={L.contact} /></SideTitle>
         <div className="text-[0.83em] space-y-1 text-gray-800">
           <div><E path="basics.icons.email">{(b.icons && b.icons.email) || "✉"}</E> <E path="basics.email">{b.email}</E></div>
           <div><E path="basics.icons.phone">{(b.icons && b.icons.phone) || "☎"}</E> <E path="basics.phone">{b.phone}</E></div>
@@ -138,7 +138,7 @@ export default function Infographic({ resume }: TemplateProps) {
 
         {resume.skills.length > 0 && (
           <>
-            <SideTitle>{L.skills}</SideTitle>
+            <SideTitle><EditableLabel k="skills" fallback={L.skills} /></SideTitle>
             {resume.skills.map((s, i) => {
               const pct = levelToPct(s.level);
               return (
@@ -161,7 +161,7 @@ export default function Infographic({ resume }: TemplateProps) {
 
         {resume.languages.length > 0 && (
           <>
-            <SideTitle>{L.languages}</SideTitle>
+            <SideTitle><EditableLabel k="languages" fallback={L.languages} /></SideTitle>
             {resume.languages.map((l, i) => {
               const dots = fluencyToDots(l.fluency);
               return (
@@ -184,7 +184,7 @@ export default function Infographic({ resume }: TemplateProps) {
 
         {resume.awards.length > 0 && (
           <>
-            <SideTitle>{L.awards}</SideTitle>
+            <SideTitle><EditableLabel k="awards" fallback={L.awards} /></SideTitle>
             {resume.awards.map((a, i) => (
               <div key={a.id} className={itemCls(a, "text-[0.83em] mb-2")}>
                 <div className="font-semibold"><E path={`awards.${i}.title`}>{a.title}</E></div>

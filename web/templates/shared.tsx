@@ -243,7 +243,7 @@ export function Avatar({
  * typically don't need to pass `breakBefore` on Section itself — but it is
  * available for explicit "this entire section on a new page" use.
  */
-export function Section({ title, children, accent = false, breakBefore = false }: { title: string; children: React.ReactNode; accent?: boolean; breakBefore?: boolean }) {
+export function Section({ title, children, accent = false, breakBefore = false, titleKey }: { title: React.ReactNode; children: React.ReactNode; accent?: boolean; breakBefore?: boolean; titleKey?: string }) {
   return (
     <section
       className={`resume-section ${breakBefore ? "page-break-before" : ""}`}
@@ -253,11 +253,23 @@ export function Section({ title, children, accent = false, breakBefore = false }
         className="font-semibold tracking-wide uppercase text-[0.82em] mb-2 pb-1 border-b"
         style={{ color: accent ? "var(--resume-accent)" : "#111827", borderColor: "#e5e7eb" }}
       >
-        {title}
+        {titleKey ? <EditableLabel k={titleKey} fallback={title} /> : title}
       </h2>
       <div className="space-y-3">{children}</div>
     </section>
   );
+}
+
+/**
+ * Render a section heading or other small label that the user can click to
+ * customise. Persists under `customLabels[k]`. When the saved value is empty
+ * we render `fallback` (the localised default) — both visually and inside the
+ * editable field, so users see what they're overriding.
+ */
+export function EditableLabel({ k, fallback, className = "" }: { k: string; fallback: React.ReactNode; className?: string }) {
+  const saved = useStore((s) => (s.resume.customLabels || {})[k]);
+  const text = (typeof saved === "string" && saved.length > 0) ? saved : (typeof fallback === "string" ? fallback : "");
+  return <E path={`customLabels.${k}`} className={className}>{text}</E>;
 }
 
 /** Wrapper for individual entries (one job, one project) so a page break never
@@ -405,11 +417,29 @@ export function Draggable({
     window.addEventListener("mouseup", onUp);
   };
 
+  const moved = (off.x || 0) !== 0 || (off.y || 0) !== 0;
+  const onReset = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const { resume, update } = useStore.getState();
+    const bo = { ...(resume.basics.blockOffsets || {}) };
+    delete bo[name];
+    update("basics", { ...resume.basics, blockOffsets: bo });
+  };
   return (
     <Tag
       className={`draggable-block group relative ${className}`}
       style={{ transform: `translate(${off.x || 0}px, ${off.y || 0}px)` }}
     >
+      {moved && (
+        <button
+          type="button"
+          onClick={onReset}
+          title="复位 / reset position"
+          aria-label="reset position"
+          className="drag-reset"
+        >↺</button>
+      )}
       <button
         type="button"
         onMouseDown={onMouseDown}

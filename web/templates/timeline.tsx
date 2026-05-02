@@ -1,5 +1,5 @@
 "use client";
-import { TemplateProps, range, itemCls, Avatar, E, Draggable, useSectionLabels, useOrderedSections , DateRange} from "./shared";
+import { TemplateProps, range, itemCls, Avatar, E, Draggable, useSectionLabels, useOrderedSections , DateRange, EditableLabel} from "./shared";
 
 /**
  * Vertical timeline: each work/project entry has a dot on the left with a
@@ -32,7 +32,7 @@ export default function Timeline({ resume }: TemplateProps) {
 
   const work = resume.work.length > 0 && (
     <>
-      <H>{L.experience}</H>
+      <H><EditableLabel k="work" fallback={L.experience} /></H>
       {resume.work.map((w, i) => (
         <Node key={w.id} date={<DateRange startPath={`work.${i}.startDate`} endPath={`work.${i}.endDate`} start={w.startDate} end={w.endDate} />} breakBefore={(w as any).breakBefore}>
           <div className="text-[0.93em]"><b><E path={`work.${i}.position`}>{w.position}</E></b> · <span className="text-gray-700"><E path={`work.${i}.company`}>{w.company}</E></span></div>
@@ -46,7 +46,7 @@ export default function Timeline({ resume }: TemplateProps) {
   );
   const projects = resume.projects.length > 0 && (
     <>
-      <H>{L.projects}</H>
+      <H><EditableLabel k="projects" fallback={L.projects} /></H>
       {resume.projects.map((p, i) => (
         <Node key={p.id} date={<DateRange startPath={`projects.${i}.startDate`} endPath={`projects.${i}.endDate`} start={p.startDate} end={p.endDate} />} breakBefore={(p as any).breakBefore}>
           <div className="text-[0.93em]"><b><E path={`projects.${i}.name`}>{p.name}</E></b></div>
@@ -65,7 +65,7 @@ export default function Timeline({ resume }: TemplateProps) {
   );
   const education = resume.education.length > 0 && (
     <>
-      <H>{L.education}</H>
+      <H><EditableLabel k="education" fallback={L.education} /></H>
       {resume.education.map((e, i) => (
         <Node key={e.id} date={<DateRange startPath={`education.${i}.startDate`} endPath={`education.${i}.endDate`} start={e.startDate} end={e.endDate} />} breakBefore={(e as any).breakBefore}>
           <div className="text-[0.93em]"><b><E path={`education.${i}.institution`}>{e.institution}</E></b></div>
@@ -76,7 +76,7 @@ export default function Timeline({ resume }: TemplateProps) {
   );
   const skills = resume.skills.length > 0 && (
     <>
-      <H>{L.skills}</H>
+      <H><EditableLabel k="skills" fallback={L.skills} /></H>
       <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-[0.88em]">
         {resume.skills.map((s, i) => (
           <div key={s.id} className={itemCls(s)}>
@@ -89,7 +89,7 @@ export default function Timeline({ resume }: TemplateProps) {
   );
   const awards = resume.awards.length > 0 && (
     <>
-      <H>{L.honorsAndAwards}</H>
+      <H><EditableLabel k="awards" fallback={L.honorsAndAwards} /></H>
       <div className="text-[0.88em] space-y-0.5">
         {resume.awards.map((a, i) => (
           <div key={a.id} className={itemCls(a)}><b><E path={`awards.${i}.title`}>{a.title}</E></b> · <E path={`awards.${i}.awarder`}>{a.awarder}</E> · <span className="text-gray-500"><E path={`awards.${i}.date`}>{a.date}</E></span></div>
@@ -99,7 +99,7 @@ export default function Timeline({ resume }: TemplateProps) {
   );
   const languages = resume.languages.length > 0 && (
     <>
-      <H>{L.languages}</H>
+      <H><EditableLabel k="languages" fallback={L.languages} /></H>
       <div className="text-[0.88em]">
         {resume.languages.map((l) => `${l.language} (${l.fluency})`).join(" · ")}
       </div>

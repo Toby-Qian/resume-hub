@@ -1,5 +1,5 @@
 "use client";
-import { TemplateProps, range, itemCls, Avatar, E, Draggable, useSectionLabels, useOrderedSections , DateRange} from "./shared";
+import { TemplateProps, range, itemCls, Avatar, E, Draggable, useSectionLabels, useOrderedSections , DateRange, EditableLabel} from "./shared";
 
 /**
  * Two-column layout with a soft tinted sidebar. Feels lighter than
@@ -23,7 +23,7 @@ export default function Elegant({ resume }: TemplateProps) {
   );
   const work = resume.work.length > 0 && (
     <>
-      <MainH>{L.experience}</MainH>
+      <MainH><EditableLabel k="work" fallback={L.experience} /></MainH>
       {resume.work.map((w, i) => (
         <div key={w.id} className={itemCls(w, "mb-4 text-[0.92em]")}>
           <div className="flex justify-between items-baseline">
@@ -40,7 +40,7 @@ export default function Elegant({ resume }: TemplateProps) {
   );
   const projects = resume.projects.length > 0 && (
     <>
-      <MainH>{L.projects}</MainH>
+      <MainH><EditableLabel k="projects" fallback={L.projects} /></MainH>
       {resume.projects.map((p, i) => (
         <div key={p.id} className={itemCls(p, "mb-3 text-[0.92em]")}>
           <div className="flex justify-between items-baseline">
@@ -59,7 +59,7 @@ export default function Elegant({ resume }: TemplateProps) {
   );
   const education = resume.education.length > 0 && (
     <>
-      <MainH>{L.education}</MainH>
+      <MainH><EditableLabel k="education" fallback={L.education} /></MainH>
       {resume.education.map((e, i) => (
         <div key={e.id} className={itemCls(e, "mb-2 text-[0.92em]")}>
           <div className="flex justify-between items-baseline">
@@ -91,7 +91,7 @@ export default function Elegant({ resume }: TemplateProps) {
           <div className="text-[0.95em] text-gray-700 mt-1"><E path="basics.label">{b.label}</E></div>
         </Draggable>
 
-        <SideH>{L.contact}</SideH>
+        <SideH><EditableLabel k="contact" fallback={L.contact} /></SideH>
         <div className="text-[0.83em] text-gray-700 space-y-1">
           <div><E path="basics.icons.email">{(b.icons && b.icons.email) || "✉"}</E> <E path="basics.email">{b.email}</E></div>
           <div><E path="basics.icons.phone">{(b.icons && b.icons.phone) || "☎"}</E> <E path="basics.phone">{b.phone}</E></div>
@@ -101,7 +101,7 @@ export default function Elegant({ resume }: TemplateProps) {
 
         {resume.skills.length > 0 && (
           <>
-            <SideH>{L.skills}</SideH>
+            <SideH><EditableLabel k="skills" fallback={L.skills} /></SideH>
             {resume.skills.map((s, i) => (
               <div key={s.id} className={itemCls(s, "text-[0.83em] mb-2")}>
                 <div className="font-semibold text-gray-800"><E path={`skills.${i}.name`}>{s.name}</E></div>
@@ -113,7 +113,7 @@ export default function Elegant({ resume }: TemplateProps) {
 
         {resume.languages.length > 0 && (
           <>
-            <SideH>{L.languages}</SideH>
+            <SideH><EditableLabel k="languages" fallback={L.languages} /></SideH>
             {resume.languages.map((l, i) => (
               <div key={l.id} className={itemCls(l, "text-[0.83em]")}>
                 <E path={`languages.${i}.language`}>{l.language}</E> · <span className="text-gray-600"><E path={`languages.${i}.fluency`}>{l.fluency}</E></span>
@@ -124,7 +124,7 @@ export default function Elegant({ resume }: TemplateProps) {
 
         {resume.awards.length > 0 && (
           <>
-            <SideH>{L.awards}</SideH>
+            <SideH><EditableLabel k="awards" fallback={L.awards} /></SideH>
             {resume.awards.map((a, i) => (
               <div key={a.id} className={itemCls(a, "text-[0.83em] mb-1")}>
                 <div className="font-semibold"><E path={`awards.${i}.title`}>{a.title}</E></div>
@@ -137,7 +137,7 @@ export default function Elegant({ resume }: TemplateProps) {
 
       <main style={{ padding: "var(--pad)" }}>
         <Draggable name="summary">
-          <MainH>{L.about}</MainH>
+          <MainH><EditableLabel k="summary" fallback={L.about} /></MainH>
           <p className="text-[0.94em] text-gray-800 leading-relaxed"><E path="basics.summary" multiline>{b.summary}</E></p>
         </Draggable>
 
