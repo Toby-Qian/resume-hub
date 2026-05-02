@@ -4,6 +4,7 @@ import { useStore } from "@/lib/store";
 import { t } from "@/lib/i18n";
 import { toast } from "@/lib/toast";
 import { ExportMenu } from "./ExportMenu";
+import { SnapshotMenu } from "./SnapshotMenu";
 import { Completeness } from "./Completeness";
 import { ConfirmModal } from "./ConfirmModal";
 import { printResume } from "@/lib/printResume";
@@ -139,6 +140,7 @@ export function Toolbar() {
       <Btn onClick={() => fileRef.current?.click()} icon="↑">{L.actions.importJson}</Btn>
       <Btn onClick={onExport} icon="↓">{L.actions.exportJson}</Btn>
       <Btn onClick={() => setResetOpen(true)} icon="✕">{L.actions.reset}</Btn>
+      <SnapshotMenu />
       <ExportMenu />
       <button
         onClick={togglePreviewMode}

@@ -82,6 +82,21 @@ export function normalizeMargin(m: any): number {
 }
 
 const HISTORY_LIMIT = 80;
+/** Cap on user-saved named snapshots. Each snapshot holds a full Resume copy
+ *  in localStorage — at ~30KB per snapshot, 12 leaves ample headroom under
+ *  the typical 5MB quota even with the rest of the persisted state. The
+ *  oldest snapshot is dropped silently when the user crosses the cap. */
+const SNAPSHOT_LIMIT = 12;
+
+/** A user-named restore point. Stored in localStorage alongside the rest of
+ *  the persisted state. Distinct from `past`/`future` undo history: snapshots
+ *  survive reloads, can be named, and don't get pushed/popped automatically. */
+export interface Snapshot {
+  id: string;
+  name: string;        // user-supplied; falls back to a timestamp
+  createdAt: number;   // Date.now()
+  resume: Resume;
+}
 
 /** Default order in which sections appear. The store may persist a custom
  *  order — but new section keys added in later versions are appended on top
@@ -160,6 +175,13 @@ interface State {
   canRedo: () => boolean;
   beginBatch: () => void;
   endBatch: () => void;
+  /** Named restore points the user can save/load. Persisted to localStorage.
+   *  See {@link Snapshot} and SNAPSHOT_LIMIT. */
+  snapshots: Snapshot[];
+  saveSnapshot: (name?: string) => void;
+  restoreSnapshot: (id: string) => void;
+  deleteSnapshot: (id: string) => void;
+  renameSnapshot: (id: string, name: string) => void;
 }
 
 
@@ -460,6 +482,41 @@ export const useStore = create<State>()(
         canUndo: () => get().past.length > 0,
         canRedo: () => get().future.length > 0,
 
+        snapshots: [],
+        saveSnapshot: (name) => {
+          const s = get();
+          const trimmed = (name ?? "").trim();
+          const fallback = new Date().toLocaleString();
+          const snap: Snapshot = {
+            id: uid(),
+            name: trimmed || fallback,
+            createdAt: Date.now(),
+            // Snapshots are persisted alongside main state — JSON-clone so
+            // future mutations to the live resume don't bleed into them.
+            resume: JSON.parse(JSON.stringify(s.resume)),
+          };
+          // Newest first; drop oldest beyond the cap.
+          const next = [snap, ...s.snapshots].slice(0, SNAPSHOT_LIMIT);
+          set({ snapshots: next });
+        },
+        restoreSnapshot: (id) => {
+          const snap = get().snapshots.find((x) => x.id === id);
+          if (!snap) return;
+          // Route through `mutate` so undo can roll back the restore.
+          mutate(JSON.parse(JSON.stringify(snap.resume)));
+        },
+        deleteSnapshot: (id) =>
+          set({ snapshots: get().snapshots.filter((x) => x.id !== id) }),
+        renameSnapshot: (id, name) => {
+          const trimmed = name.trim();
+          if (!trimmed) return;
+          set({
+            snapshots: get().snapshots.map((x) =>
+              x.id === id ? { ...x, name: trimmed } : x
+            ),
+          });
+        },
+
         beginBatch: () => {
           const s = get();
           if (s._batch) return;
@@ -485,6 +542,7 @@ export const useStore = create<State>()(
         hiddenSections: s.hiddenSections,
         sectionOrder: s.sectionOrder,
         previewMode: s.previewMode,
+        snapshots: s.snapshots,
       }) as any,
       // Migrate persisted state for users who had the now-removed
       // "academic-cn" template selected. Falls back to cn-formal which is
@@ -506,6 +564,8 @@ export const useStore = create<State>()(
         const filtered = existing.filter((k) => DEFAULT_SECTION_ORDER.includes(k));
         const missing = DEFAULT_SECTION_ORDER.filter((k) => !filtered.includes(k));
         p.sectionOrder = [...filtered, ...missing];
+        // Older saves don't have snapshots — start with an empty list.
+        if (!Array.isArray(p.snapshots)) p.snapshots = [];
         return { ...current, ...p };
       },
     }
