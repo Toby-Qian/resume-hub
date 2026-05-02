@@ -1,5 +1,5 @@
 "use client";
-import { TemplateProps, range, itemCls, Avatar, E, Draggable, useSectionLabels, useOrderedSections } from "./shared";
+import { TemplateProps, range, itemCls, Avatar, E, Draggable, useSectionLabels, useOrderedSections , DateRange} from "./shared";
 
 /**
  * Magazine / editorial layout — inspired by The New Yorker / NYT feature
@@ -30,7 +30,7 @@ export default function Magazine({ resume }: TemplateProps) {
         <div key={w.id} className={itemCls(w, "mb-3 text-[0.9em]")}>
           <div className="font-semibold"><E path={`work.${i}.position`}>{w.position}</E></div>
           <div className="italic text-gray-700"><E path={`work.${i}.company`}>{w.company}</E>{w.location && <> · <E path={`work.${i}.location`}>{w.location}</E></>}</div>
-          <div className="text-[0.82em] text-gray-500 mb-1">{range(w.startDate, w.endDate)}</div>
+          <div className="text-[0.82em] text-gray-500 mb-1">{<DateRange startPath={`work.${i}.startDate`} endPath={`work.${i}.endDate`} start={w.startDate} end={w.endDate} />}</div>
           <ul className="list-disc ml-5">
             {w.highlights.filter(Boolean).map((h, j) => <li key={j}><E path={`work.${i}.highlights.${j}`}>{h}</E></li>)}
           </ul>
@@ -45,7 +45,7 @@ export default function Magazine({ resume }: TemplateProps) {
         <div key={e.id} className={itemCls(e, "mb-2 text-[0.9em]")}>
           <div className="font-semibold"><E path={`education.${i}.institution`}>{e.institution}</E></div>
           <div className="italic"><E path={`education.${i}.studyType`}>{e.studyType}</E>, <E path={`education.${i}.area`}>{e.area}</E></div>
-          <div className="text-[0.82em] text-gray-500">{range(e.startDate, e.endDate)}{e.score && <> · <E path={`education.${i}.score`}>{e.score}</E></>}</div>
+          <div className="text-[0.82em] text-gray-500">{<DateRange startPath={`education.${i}.startDate`} endPath={`education.${i}.endDate`} start={e.startDate} end={e.endDate} />}{e.score && <> · <E path={`education.${i}.score`}>{e.score}</E></>}</div>
           {e.courses && e.courses.length > 0 && (
             <div className="text-[0.85em] text-gray-600 italic">{L.coursework}: {e.courses.join("; ")}</div>
           )}
@@ -59,7 +59,7 @@ export default function Magazine({ resume }: TemplateProps) {
       {resume.projects.map((p, i) => (
         <div key={p.id} className={itemCls(p, "mb-3 text-[0.9em]")}>
           <div className="font-semibold"><E path={`projects.${i}.name`}>{p.name}</E></div>
-          <div className="text-[0.82em] text-gray-500">{range(p.startDate, p.endDate)}</div>
+          <div className="text-[0.82em] text-gray-500">{<DateRange startPath={`projects.${i}.startDate`} endPath={`projects.${i}.endDate`} start={p.startDate} end={p.endDate} />}</div>
           {p.description && <div className="text-gray-800 mt-0.5"><E path={`projects.${i}.description`} multiline>{p.description}</E></div>}
           {p.highlights.filter(Boolean).length > 0 && (
             <ul className="list-disc ml-5 mt-0.5">

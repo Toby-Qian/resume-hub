@@ -1,5 +1,5 @@
 "use client";
-import { TemplateProps, range, itemCls, Avatar, E, Draggable, useSectionLabels, useOrderedSections } from "./shared";
+import { TemplateProps, range, itemCls, Avatar, E, Draggable, useSectionLabels, useOrderedSections , DateRange} from "./shared";
 
 export default function CNFormal({ resume }: TemplateProps) {
   const b = resume.basics;
@@ -15,7 +15,7 @@ export default function CNFormal({ resume }: TemplateProps) {
         <div key={e.id} className={itemCls(e, "mb-2 text-[0.95em]")}>
           <div className="flex justify-between">
             <div><b><E path={`education.${i}.institution`}>{e.institution}</E></b> · <E path={`education.${i}.studyType`}>{e.studyType}</E> · <E path={`education.${i}.area`}>{e.area}</E></div>
-            <div className="text-gray-500">{range(e.startDate, e.endDate)}</div>
+            <div className="text-gray-500">{<DateRange startPath={`education.${i}.startDate`} endPath={`education.${i}.endDate`} start={e.startDate} end={e.endDate} />}</div>
           </div>
           {e.score && <div className="text-gray-700"><E path={`education.${i}.score`}>{e.score}</E></div>}
           {e.courses && e.courses.length > 0 && <div className="text-gray-600 text-[0.9em]">主修：{e.courses.join("、")}</div>}
@@ -31,7 +31,7 @@ export default function CNFormal({ resume }: TemplateProps) {
         <div key={w.id} className={itemCls(w, "mb-3 text-[0.95em]")}>
           <div className="flex justify-between">
             <div><b><E path={`work.${i}.company`}>{w.company}</E></b> · <E path={`work.${i}.position`}>{w.position}</E></div>
-            <div className="text-gray-500">{range(w.startDate, w.endDate)}</div>
+            <div className="text-gray-500">{<DateRange startPath={`work.${i}.startDate`} endPath={`work.${i}.endDate`} start={w.startDate} end={w.endDate} />}</div>
           </div>
           <ul className="list-disc ml-5 mt-1">
             {w.highlights.map((h, j) => <li key={j}><E path={`work.${i}.highlights.${j}`}>{h}</E></li>)}
@@ -48,7 +48,7 @@ export default function CNFormal({ resume }: TemplateProps) {
         <div key={p.id} className={itemCls(p, "mb-3 text-[0.95em]")}>
           <div className="flex justify-between">
             <div><b><E path={`projects.${i}.name`}>{p.name}</E></b>{p.keywords && p.keywords.length > 0 && <span className="text-gray-500"> · {p.keywords.join("/")}</span>}</div>
-            <div className="text-gray-500">{range(p.startDate, p.endDate)}</div>
+            <div className="text-gray-500">{<DateRange startPath={`projects.${i}.startDate`} endPath={`projects.${i}.endDate`} start={p.startDate} end={p.endDate} />}</div>
           </div>
           <div className="text-gray-700"><E path={`projects.${i}.description`} multiline>{p.description}</E></div>
           <ul className="list-disc ml-5">

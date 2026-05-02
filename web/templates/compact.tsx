@@ -1,5 +1,5 @@
 "use client";
-import { TemplateProps, range, itemCls, Avatar, E, Draggable, useSectionLabels, useOrderedSections } from "./shared";
+import { TemplateProps, range, itemCls, Avatar, E, Draggable, useSectionLabels, useOrderedSections , DateRange} from "./shared";
 
 /**
  * Single-column, tight-leading, small-type resume — built for senior
@@ -23,7 +23,7 @@ export default function Compact({ resume }: TemplateProps) {
         <div key={w.id} className={itemCls(w, "text-[0.86em] mb-1.5")}>
           <div className="flex justify-between">
             <div><b><E path={`work.${i}.company`}>{w.company}</E></b> — <i><E path={`work.${i}.position`}>{w.position}</E></i>{w.location && <span className="text-gray-500"> · <E path={`work.${i}.location`}>{w.location}</E></span>}</div>
-            <div className="text-gray-500 whitespace-nowrap">{range(w.startDate, w.endDate)}</div>
+            <div className="text-gray-500 whitespace-nowrap">{<DateRange startPath={`work.${i}.startDate`} endPath={`work.${i}.endDate`} start={w.startDate} end={w.endDate} />}</div>
           </div>
           {w.highlights.filter(Boolean).length > 0 && (
             <ul className="list-[square] ml-4">
@@ -42,7 +42,7 @@ export default function Compact({ resume }: TemplateProps) {
         <div key={p.id} className={itemCls(p, "text-[0.86em] mb-1")}>
           <div className="flex justify-between">
             <div><b><E path={`projects.${i}.name`}>{p.name}</E></b>{p.description && <span className="text-gray-700"> — <E path={`projects.${i}.description`} multiline>{p.description}</E></span>}</div>
-            <div className="text-gray-500 whitespace-nowrap">{range(p.startDate, p.endDate)}</div>
+            <div className="text-gray-500 whitespace-nowrap">{<DateRange startPath={`projects.${i}.startDate`} endPath={`projects.${i}.endDate`} start={p.startDate} end={p.endDate} />}</div>
           </div>
           {p.highlights.filter(Boolean).length > 0 && (
             <ul className="list-[square] ml-4">
@@ -64,7 +64,7 @@ export default function Compact({ resume }: TemplateProps) {
         <div key={e.id} className={itemCls(e, "text-[0.86em]")}>
           <div className="flex justify-between">
             <div><b><E path={`education.${i}.institution`}>{e.institution}</E></b> — <E path={`education.${i}.studyType`}>{e.studyType}</E>, <E path={`education.${i}.area`}>{e.area}</E>{e.score && <span className="text-gray-600"> · <E path={`education.${i}.score`}>{e.score}</E></span>}</div>
-            <div className="text-gray-500 whitespace-nowrap">{range(e.startDate, e.endDate)}</div>
+            <div className="text-gray-500 whitespace-nowrap">{<DateRange startPath={`education.${i}.startDate`} endPath={`education.${i}.endDate`} start={e.startDate} end={e.endDate} />}</div>
           </div>
         </div>
       ))}

@@ -1,5 +1,5 @@
 "use client";
-import { TemplateProps, Section, range, itemCls, Avatar, E, Draggable, useSectionLabels, useOrderedSections } from "./shared";
+import { TemplateProps, Section, range, itemCls, Avatar, E, Draggable, useSectionLabels, useOrderedSections , DateRange} from "./shared";
 
 export default function Classic({ resume }: TemplateProps) {
   const b = resume.basics;
@@ -11,7 +11,7 @@ export default function Classic({ resume }: TemplateProps) {
         <div key={e.id} className={itemCls(e)}>
           <div className="flex justify-between">
             <div><b><E path={`education.${i}.institution`}>{e.institution}</E></b> — <E path={`education.${i}.studyType`}>{e.studyType}</E>, <E path={`education.${i}.area`}>{e.area}</E></div>
-            <div className="text-[0.9em]">{range(e.startDate, e.endDate)}</div>
+            <div className="text-[0.9em]">{<DateRange startPath={`education.${i}.startDate`} endPath={`education.${i}.endDate`} start={e.startDate} end={e.endDate} />}</div>
           </div>
           {e.score && <div className="text-[0.9em] text-gray-700"><E path={`education.${i}.score`}>{e.score}</E></div>}
         </div>
@@ -25,7 +25,7 @@ export default function Classic({ resume }: TemplateProps) {
         <div key={w.id} className={itemCls(w)}>
           <div className="flex justify-between">
             <div><b><E path={`work.${i}.company`}>{w.company}</E></b> — <i><E path={`work.${i}.position`}>{w.position}</E></i></div>
-            <div className="text-[0.9em]">{range(w.startDate, w.endDate)}</div>
+            <div className="text-[0.9em]">{<DateRange startPath={`work.${i}.startDate`} endPath={`work.${i}.endDate`} start={w.startDate} end={w.endDate} />}</div>
           </div>
           <ul className="list-disc ml-6 mt-1 text-[0.92em]">
             {w.highlights.filter(Boolean).map((h, j) => <li key={j}><E path={`work.${i}.highlights.${j}`}>{h}</E></li>)}
@@ -41,7 +41,7 @@ export default function Classic({ resume }: TemplateProps) {
         <div key={p.id} className={itemCls(p)}>
           <div className="flex justify-between">
             <div><b><E path={`projects.${i}.name`}>{p.name}</E></b>{p.url && <span className="text-[0.85em] text-gray-600"> — <E path={`projects.${i}.url`}>{p.url}</E></span>}</div>
-            <div className="text-[0.9em]">{range(p.startDate, p.endDate)}</div>
+            <div className="text-[0.9em]">{<DateRange startPath={`projects.${i}.startDate`} endPath={`projects.${i}.endDate`} start={p.startDate} end={p.endDate} />}</div>
           </div>
           <div className="text-[0.9em]"><E path={`projects.${i}.description`} multiline>{p.description}</E></div>
           <ul className="list-disc ml-6 text-[0.92em]">

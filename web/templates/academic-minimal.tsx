@@ -1,5 +1,5 @@
 "use client";
-import { TemplateProps, range, itemCls, Avatar, E, Draggable, useSectionLabels, useOrderedSections } from "./shared";
+import { TemplateProps, range, itemCls, Avatar, E, Draggable, useSectionLabels, useOrderedSections , DateRange} from "./shared";
 
 /**
  * Minimalist academic: no color, purely typographic hierarchy. Small-caps
@@ -19,7 +19,7 @@ export default function AcademicMinimal({ resume }: TemplateProps) {
     <Row label={L.education}>
       {resume.education.map((e, i) => (
         <div key={e.id} className={itemCls(e)}>
-          <div><i><E path={`education.${i}.institution`}>{e.institution}</E></i>, <E path={`education.${i}.studyType`}>{e.studyType}</E>, <E path={`education.${i}.area`}>{e.area}</E> <span className="text-gray-500">· {range(e.startDate, e.endDate)}</span></div>
+          <div><i><E path={`education.${i}.institution`}>{e.institution}</E></i>, <E path={`education.${i}.studyType`}>{e.studyType}</E>, <E path={`education.${i}.area`}>{e.area}</E> <span className="text-gray-500">· {<DateRange startPath={`education.${i}.startDate`} endPath={`education.${i}.endDate`} start={e.startDate} end={e.endDate} />}</span></div>
           {e.score && <div className="text-gray-600 text-[0.9em]"><E path={`education.${i}.score`}>{e.score}</E></div>}
         </div>
       ))}
@@ -29,7 +29,7 @@ export default function AcademicMinimal({ resume }: TemplateProps) {
     <Row label={L.appointments}>
       {resume.work.map((w, i) => (
         <div key={w.id} className={itemCls(w)}>
-          <div><b><E path={`work.${i}.position`}>{w.position}</E></b>, <i><E path={`work.${i}.company`}>{w.company}</E></i> <span className="text-gray-500">· {range(w.startDate, w.endDate)}</span></div>
+          <div><b><E path={`work.${i}.position`}>{w.position}</E></b>, <i><E path={`work.${i}.company`}>{w.company}</E></i> <span className="text-gray-500">· {<DateRange startPath={`work.${i}.startDate`} endPath={`work.${i}.endDate`} start={w.startDate} end={w.endDate} />}</span></div>
           <ul className="list-[square] ml-5 text-[0.95em]">
             {w.highlights.filter(Boolean).map((h, j) => <li key={j}><E path={`work.${i}.highlights.${j}`}>{h}</E></li>)}
           </ul>
@@ -44,7 +44,7 @@ export default function AcademicMinimal({ resume }: TemplateProps) {
           <span className="text-gray-500 mr-1">{i + 1}.</span>
           <b><E path={`projects.${i}.name`}>{p.name}</E></b>
           {p.description && <span>. <E path={`projects.${i}.description`} multiline>{p.description}</E></span>}
-          {(p.startDate || p.endDate) && <span className="text-gray-500"> · {range(p.startDate, p.endDate)}</span>}
+          {(p.startDate || p.endDate) && <span className="text-gray-500"> · {<DateRange startPath={`projects.${i}.startDate`} endPath={`projects.${i}.endDate`} start={p.startDate} end={p.endDate} />}</span>}
         </div>
       ))}
     </Row>
@@ -91,7 +91,7 @@ export default function AcademicMinimal({ resume }: TemplateProps) {
     <Row label={L.teaching}>
       {resume.teaching.map((tg, i) => (
         <div key={tg.id} className={itemCls(tg)}>
-          <b><E path={`teaching.${i}.course`}>{tg.course}</E></b>{tg.institution && <>, <E path={`teaching.${i}.institution`}>{tg.institution}</E></>}{tg.role && <span className="text-gray-500"> · <E path={`teaching.${i}.role`}>{tg.role}</E></span>} <span className="text-gray-500">· {range(tg.startDate, tg.endDate)}</span>
+          <b><E path={`teaching.${i}.course`}>{tg.course}</E></b>{tg.institution && <>, <E path={`teaching.${i}.institution`}>{tg.institution}</E></>}{tg.role && <span className="text-gray-500"> · <E path={`teaching.${i}.role`}>{tg.role}</E></span>} <span className="text-gray-500">· {<DateRange startPath={`teaching.${i}.startDate`} endPath={`teaching.${i}.endDate`} start={tg.startDate} end={tg.endDate} />}</span>
         </div>
       ))}
     </Row>

@@ -91,7 +91,14 @@ export function useOrderedSections(
     if (seen.has(k)) return;
     seen.add(k);
     const node = renderers[k];
-    if (node) out.push(<React.Fragment key={k}>{node}</React.Fragment>);
+    if (node) out.push(
+      // Each section is wrapped in `Draggable` so the user can also nudge an
+      // individual section freely via its own drag handle (offset persisted
+      // under `basics.blockOffsets["section:<key>"]`). The reorder DnD
+      // (StylePanel / Editor) controls which section appears in which slot;
+      // this lets the user fine-tune the slot's position on the page.
+      <Draggable key={k} name={`section:${k}`}>{node}</Draggable>
+    );
   };
   for (const k of order) push(k);
   // Append any keys the user's order forgot (forward-compat).
@@ -104,6 +111,36 @@ export function useOrderedSections(
 export const fmtDate = (s?: string) => s || "";
 export const range = (a?: string, b?: string) =>
   [fmtDate(a), fmtDate(b)].filter(Boolean).join(" — ");
+
+/**
+ * Inline-editable date range. Each end is its own click-to-edit `<E>` so the
+ * user can adjust dates directly in the preview without leaving for the
+ * editor. Renders as "YYYY-MM — YYYY-MM" when both ends are set; falls back
+ * to a single end when only one is present; renders an empty editable span
+ * when neither is set so users still discover that dates exist here.
+ *
+ * Use instead of `range()` whenever the date string comes from a known item
+ * in the resume data — pass the dotted paths so commits route to the right
+ * field.
+ */
+export function DateRange({
+  startPath, endPath, start, end, sep = " — ", className = "",
+}: {
+  startPath: string;
+  endPath: string;
+  start?: string;
+  end?: string;
+  sep?: string;
+  className?: string;
+}) {
+  return (
+    <span className={className}>
+      <E path={startPath}>{start || ""}</E>
+      {(start && end) ? sep : (start || end ? "" : sep)}
+      <E path={endPath}>{end || ""}</E>
+    </span>
+  );
+}
 
 /** Produces CSS classes for an individual resume item div.
  *  Always adds `resume-item` (so CSS break-inside: avoid applies),

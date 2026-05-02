@@ -19,6 +19,9 @@ export interface ResumeBasics {
   // slot name ("header", "summary", "contact", ...). Values are pixel offsets
   // applied via CSS transform so flow is undisturbed.
   blockOffsets?: Record<string, { x?: number; y?: number }>;
+  // Per-template editable icon overrides for contact rows (e.g. ✉ ☎ 📍 🔗).
+  // Empty / missing means the template's hardcoded default emoji renders.
+  icons?: { email?: string; phone?: string; location?: string; website?: string };
 }
 
 export interface ResumeWork {

@@ -1,5 +1,5 @@
 "use client";
-import { TemplateProps, range, itemCls, Avatar, E, Draggable, useSectionLabels, useOrderedSections } from "./shared";
+import { TemplateProps, range, itemCls, Avatar, E, Draggable, useSectionLabels, useOrderedSections , DateRange} from "./shared";
 
 export default function Minimal({ resume }: TemplateProps) {
   const b = resume.basics;
@@ -15,7 +15,7 @@ export default function Minimal({ resume }: TemplateProps) {
     <Row title={L.workShort}>
       {resume.work.map((w, i) => (
         <div key={w.id} className={itemCls(w)}>
-          <div className="text-[0.95em]"><b><E path={`work.${i}.position`}>{w.position}</E></b> at <E path={`work.${i}.company`}>{w.company}</E> <span className="text-gray-400">· {range(w.startDate, w.endDate)}</span></div>
+          <div className="text-[0.95em]"><b><E path={`work.${i}.position`}>{w.position}</E></b> at <E path={`work.${i}.company`}>{w.company}</E> <span className="text-gray-400">· {<DateRange startPath={`work.${i}.startDate`} endPath={`work.${i}.endDate`} start={w.startDate} end={w.endDate} />}</span></div>
           <ul className="list-[circle] ml-5 text-[0.9em] text-gray-700">
             {w.highlights.filter(Boolean).map((h, j) => <li key={j}><E path={`work.${i}.highlights.${j}`}>{h}</E></li>)}
           </ul>
@@ -28,7 +28,7 @@ export default function Minimal({ resume }: TemplateProps) {
     <Row title={L.educationShort}>
       {resume.education.map((e, i) => (
         <div key={e.id} className={itemCls(e, "text-[0.9em]")}>
-          <b><E path={`education.${i}.institution`}>{e.institution}</E></b> — <E path={`education.${i}.studyType`}>{e.studyType}</E>, <E path={`education.${i}.area`}>{e.area}</E> <span className="text-gray-400">· {range(e.startDate, e.endDate)}</span>
+          <b><E path={`education.${i}.institution`}>{e.institution}</E></b> — <E path={`education.${i}.studyType`}>{e.studyType}</E>, <E path={`education.${i}.area`}>{e.area}</E> <span className="text-gray-400">· {<DateRange startPath={`education.${i}.startDate`} endPath={`education.${i}.endDate`} start={e.startDate} end={e.endDate} />}</span>
         </div>
       ))}
     </Row>

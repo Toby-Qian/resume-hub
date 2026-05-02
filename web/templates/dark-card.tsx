@@ -1,5 +1,5 @@
 "use client";
-import { TemplateProps, range, itemCls, Avatar, E, Draggable, useSectionLabels, useOrderedSections } from "./shared";
+import { TemplateProps, range, itemCls, Avatar, E, Draggable, useSectionLabels, useOrderedSections , DateRange} from "./shared";
 
 /**
  * Dark hero band + light content cards. Modern startup / SaaS-portfolio
@@ -39,7 +39,7 @@ export default function DarkCard({ resume }: TemplateProps) {
             <div className="font-semibold"><E path={`work.${i}.position`}>{w.position}</E> <span className="font-normal text-gray-700">@ <E path={`work.${i}.company`}>{w.company}</E></span></div>
             <div className="text-[0.82em] px-2 py-0.5 rounded-full font-medium"
               style={{ background: "var(--resume-tint-12)", color: "var(--resume-accent)" }}>
-              {range(w.startDate, w.endDate)}
+              {<DateRange startPath={`work.${i}.startDate`} endPath={`work.${i}.endDate`} start={w.startDate} end={w.endDate} />}
             </div>
           </div>
           {w.location && <div className="text-[0.82em] text-gray-500"><E path={`work.${i}.location`}>{w.location}</E></div>}
@@ -57,7 +57,7 @@ export default function DarkCard({ resume }: TemplateProps) {
         <Card key={p.id} breakBefore={(p as any).breakBefore} className="text-[0.92em]">
           <div className="flex justify-between items-baseline">
             <div className="font-semibold"><E path={`projects.${i}.name`}>{p.name}</E></div>
-            <div className="text-[0.82em] text-gray-500 whitespace-nowrap">{range(p.startDate, p.endDate)}</div>
+            <div className="text-[0.82em] text-gray-500 whitespace-nowrap">{<DateRange startPath={`projects.${i}.startDate`} endPath={`projects.${i}.endDate`} start={p.startDate} end={p.endDate} />}</div>
           </div>
           {p.description && <div className="text-gray-700 mt-0.5"><E path={`projects.${i}.description`} multiline>{p.description}</E></div>}
           {p.highlights.filter(Boolean).length > 0 && (
@@ -98,10 +98,10 @@ export default function DarkCard({ resume }: TemplateProps) {
             <h1 className="text-[2.2em] font-bold leading-tight"><E path="basics.name">{b.name}</E></h1>
             <div className="text-[1em] opacity-90 mt-0.5"><E path="basics.label">{b.label}</E></div>
             <div className="text-[0.82em] opacity-95 mt-2 flex flex-wrap gap-x-4 gap-y-1">
-              <span>✉ <E path="basics.email">{b.email}</E></span>
-              <span>☎ <E path="basics.phone">{b.phone}</E></span>
-              <span>📍 <E path="basics.location">{b.location}</E></span>
-              <span>🔗 <E path="basics.website">{b.website}</E></span>
+              <span><E path="basics.icons.email">{(b.icons && b.icons.email) || "✉"}</E> <E path="basics.email">{b.email}</E></span>
+              <span><E path="basics.icons.phone">{(b.icons && b.icons.phone) || "☎"}</E> <E path="basics.phone">{b.phone}</E></span>
+              <span><E path="basics.icons.location">{(b.icons && b.icons.location) || "📍"}</E> <E path="basics.location">{b.location}</E></span>
+              <span><E path="basics.icons.website">{(b.icons && b.icons.website) || "🔗"}</E> <E path="basics.website">{b.website}</E></span>
             </div>
           </div>
         </Draggable>
@@ -125,7 +125,7 @@ export default function DarkCard({ resume }: TemplateProps) {
                 <Card key={e.id} className="text-[0.9em]">
                   <div className="font-semibold"><E path={`education.${i}.institution`}>{e.institution}</E></div>
                   <div className="text-gray-700"><E path={`education.${i}.studyType`}>{e.studyType}</E> · <E path={`education.${i}.area`}>{e.area}</E></div>
-                  <div className="text-[0.82em] text-gray-500">{range(e.startDate, e.endDate)}{e.score ? ` · ${e.score}` : ""}</div>
+                  <div className="text-[0.82em] text-gray-500">{<DateRange startPath={`education.${i}.startDate`} endPath={`education.${i}.endDate`} start={e.startDate} end={e.endDate} />}{e.score ? ` · ${e.score}` : ""}</div>
                 </Card>
               ))}
             </div>

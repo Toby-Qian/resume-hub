@@ -1,5 +1,5 @@
 "use client";
-import { TemplateProps, range, itemCls, Avatar, E, Draggable, useSectionLabels, useOrderedSections } from "./shared";
+import { TemplateProps, range, itemCls, Avatar, E, Draggable, useSectionLabels, useOrderedSections , DateRange} from "./shared";
 
 export default function CNCreative({ resume }: TemplateProps) {
   const b = resume.basics;
@@ -10,7 +10,7 @@ export default function CNCreative({ resume }: TemplateProps) {
       <h2 className="text-[1em] font-bold mb-2" style={{ color: "var(--resume-accent)" }}>{L.experience}</h2>
       {resume.work.map((w, i) => (
         <div key={w.id} className={itemCls(w, "mb-3 text-[0.92em]")}>
-          <div className="flex justify-between"><b><E path={`work.${i}.company`}>{w.company}</E> · <E path={`work.${i}.position`}>{w.position}</E></b><span className="text-gray-500">{range(w.startDate, w.endDate)}</span></div>
+          <div className="flex justify-between"><b><E path={`work.${i}.company`}>{w.company}</E> · <E path={`work.${i}.position`}>{w.position}</E></b><span className="text-gray-500">{<DateRange startPath={`work.${i}.startDate`} endPath={`work.${i}.endDate`} start={w.startDate} end={w.endDate} />}</span></div>
           <ul className="list-disc ml-5 mt-1">
             {w.highlights.filter(Boolean).map((h, j) => <li key={j}><E path={`work.${i}.highlights.${j}`}>{h}</E></li>)}
           </ul>
@@ -23,7 +23,7 @@ export default function CNCreative({ resume }: TemplateProps) {
       <h2 className="text-[1em] font-bold mb-2" style={{ color: "var(--resume-accent)" }}>{L.projects}</h2>
       {resume.projects.map((p, i) => (
         <div key={p.id} className={itemCls(p, "mb-3 text-[0.92em]")}>
-          <div className="flex justify-between"><b><E path={`projects.${i}.name`}>{p.name}</E></b><span className="text-gray-500">{range(p.startDate, p.endDate)}</span></div>
+          <div className="flex justify-between"><b><E path={`projects.${i}.name`}>{p.name}</E></b><span className="text-gray-500">{<DateRange startPath={`projects.${i}.startDate`} endPath={`projects.${i}.endDate`} start={p.startDate} end={p.endDate} />}</span></div>
           <div className="text-gray-700"><E path={`projects.${i}.description`} multiline>{p.description}</E></div>
           <ul className="list-disc ml-5">
             {p.highlights.filter(Boolean).map((h, j) => <li key={j}><E path={`projects.${i}.highlights.${j}`}>{h}</E></li>)}
@@ -37,7 +37,7 @@ export default function CNCreative({ resume }: TemplateProps) {
       <h2 className="text-[1em] font-bold mb-2" style={{ color: "var(--resume-accent)" }}>{L.education}</h2>
       {resume.education.map((e, i) => (
         <div key={e.id} className={itemCls(e, "text-[0.92em] mb-1")}>
-          <div className="flex justify-between"><b><E path={`education.${i}.institution`}>{e.institution}</E></b><span className="text-gray-500">{range(e.startDate, e.endDate)}</span></div>
+          <div className="flex justify-between"><b><E path={`education.${i}.institution`}>{e.institution}</E></b><span className="text-gray-500">{<DateRange startPath={`education.${i}.startDate`} endPath={`education.${i}.endDate`} start={e.startDate} end={e.endDate} />}</span></div>
           <div><E path={`education.${i}.studyType`}>{e.studyType}</E> · <E path={`education.${i}.area`}>{e.area}</E>{e.score ? ` · ${e.score}` : ""}</div>
         </div>
       ))}
@@ -69,10 +69,10 @@ export default function CNCreative({ resume }: TemplateProps) {
         </Draggable>
         <div className="h-px bg-white/40 my-4" />
         <div className="text-[0.85em] space-y-1 opacity-95">
-          <div>📱 <E path="basics.phone">{b.phone}</E></div>
-          <div>✉ <E path="basics.email">{b.email}</E></div>
-          <div>📍 <E path="basics.location">{b.location}</E></div>
-          <div>🔗 <E path="basics.website">{b.website}</E></div>
+          <div><E path="basics.icons.phone">{(b.icons && b.icons.phone) || "📱"}</E> <E path="basics.phone">{b.phone}</E></div>
+          <div><E path="basics.icons.email">{(b.icons && b.icons.email) || "✉"}</E> <E path="basics.email">{b.email}</E></div>
+          <div><E path="basics.icons.location">{(b.icons && b.icons.location) || "📍"}</E> <E path="basics.location">{b.location}</E></div>
+          <div><E path="basics.icons.website">{(b.icons && b.icons.website) || "🔗"}</E> <E path="basics.website">{b.website}</E></div>
         </div>
         {resume.skills.length > 0 && (
           <>

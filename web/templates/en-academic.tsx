@@ -1,5 +1,5 @@
 "use client";
-import { TemplateProps, range, itemCls, Avatar, E, Draggable, useSectionLabels, useOrderedSections } from "./shared";
+import { TemplateProps, range, itemCls, Avatar, E, Draggable, useSectionLabels, useOrderedSections , DateRange} from "./shared";
 
 export default function ENAcademic({ resume }: TemplateProps) {
   const b = resume.basics;
@@ -14,7 +14,7 @@ export default function ENAcademic({ resume }: TemplateProps) {
         <div key={e.id} className={itemCls(e, "mb-2 text-[0.95em]")}>
           <div className="flex justify-between">
             <div><i><E path={`education.${i}.institution`}>{e.institution}</E></i></div>
-            <div>{range(e.startDate, e.endDate)}</div>
+            <div>{<DateRange startPath={`education.${i}.startDate`} endPath={`education.${i}.endDate`} start={e.startDate} end={e.endDate} />}</div>
           </div>
           <div><E path={`education.${i}.studyType`}>{e.studyType}</E>, <E path={`education.${i}.area`}>{e.area}</E>{e.score ? `. ${e.score}` : ""}</div>
         </div>
@@ -28,7 +28,7 @@ export default function ENAcademic({ resume }: TemplateProps) {
         <div key={w.id} className={itemCls(w, "mb-3 text-[0.95em]")}>
           <div className="flex justify-between">
             <div><b><E path={`work.${i}.position`}>{w.position}</E></b>, <i><E path={`work.${i}.company`}>{w.company}</E></i></div>
-            <div>{range(w.startDate, w.endDate)}</div>
+            <div>{<DateRange startPath={`work.${i}.startDate`} endPath={`work.${i}.endDate`} start={w.startDate} end={w.endDate} />}</div>
           </div>
           <ul className="list-disc ml-5 mt-1">
             {w.highlights.filter(Boolean).map((h, j) => <li key={j}><E path={`work.${i}.highlights.${j}`}>{h}</E></li>)}
@@ -44,7 +44,7 @@ export default function ENAcademic({ resume }: TemplateProps) {
         <div key={p.id} className={itemCls(p, "mb-2 text-[0.95em]")}>
           <div className="flex justify-between">
             <div><b><E path={`projects.${i}.name`}>{p.name}</E></b></div>
-            <div>{range(p.startDate, p.endDate)}</div>
+            <div>{<DateRange startPath={`projects.${i}.startDate`} endPath={`projects.${i}.endDate`} start={p.startDate} end={p.endDate} />}</div>
           </div>
           <div><E path={`projects.${i}.description`} multiline>{p.description}</E></div>
           {p.url && <div className="text-[0.85em] text-gray-600"><E path={`projects.${i}.url`}>{p.url}</E></div>}
@@ -99,7 +99,7 @@ export default function ENAcademic({ resume }: TemplateProps) {
         <div key={tg.id} className={itemCls(tg, "mb-1.5 text-[0.93em]")}>
           <div className="flex justify-between">
             <div><b><E path={`teaching.${i}.course`}>{tg.course}</E></b>{tg.institution && <>, <i><E path={`teaching.${i}.institution`}>{tg.institution}</E></i></>}{tg.role && <span className="text-gray-600"> · <E path={`teaching.${i}.role`}>{tg.role}</E></span>}</div>
-            <div className="text-gray-600">{range(tg.startDate, tg.endDate)}</div>
+            <div className="text-gray-600">{<DateRange startPath={`teaching.${i}.startDate`} endPath={`teaching.${i}.endDate`} start={tg.startDate} end={tg.endDate} />}</div>
           </div>
         </div>
       ))}

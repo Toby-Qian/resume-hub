@@ -1,5 +1,5 @@
 "use client";
-import { TemplateProps, Section, range, itemCls, Avatar, E, Draggable, useSectionLabels, useOrderedSections } from "./shared";
+import { TemplateProps, Section, range, itemCls, Avatar, E, Draggable, useSectionLabels, useOrderedSections , DateRange} from "./shared";
 
 export default function Modern({ resume }: TemplateProps) {
   const b = resume.basics;
@@ -11,7 +11,7 @@ export default function Modern({ resume }: TemplateProps) {
         <div key={w.id} className={itemCls(w)}>
           <div className="flex justify-between items-baseline">
             <div className="font-semibold"><E path={`work.${i}.position`}>{w.position}</E> · <span className="font-normal"><E path={`work.${i}.company`}>{w.company}</E></span></div>
-            <div className="text-[0.85em] text-gray-500">{range(w.startDate, w.endDate)}</div>
+            <div className="text-[0.85em] text-gray-500">{<DateRange startPath={`work.${i}.startDate`} endPath={`work.${i}.endDate`} start={w.startDate} end={w.endDate} />}</div>
           </div>
           {w.location && <div className="text-[0.8em] text-gray-500"><E path={`work.${i}.location`}>{w.location}</E></div>}
           <ul className="list-disc ml-5 mt-1 text-[0.92em]">
@@ -28,7 +28,7 @@ export default function Modern({ resume }: TemplateProps) {
         <div key={p.id} className={itemCls(p)}>
           <div className="flex justify-between items-baseline">
             <div className="font-semibold"><E path={`projects.${i}.name`}>{p.name}</E></div>
-            <div className="text-[0.85em] text-gray-500">{range(p.startDate, p.endDate)}</div>
+            <div className="text-[0.85em] text-gray-500">{<DateRange startPath={`projects.${i}.startDate`} endPath={`projects.${i}.endDate`} start={p.startDate} end={p.endDate} />}</div>
           </div>
           {p.description && <div className="text-[0.9em] text-gray-700"><E path={`projects.${i}.description`} multiline>{p.description}</E></div>}
           {p.highlights.length > 0 && (
@@ -50,7 +50,7 @@ export default function Modern({ resume }: TemplateProps) {
         <div key={e.id} className={itemCls(e)}>
           <div className="flex justify-between items-baseline">
             <div className="font-semibold"><E path={`education.${i}.institution`}>{e.institution}</E></div>
-            <div className="text-[0.85em] text-gray-500">{range(e.startDate, e.endDate)}</div>
+            <div className="text-[0.85em] text-gray-500">{<DateRange startPath={`education.${i}.startDate`} endPath={`education.${i}.endDate`} start={e.startDate} end={e.endDate} />}</div>
           </div>
           <div className="text-[0.9em]"><E path={`education.${i}.studyType`}>{e.studyType}</E> · <E path={`education.${i}.area`}>{e.area}</E>{e.score ? ` · ${e.score}` : ""}</div>
           {e.courses && e.courses.length > 0 && (
@@ -104,10 +104,10 @@ export default function Modern({ resume }: TemplateProps) {
           <h1 className="text-[2em] font-bold" style={{ color: "var(--resume-accent)" }}><E path="basics.name">{b.name}</E></h1>
           <div className="text-[1.05em] text-gray-700 mt-1"><E path="basics.label">{b.label}</E></div>
           <div className="text-[0.85em] text-gray-600 mt-2 flex flex-wrap gap-x-4 gap-y-1">
-            <span>✉ <E path="basics.email">{b.email}</E></span>
-            <span>☎ <E path="basics.phone">{b.phone}</E></span>
-            <span>📍 <E path="basics.location">{b.location}</E></span>
-            <span>🔗 <E path="basics.website">{b.website}</E></span>
+            <span><E path="basics.icons.email">{(b.icons && b.icons.email) || "✉"}</E> <E path="basics.email">{b.email}</E></span>
+            <span><E path="basics.icons.phone">{(b.icons && b.icons.phone) || "☎"}</E> <E path="basics.phone">{b.phone}</E></span>
+            <span><E path="basics.icons.location">{(b.icons && b.icons.location) || "📍"}</E> <E path="basics.location">{b.location}</E></span>
+            <span><E path="basics.icons.website">{(b.icons && b.icons.website) || "🔗"}</E> <E path="basics.website">{b.website}</E></span>
           </div>
           <p className="mt-3 text-[0.95em] text-gray-800"><E path="basics.summary" multiline>{b.summary}</E></p>
         </div>

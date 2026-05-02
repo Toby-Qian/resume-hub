@@ -1,5 +1,5 @@
 "use client";
-import { TemplateProps, range, itemCls, Avatar, E, Draggable, useSectionLabels, useOrderedSections } from "./shared";
+import { TemplateProps, range, itemCls, Avatar, E, Draggable, useSectionLabels, useOrderedSections , DateRange} from "./shared";
 
 /**
  * Vertical timeline: each work/project entry has a dot on the left with a
@@ -18,7 +18,7 @@ export default function Timeline({ resume }: TemplateProps) {
   // Gutter width holds the date; the dot sits on the right edge of the gutter.
   const GUTTER = "96px";
 
-  const Node = ({ date, children, breakBefore }: { date: string; children: React.ReactNode; breakBefore?: boolean }) => (
+  const Node = ({ date, children, breakBefore }: { date: React.ReactNode; children: React.ReactNode; breakBefore?: boolean }) => (
     <div className={`resume-item ${breakBefore ? "page-break-before" : ""} grid gap-3 mb-4`}
       style={{ gridTemplateColumns: `${GUTTER} 1fr` }}>
       <div className="text-[0.8em] text-gray-500 text-right pt-0.5 whitespace-nowrap">{date}</div>
@@ -34,7 +34,7 @@ export default function Timeline({ resume }: TemplateProps) {
     <>
       <H>{L.experience}</H>
       {resume.work.map((w, i) => (
-        <Node key={w.id} date={range(w.startDate, w.endDate)} breakBefore={(w as any).breakBefore}>
+        <Node key={w.id} date={<DateRange startPath={`work.${i}.startDate`} endPath={`work.${i}.endDate`} start={w.startDate} end={w.endDate} />} breakBefore={(w as any).breakBefore}>
           <div className="text-[0.93em]"><b><E path={`work.${i}.position`}>{w.position}</E></b> · <span className="text-gray-700"><E path={`work.${i}.company`}>{w.company}</E></span></div>
           {w.location && <div className="text-[0.8em] text-gray-500"><E path={`work.${i}.location`}>{w.location}</E></div>}
           <ul className="list-disc ml-5 mt-1 text-[0.9em]">
@@ -48,7 +48,7 @@ export default function Timeline({ resume }: TemplateProps) {
     <>
       <H>{L.projects}</H>
       {resume.projects.map((p, i) => (
-        <Node key={p.id} date={range(p.startDate, p.endDate)} breakBefore={(p as any).breakBefore}>
+        <Node key={p.id} date={<DateRange startPath={`projects.${i}.startDate`} endPath={`projects.${i}.endDate`} start={p.startDate} end={p.endDate} />} breakBefore={(p as any).breakBefore}>
           <div className="text-[0.93em]"><b><E path={`projects.${i}.name`}>{p.name}</E></b></div>
           {p.description && <div className="text-[0.88em] text-gray-700"><E path={`projects.${i}.description`} multiline>{p.description}</E></div>}
           {p.highlights.filter(Boolean).length > 0 && (
@@ -67,7 +67,7 @@ export default function Timeline({ resume }: TemplateProps) {
     <>
       <H>{L.education}</H>
       {resume.education.map((e, i) => (
-        <Node key={e.id} date={range(e.startDate, e.endDate)} breakBefore={(e as any).breakBefore}>
+        <Node key={e.id} date={<DateRange startPath={`education.${i}.startDate`} endPath={`education.${i}.endDate`} start={e.startDate} end={e.endDate} />} breakBefore={(e as any).breakBefore}>
           <div className="text-[0.93em]"><b><E path={`education.${i}.institution`}>{e.institution}</E></b></div>
           <div className="text-[0.88em]"><E path={`education.${i}.studyType`}>{e.studyType}</E> · <E path={`education.${i}.area`}>{e.area}</E>{e.score ? ` · ${e.score}` : ""}</div>
         </Node>
@@ -115,10 +115,10 @@ export default function Timeline({ resume }: TemplateProps) {
           <h1 className="text-[2em] font-bold" style={{ color: "var(--resume-accent)" }}><E path="basics.name">{b.name}</E></h1>
           <div className="text-[1em] text-gray-700"><E path="basics.label">{b.label}</E></div>
           <div className="text-[0.82em] text-gray-600 mt-1 flex flex-wrap gap-x-3 gap-y-0.5">
-            <span>✉ <E path="basics.email">{b.email}</E></span>
-            <span>☎ <E path="basics.phone">{b.phone}</E></span>
-            <span>📍 <E path="basics.location">{b.location}</E></span>
-            <span>🔗 <E path="basics.website">{b.website}</E></span>
+            <span><E path="basics.icons.email">{(b.icons && b.icons.email) || "✉"}</E> <E path="basics.email">{b.email}</E></span>
+            <span><E path="basics.icons.phone">{(b.icons && b.icons.phone) || "☎"}</E> <E path="basics.phone">{b.phone}</E></span>
+            <span><E path="basics.icons.location">{(b.icons && b.icons.location) || "📍"}</E> <E path="basics.location">{b.location}</E></span>
+            <span><E path="basics.icons.website">{(b.icons && b.icons.website) || "🔗"}</E> <E path="basics.website">{b.website}</E></span>
           </div>
         </div>
       </Draggable>

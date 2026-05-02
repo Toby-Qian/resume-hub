@@ -1,5 +1,5 @@
 "use client";
-import { TemplateProps, range, itemCls, Avatar, E, Draggable, useSectionLabels, useOrderedSections } from "./shared";
+import { TemplateProps, range, itemCls, Avatar, E, Draggable, useSectionLabels, useOrderedSections , DateRange} from "./shared";
 
 /**
  * Publication-first CV. Projects are rendered as a numbered publication list
@@ -48,7 +48,7 @@ export default function AcademicPub({ resume }: TemplateProps) {
               <div className="min-w-0">
                 <b><E path={`projects.${i}.name`}>{p.name}</E></b>
                 {p.description && <span>. <E path={`projects.${i}.description`} multiline>{p.description}</E></span>}
-                {(p.startDate || p.endDate) && <span className="text-gray-600"> ({range(p.startDate, p.endDate)})</span>}
+                {(p.startDate || p.endDate) && <span className="text-gray-600"> ({<DateRange startPath={`projects.${i}.startDate`} endPath={`projects.${i}.endDate`} start={p.startDate} end={p.endDate} />})</span>}
                 {p.url && <div className="text-[0.85em] text-gray-600 break-all"><E path={`projects.${i}.url`}>{p.url}</E></div>}
                 {p.keywords && p.keywords.length > 0 && (
                   <div className="text-[0.82em] text-gray-500">keywords: {p.keywords.join(", ")}</div>
@@ -66,7 +66,7 @@ export default function AcademicPub({ resume }: TemplateProps) {
         <div key={e.id} className={itemCls(e, "mb-1.5 text-[0.9em]")}>
           <div className="flex justify-between">
             <div><i><E path={`education.${i}.institution`}>{e.institution}</E></i>, <E path={`education.${i}.studyType`}>{e.studyType}</E> in <E path={`education.${i}.area`}>{e.area}</E></div>
-            <div className="text-gray-600">{range(e.startDate, e.endDate)}</div>
+            <div className="text-gray-600">{<DateRange startPath={`education.${i}.startDate`} endPath={`education.${i}.endDate`} start={e.startDate} end={e.endDate} />}</div>
           </div>
           {e.score && <div className="text-gray-700"><E path={`education.${i}.score`}>{e.score}</E></div>}
         </div>
@@ -79,7 +79,7 @@ export default function AcademicPub({ resume }: TemplateProps) {
         <div key={w.id} className={itemCls(w, "mb-2 text-[0.9em]")}>
           <div className="flex justify-between">
             <div><b><E path={`work.${i}.position`}>{w.position}</E></b>, <i><E path={`work.${i}.company`}>{w.company}</E></i></div>
-            <div className="text-gray-600">{range(w.startDate, w.endDate)}</div>
+            <div className="text-gray-600">{<DateRange startPath={`work.${i}.startDate`} endPath={`work.${i}.endDate`} start={w.startDate} end={w.endDate} />}</div>
           </div>
           <ul className="list-disc ml-5">
             {w.highlights.filter(Boolean).map((h, j) => <li key={j}><E path={`work.${i}.highlights.${j}`}>{h}</E></li>)}
@@ -119,7 +119,7 @@ export default function AcademicPub({ resume }: TemplateProps) {
         <div key={tg.id} className={itemCls(tg, "mb-1.5 text-[0.9em]")}>
           <div className="flex justify-between">
             <div><b><E path={`teaching.${i}.course`}>{tg.course}</E></b>{tg.institution && <>, <i><E path={`teaching.${i}.institution`}>{tg.institution}</E></i></>}{tg.role && <span className="text-gray-600"> · <E path={`teaching.${i}.role`}>{tg.role}</E></span>}</div>
-            <div className="text-gray-600">{range(tg.startDate, tg.endDate)}</div>
+            <div className="text-gray-600">{<DateRange startPath={`teaching.${i}.startDate`} endPath={`teaching.${i}.endDate`} start={tg.startDate} end={tg.endDate} />}</div>
           </div>
           {tg.summary && <div className="text-gray-700"><E path={`teaching.${i}.summary`} multiline>{tg.summary}</E></div>}
         </div>
