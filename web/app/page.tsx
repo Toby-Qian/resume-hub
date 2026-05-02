@@ -8,6 +8,7 @@ import { StylePanel } from "@/components/StylePanel";
 import { Gallery } from "@/components/Gallery";
 import { Toolbar } from "@/components/Toolbar";
 import { EmptyState } from "@/components/EmptyState";
+import { FileDropZone } from "@/components/FileDropZone";
 import { Footer } from "@/components/Footer";
 
 type Tab = "editor" | "gallery";
@@ -25,6 +26,7 @@ export default function Home() {
 
   return (
     <div className="min-h-screen">
+      <FileDropZone />
       <header className="no-print sticky top-0 z-40 bg-white/80 backdrop-blur-md border-b border-gray-200/70">
         <div className="max-w-[1600px] mx-auto px-4 py-3 flex items-center gap-4 flex-wrap">
           <div className="flex items-center gap-2.5">

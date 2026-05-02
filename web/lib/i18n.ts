@@ -151,6 +151,10 @@ export const T = {
       snapshotRestored: "已恢复快照",
       snapshotDeleted: "快照已删除",
     },
+    dropzone: {
+      title: "松开即可导入 JSON",
+      sub: "支持本应用导出的 JSON · 也支持 jsonresume.org 原生格式",
+    },
     snapshots: {
       title: "快照",
       hint: "把当前简历存为命名快照，随时一键回到这个版本（仅保存在本地浏览器）",
@@ -349,6 +353,10 @@ export const T = {
       snapshotSaved: "Snapshot saved",
       snapshotRestored: "Snapshot restored",
       snapshotDeleted: "Snapshot deleted",
+    },
+    dropzone: {
+      title: "Drop to import JSON",
+      sub: "Resume Hub export · or any jsonresume.org-native file",
     },
     snapshots: {
       title: "Snapshots",
