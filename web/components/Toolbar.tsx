@@ -8,7 +8,7 @@ import { Completeness } from "./Completeness";
 import { ConfirmModal } from "./ConfirmModal";
 
 export function Toolbar() {
-  const { lang, setLang, loadSample, reset, resume, setResume, undo, redo, past, future } = useStore();
+  const { lang, setLang, loadSample, reset, resume, setResume, undo, redo, past, future, previewMode, togglePreviewMode } = useStore();
   const L = t(lang);
   const fileRef = useRef<HTMLInputElement>(null);
 
@@ -135,6 +135,20 @@ export function Toolbar() {
       <Btn onClick={onExport} icon="↓">{L.actions.exportJson}</Btn>
       <Btn onClick={() => setResetOpen(true)} icon="✕">{L.actions.reset}</Btn>
       <ExportMenu />
+      <button
+        onClick={togglePreviewMode}
+        title={(L.actions as any).previewModeHint ?? "切换预览/编辑模式 — 隐藏所有编辑提示，让画布看起来像最终 PDF"}
+        className={`text-xs px-3 py-1.5 rounded-lg border transition-all flex items-center gap-1.5 ${
+          previewMode
+            ? "bg-violet-600 text-white border-violet-600 hover:bg-violet-700 shadow-sm"
+            : "bg-white border-gray-200 text-gray-700 hover:bg-gray-50 hover:border-gray-300"
+        }`}
+      >
+        <span className="text-[0.85em] opacity-90">{previewMode ? "👁" : "✎"}</span>
+        {previewMode
+          ? ((L.actions as any).previewMode ?? "预览模式")
+          : ((L.actions as any).editMode ?? "编辑模式")}
+      </button>
       <div className="ml-auto inline-flex items-center bg-gray-100 rounded-lg p-0.5">
         <button onClick={() => setLang("zh")}
           className={`text-xs px-2.5 py-1 rounded-md transition-all ${lang === "zh" ? "bg-white text-gray-900 shadow-sm font-medium" : "text-gray-500 hover:text-gray-900"}`}>中</button>

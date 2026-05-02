@@ -40,7 +40,7 @@ function darkenHex(c: string, pct: number): string {
 }
 
 export function Preview() {
-  const { resume, template, theme, lang, addNote, addImageNote, addShapeNote, pageSetup, setPageSetup, hiddenSections } = useStore();
+  const { resume, template, theme, lang, addNote, addImageNote, addShapeNote, pageSetup, setPageSetup, hiddenSections, previewMode } = useStore();
   // Boolean "open the second-page canvas". Persisted PageSetups from the
   // earlier numeric `extraPages` field are migrated by treating any positive
   // value as "second page on". The field stays a number in storage so we
@@ -332,7 +332,7 @@ export function Preview() {
       >
         <div
           ref={paperRef}
-          className={`paper paper-flow print-area density-${theme.density} ${pageSetup.size === "Letter" ? "paper-letter" : ""}`}
+          className={`paper paper-flow print-area density-${theme.density} ${pageSetup.size === "Letter" ? "paper-letter" : ""} ${previewMode ? "preview-mode" : ""}`}
           style={{
             ["--resume-accent" as any]: theme.accent,
             // Companion variables exposed to templates so they can build

@@ -36,6 +36,9 @@ export const T = {
       undo: "撤销", redo: "重做",
       duplicate: "复制此条", expandAll: "全部展开", collapseAll: "全部折叠",
       savedJustNow: "已保存", savedSecondsAgo: "{n} 秒前已保存", savedMinutesAgo: "{n} 分钟前已保存",
+      previewMode: "预览模式", editMode: "编辑模式",
+      previewModeHint: "切换预览 / 编辑模式 — 预览模式下画布完全像 PDF，没有拖把和虚线提示",
+      customized: "已自定义",
     },
     theme: {
       accent: "主色", fontSans: "无衬线字体", fontSerif: "衬线字体",
@@ -209,6 +212,9 @@ export const T = {
       undo: "Undo", redo: "Redo",
       duplicate: "Duplicate", expandAll: "Expand all", collapseAll: "Collapse all",
       savedJustNow: "Saved", savedSecondsAgo: "Saved {n}s ago", savedMinutesAgo: "Saved {n}m ago",
+      previewMode: "Preview", editMode: "Editing",
+      previewModeHint: "Toggle preview / edit — preview hides all editing chrome so the canvas looks exactly like the PDF",
+      customized: "customised",
     },
     theme: {
       accent: "Accent", fontSans: "Sans font", fontSerif: "Serif font",

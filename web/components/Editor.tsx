@@ -155,11 +155,16 @@ interface SectionTitleProps {
   /** When provided, this section participates in section-order DnD. */
   onReorderSection?: (fromKey: string, toKey: string) => void;
   reorderSectionHint?: string;
+  /** Truthy when the user renamed this section's heading via inline edit;
+   *  shows a small dot in the editor so the override is discoverable. */
+  customized?: boolean;
+  customizedLabel?: string;
 }
 
 const SectionTitle = ({
   children, onAdd, sectionKey, count, open, onToggle, addLabel,
   onReorderSection, reorderSectionHint,
+  customized, customizedLabel,
 }: SectionTitleProps) => {
   const collapsible = !!sectionKey;
   const icon = sectionKey ? SECTION_ICONS[sectionKey] : null;
@@ -224,6 +229,14 @@ const SectionTitle = ({
             {count}
           </span>
         )}
+        {customized && (
+          <span
+            title={customizedLabel ?? "已自定义"}
+            className="text-[0.55rem] uppercase tracking-wider px-1.5 py-px rounded-full bg-amber-100 text-amber-700 border border-amber-200"
+          >
+            {customizedLabel ?? "已自定义"}
+          </span>
+        )}
       </div>
       <div className="flex items-center gap-2">
         {onAdd && open && <AddBtn onClick={onAdd} label={addLabel} />}
@@ -262,6 +275,8 @@ export function Editor() {
   const reorderSectionHint = ((L as any).style?.sectionOrderHint) ?? "拖动调整节区顺序";
   const onReorderSection = (fromKey: string, toKey: string) =>
     reorderSection(fromKey as SectionKey, toKey as SectionKey);
+  const customizedLabel = (L.actions as any).customized ?? "已自定义";
+  const isCustomized = (k: string) => !!(resume.customLabels && resume.customLabels[k]);
   const breakLabel  = L.form.breakBefore;
   const removeLabel = L.actions.remove;
   const duplicateLabel = (L.actions as any).duplicate ?? "Duplicate";
@@ -415,7 +430,7 @@ export function Editor() {
 
       </>}
 
-      <SectionTitle sectionKey="work" count={resume.work.length} open={isOpen("work")} onToggle={() => toggle("work")} addLabel={addLabel} onAdd={() => addItem("work")} onReorderSection={onReorderSection} reorderSectionHint={reorderSectionHint}>{L.sections.work}</SectionTitle>
+      <SectionTitle sectionKey="work" count={resume.work.length} open={isOpen("work")} onToggle={() => toggle("work")} addLabel={addLabel} onAdd={() => addItem("work")} onReorderSection={onReorderSection} reorderSectionHint={reorderSectionHint} customized={isCustomized("work")} customizedLabel={customizedLabel}>{L.sections.work}</SectionTitle>
       {isOpen("work") && resume.work.map((w) => (
         <SortableCard key={w.id} section="work" id={w.id}
           onRemove={() => removeItem("work", w.id)}
@@ -440,7 +455,7 @@ export function Editor() {
         </SortableCard>
       ))}
 
-      <SectionTitle sectionKey="education" count={resume.education.length} open={isOpen("education")} onToggle={() => toggle("education")} addLabel={addLabel} onAdd={() => addItem("education")} onReorderSection={onReorderSection} reorderSectionHint={reorderSectionHint}>{L.sections.education}</SectionTitle>
+      <SectionTitle sectionKey="education" count={resume.education.length} open={isOpen("education")} onToggle={() => toggle("education")} addLabel={addLabel} onAdd={() => addItem("education")} onReorderSection={onReorderSection} reorderSectionHint={reorderSectionHint} customized={isCustomized("education")} customizedLabel={customizedLabel}>{L.sections.education}</SectionTitle>
       {isOpen("education") && resume.education.map((e) => (
         <SortableCard key={e.id} section="education" id={e.id}
           onRemove={() => removeItem("education", e.id)}
@@ -466,7 +481,7 @@ export function Editor() {
         </SortableCard>
       ))}
 
-      <SectionTitle sectionKey="projects" count={resume.projects.length} open={isOpen("projects")} onToggle={() => toggle("projects")} addLabel={addLabel} onAdd={() => addItem("projects")} onReorderSection={onReorderSection} reorderSectionHint={reorderSectionHint}>{L.sections.projects}</SectionTitle>
+      <SectionTitle sectionKey="projects" count={resume.projects.length} open={isOpen("projects")} onToggle={() => toggle("projects")} addLabel={addLabel} onAdd={() => addItem("projects")} onReorderSection={onReorderSection} reorderSectionHint={reorderSectionHint} customized={isCustomized("projects")} customizedLabel={customizedLabel}>{L.sections.projects}</SectionTitle>
       {isOpen("projects") && resume.projects.map((p) => (
         <SortableCard key={p.id} section="projects" id={p.id}
           onRemove={() => removeItem("projects", p.id)}
@@ -498,7 +513,7 @@ export function Editor() {
         </SortableCard>
       ))}
 
-      <SectionTitle sectionKey="skills" count={resume.skills.length} open={isOpen("skills")} onToggle={() => toggle("skills")} addLabel={addLabel} onAdd={() => addItem("skills")} onReorderSection={onReorderSection} reorderSectionHint={reorderSectionHint}>{L.sections.skills}</SectionTitle>
+      <SectionTitle sectionKey="skills" count={resume.skills.length} open={isOpen("skills")} onToggle={() => toggle("skills")} addLabel={addLabel} onAdd={() => addItem("skills")} onReorderSection={onReorderSection} reorderSectionHint={reorderSectionHint} customized={isCustomized("skills")} customizedLabel={customizedLabel}>{L.sections.skills}</SectionTitle>
       {isOpen("skills") && resume.skills.map((s) => (
         <SortableCard key={s.id} section="skills" id={s.id}
           onRemove={() => removeItem("skills", s.id)}
@@ -520,7 +535,7 @@ export function Editor() {
         </SortableCard>
       ))}
 
-      <SectionTitle sectionKey="awards" count={resume.awards.length} open={isOpen("awards")} onToggle={() => toggle("awards")} addLabel={addLabel} onAdd={() => addItem("awards")} onReorderSection={onReorderSection} reorderSectionHint={reorderSectionHint}>{L.sections.awards}</SectionTitle>
+      <SectionTitle sectionKey="awards" count={resume.awards.length} open={isOpen("awards")} onToggle={() => toggle("awards")} addLabel={addLabel} onAdd={() => addItem("awards")} onReorderSection={onReorderSection} reorderSectionHint={reorderSectionHint} customized={isCustomized("awards")} customizedLabel={customizedLabel}>{L.sections.awards}</SectionTitle>
       {isOpen("awards") && resume.awards.map((a) => (
         <SortableCard key={a.id} section="awards" id={a.id}
           onRemove={() => removeItem("awards", a.id)}
@@ -537,7 +552,7 @@ export function Editor() {
         </SortableCard>
       ))}
 
-      <SectionTitle sectionKey="languages" count={resume.languages.length} open={isOpen("languages")} onToggle={() => toggle("languages")} addLabel={addLabel} onAdd={() => addItem("languages")} onReorderSection={onReorderSection} reorderSectionHint={reorderSectionHint}>{L.sections.languages}</SectionTitle>
+      <SectionTitle sectionKey="languages" count={resume.languages.length} open={isOpen("languages")} onToggle={() => toggle("languages")} addLabel={addLabel} onAdd={() => addItem("languages")} onReorderSection={onReorderSection} reorderSectionHint={reorderSectionHint} customized={isCustomized("languages")} customizedLabel={customizedLabel}>{L.sections.languages}</SectionTitle>
       {isOpen("languages") && resume.languages.map((l) => (
         <SortableCard key={l.id} section="languages" id={l.id}
           onRemove={() => removeItem("languages", l.id)}
@@ -556,7 +571,7 @@ export function Editor() {
           actively render these, but the editor exposes them universally so a
           user on, say, "modern" who switches to "academic-pub" later won't
           have to re-key data. Empty arrays are silently skipped by templates. */}
-      <SectionTitle sectionKey="publications" count={(resume.publications || []).length} open={isOpen("publications")} onToggle={() => toggle("publications")} addLabel={addLabel} onAdd={() => addItem("publications")} onReorderSection={onReorderSection} reorderSectionHint={reorderSectionHint}>{(L.sections as any).publications}</SectionTitle>
+      <SectionTitle sectionKey="publications" count={(resume.publications || []).length} open={isOpen("publications")} onToggle={() => toggle("publications")} addLabel={addLabel} onAdd={() => addItem("publications")} onReorderSection={onReorderSection} reorderSectionHint={reorderSectionHint} customized={isCustomized("publications")} customizedLabel={customizedLabel}>{(L.sections as any).publications}</SectionTitle>
       {isOpen("publications") && (resume.publications || []).map((p) => (
         <SortableCard key={p.id} section="publications" id={p.id}
           onRemove={() => removeItem("publications", p.id)}
@@ -576,7 +591,7 @@ export function Editor() {
         </SortableCard>
       ))}
 
-      <SectionTitle sectionKey="talks" count={(resume.talks || []).length} open={isOpen("talks")} onToggle={() => toggle("talks")} addLabel={addLabel} onAdd={() => addItem("talks")} onReorderSection={onReorderSection} reorderSectionHint={reorderSectionHint}>{(L.sections as any).talks}</SectionTitle>
+      <SectionTitle sectionKey="talks" count={(resume.talks || []).length} open={isOpen("talks")} onToggle={() => toggle("talks")} addLabel={addLabel} onAdd={() => addItem("talks")} onReorderSection={onReorderSection} reorderSectionHint={reorderSectionHint} customized={isCustomized("talks")} customizedLabel={customizedLabel}>{(L.sections as any).talks}</SectionTitle>
       {isOpen("talks") && (resume.talks || []).map((tk) => (
         <SortableCard key={tk.id} section="talks" id={tk.id}
           onRemove={() => removeItem("talks", tk.id)}
@@ -594,7 +609,7 @@ export function Editor() {
         </SortableCard>
       ))}
 
-      <SectionTitle sectionKey="teaching" count={(resume.teaching || []).length} open={isOpen("teaching")} onToggle={() => toggle("teaching")} addLabel={addLabel} onAdd={() => addItem("teaching")} onReorderSection={onReorderSection} reorderSectionHint={reorderSectionHint}>{(L.sections as any).teaching}</SectionTitle>
+      <SectionTitle sectionKey="teaching" count={(resume.teaching || []).length} open={isOpen("teaching")} onToggle={() => toggle("teaching")} addLabel={addLabel} onAdd={() => addItem("teaching")} onReorderSection={onReorderSection} reorderSectionHint={reorderSectionHint} customized={isCustomized("teaching")} customizedLabel={customizedLabel}>{(L.sections as any).teaching}</SectionTitle>
       {isOpen("teaching") && (resume.teaching || []).map((tg) => (
         <SortableCard key={tg.id} section="teaching" id={tg.id}
           onRemove={() => removeItem("teaching", tg.id)}

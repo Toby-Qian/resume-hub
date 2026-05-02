@@ -107,6 +107,12 @@ interface State {
   sectionOrder: SectionKey[];
   setSectionOrder: (order: SectionKey[]) => void;
   reorderSection: (fromKey: SectionKey, toKey: SectionKey) => void;
+  /** When true the preview hides all editing affordances (drag handles,
+   *  dashed-underline hover hints on `<E>` fields, drop indicators…) so the
+   *  paper looks exactly like the printed PDF. Persisted so the user's
+   *  preferred review/edit mode survives reloads. */
+  previewMode: boolean;
+  togglePreviewMode: () => void;
   past: Resume[];
   future: Resume[];
   /** When true, subsequent mutations do NOT push new history entries.
@@ -202,6 +208,8 @@ export const useStore = create<State>()(
         },
         sectionOrder: [...DEFAULT_SECTION_ORDER],
         setSectionOrder: (order) => set({ sectionOrder: order.slice() }),
+        previewMode: false,
+        togglePreviewMode: () => set({ previewMode: !get().previewMode }),
         reorderSection: (fromKey, toKey) => {
           if (fromKey === toKey) return;
           const cur = get().sectionOrder.slice();
@@ -456,6 +464,7 @@ export const useStore = create<State>()(
         pageSetup: s.pageSetup,
         hiddenSections: s.hiddenSections,
         sectionOrder: s.sectionOrder,
+        previewMode: s.previewMode,
       }) as any,
       // Migrate persisted state for users who had the now-removed
       // "academic-cn" template selected. Falls back to cn-formal which is

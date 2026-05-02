@@ -360,6 +360,36 @@ body {
   .drag-handle, .drag-reset { display: none !important; }
 }
 
+/* Preview / reading mode — same suppression as print, but applied on screen
+   so the user can review the resume as a static document. Activated by
+   adding `.preview-mode` to the `.paper` element. Editing still works (the
+   contenteditable is intact); we just hide hover/focus chrome and drag
+   handles so the page reads cleanly. The sticky toggle in the toolbar lets
+   the user flip back to edit mode. */
+.paper.preview-mode .editable-field {
+  background: transparent !important;
+  box-shadow: none !important;
+  cursor: default;
+}
+.paper.preview-mode .editable-field:hover { background-color: transparent !important; }
+.paper.preview-mode .editable-field:focus {
+  background-color: rgba(254, 240, 138, 0.4) !important;
+  box-shadow: 0 0 0 2px rgba(234, 179, 8, 0.5) !important;
+  cursor: text;
+}
+.paper.preview-mode .drag-handle,
+.paper.preview-mode .drag-reset { display: none !important; }
+.paper.preview-mode .resume-note .note-chrome,
+.paper.preview-mode .resume-note .note-resize {
+  display: none !important;
+}
+.paper.preview-mode .resume-note .note-body,
+.paper.preview-mode .resume-note .note-image {
+  border-color: transparent !important;
+  background: transparent !important;
+}
+.paper.preview-mode .resume-note .note-body.empty::before { content: ""; }
+
 /* ---------- Free-floating notes ---------------------------------------- */
 .resume-note {
   /* The wrapper itself is not a pointer target; children drive interaction. */
