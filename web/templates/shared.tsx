@@ -552,8 +552,12 @@ export function SkillBar({
  * sections, this returns null — zero visual footprint.
  */
 export function CustomSections({ accent = true }: { accent?: boolean }) {
-  const customSections = useStore((s) => s.resume.customSections || []);
+  // IMPORTANT: select the raw field — `|| []` would return a freshly-allocated
+  // array on every call, which zustand sees as a state change and triggers an
+  // infinite re-render loop. Default to [] only at the use site.
+  const raw = useStore((s) => s.resume.customSections);
   const reorder = useStore((s) => s.reorderCustomEntry);
+  const customSections = raw || [];
   if (customSections.length === 0) return null;
   return (
     <>
