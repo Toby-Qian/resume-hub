@@ -28,7 +28,7 @@ export default function Home() {
     <div className="min-h-screen">
       <FileDropZone />
       <header className="no-print sticky top-0 z-40 bg-white/80 backdrop-blur-md border-b border-gray-200/70">
-        <div className="max-w-[1600px] mx-auto px-4 py-3 flex items-center gap-4 flex-wrap">
+        <div className="max-w-[1920px] mx-auto px-4 py-3 flex items-center gap-4 flex-wrap">
           <div className="flex items-center gap-2.5">
             <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-indigo-600 grid place-items-center text-white text-sm font-bold shadow-sm">
               R
@@ -59,7 +59,7 @@ export default function Home() {
         <>
           {/* Mobile pane switcher: visible below lg */}
           <div className="lg:hidden sticky top-[57px] z-30 bg-white/85 backdrop-blur-md border-b border-gray-200/70 no-print">
-            <div className="max-w-[1600px] mx-auto px-4 py-2 flex gap-0.5 bg-gray-100/80 rounded-full p-0.5 my-2">
+            <div className="max-w-[1920px] mx-auto px-4 py-2 flex gap-0.5 bg-gray-100/80 rounded-full p-0.5 my-2">
               {([
                 ["editor", L.tabs.editor],
                 ["preview", L.tabs.preview],
@@ -77,7 +77,7 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="max-w-[1600px] mx-auto grid grid-cols-1 lg:grid-cols-[340px_1fr_300px] gap-4 p-4">
+          <div className="max-w-[1920px] mx-auto grid grid-cols-1 lg:grid-cols-[380px_1fr_320px] xl:grid-cols-[420px_1fr_340px] gap-4 px-4 py-4 2xl:px-6">
             <aside
               className={`pane pane-editor bg-white rounded-2xl border border-gray-200/70 shadow-sm lg:h-[calc(100vh-100px)] lg:overflow-y-auto no-print ${
                 pane === "editor" ? "block" : "hidden lg:block"

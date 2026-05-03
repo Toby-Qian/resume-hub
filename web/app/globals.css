@@ -783,3 +783,14 @@ body {
   /* Hide the print-only footer in normal preview. */
   .print-footer { display: none; }
 }
+
+/* Popover entrance animation — used by ExportMenu / SnapshotMenu portals.
+   Kept dependency-free (no tailwindcss-animate). */
+.popover-pop {
+  animation: popover-pop 140ms ease-out;
+  transform-origin: top right;
+}
+@keyframes popover-pop {
+  from { opacity: 0; transform: translateY(-4px) scale(0.98); }
+  to   { opacity: 1; transform: translateY(0)    scale(1); }
+}
