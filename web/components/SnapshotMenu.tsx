@@ -15,7 +15,7 @@ export function SnapshotMenu() {
   const L = t(lang);
   const S = L.snapshots ?? {};
   const [open, setOpen] = useState(false);
-  const [coords, setCoords] = useState<{ top: number; right: number } | null>(null);
+  const [coords, setCoords] = useState<{ top: number; left: number } | null>(null);
   const wrapRef = useRef<HTMLDivElement>(null);
   const popRef = useRef<HTMLDivElement>(null);
 
@@ -23,7 +23,13 @@ export function SnapshotMenu() {
     if (!open || !wrapRef.current) return;
     const reposition = () => {
       const r = wrapRef.current!.getBoundingClientRect();
-      setCoords({ top: r.bottom + 6, right: window.innerWidth - r.right });
+      const W = 320; // popover width (w-80)
+      const margin = 8;
+      let left = r.right - W;
+      const maxLeft = window.innerWidth - W - margin;
+      if (left > maxLeft) left = maxLeft;
+      if (left < margin) left = margin;
+      setCoords({ top: r.bottom + 6, left });
     };
     reposition();
     window.addEventListener("scroll", reposition, true);
@@ -80,7 +86,7 @@ export function SnapshotMenu() {
   const popover = open && coords && typeof document !== "undefined" ? createPortal(
     <div
       ref={popRef}
-      style={{ position: "fixed", top: coords.top, right: coords.right, zIndex: 100 }}
+      style={{ position: "fixed", top: coords.top, left: coords.left, zIndex: 100 }}
       className="popover-pop w-80 bg-white rounded-xl shadow-2xl border border-gray-200 p-3.5 text-xs"
       onMouseDown={(e) => e.stopPropagation()}
     >

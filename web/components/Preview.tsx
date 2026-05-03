@@ -90,30 +90,23 @@ export function Preview() {
       `@page { size: ${pageSetup.size === "Letter" ? "letter" : "A4"}; margin: 0; }`;
   }, [pageSetup.size]);
 
-  // ---- Reset zoom + hide screen-only chrome during print ----------------
-  // Edge / Chromium can stall in print preview when the source DOM has a
-  // CSS `transform: scale()` on a paginated container. We snapshot the
-  // current zoom, force 1.0 for the duration of printing, and restore
-  // afterwards. Listeners are cheap and only fire around print events.
+  // ---- Hide screen-only chrome during print -----------------------------
+  // The print stylesheet already neutralises `transform: scale()` via
+  // `.paper { transform: none !important }` (see globals.css), so we must
+  // NOT also mutate `zoom` state on `beforeprint`. Doing so triggered a
+  // React re-render mid-print which crashed Chromium on heavier resumes.
+  // We only flip the `printing` boolean now — listeners are mounted once.
   const [printing, setPrinting] = useState(false);
   useEffect(() => {
-    const savedZoomRef = { current: 1 };
-    const onBefore = () => {
-      savedZoomRef.current = zoom;
-      setPrinting(true);
-      setZoom(1);
-    };
-    const onAfter = () => {
-      setPrinting(false);
-      setZoom(savedZoomRef.current);
-    };
+    const onBefore = () => setPrinting(true);
+    const onAfter  = () => setPrinting(false);
     window.addEventListener("beforeprint", onBefore);
     window.addEventListener("afterprint", onAfter);
     return () => {
       window.removeEventListener("beforeprint", onBefore);
       window.removeEventListener("afterprint", onAfter);
     };
-  }, [zoom]);
+  }, []);
 
   const onPickImage = async (f: File) => {
     try {

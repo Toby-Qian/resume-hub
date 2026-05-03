@@ -17,7 +17,7 @@ export function ExportMenu() {
   const L = t(lang);
   const E = L.exportMenu ?? {};
   const [open, setOpen] = useState(false);
-  const [coords, setCoords] = useState<{ top: number; right: number } | null>(null);
+  const [coords, setCoords] = useState<{ top: number; left: number } | null>(null);
   const wrapRef = useRef<HTMLDivElement>(null);
   const popRef = useRef<HTMLDivElement>(null);
 
@@ -27,7 +27,16 @@ export function ExportMenu() {
     if (!open || !wrapRef.current) return;
     const reposition = () => {
       const r = wrapRef.current!.getBoundingClientRect();
-      setCoords({ top: r.bottom + 6, right: window.innerWidth - r.right });
+      const W = 320; // popover width (w-80) — keep in sync with className below
+      const margin = 8;
+      // Anchor right edge to button right edge by default; clamp into viewport
+      // so narrow windows don't push the dialog off-screen on either side.
+      let left = r.right - W;
+      const maxLeft = window.innerWidth - W - margin;
+      const minLeft = margin;
+      if (left > maxLeft) left = maxLeft;
+      if (left < minLeft) left = minLeft;
+      setCoords({ top: r.bottom + 6, left });
     };
     reposition();
     window.addEventListener("scroll", reposition, true);
@@ -63,7 +72,7 @@ export function ExportMenu() {
   const popover = open && coords && typeof document !== "undefined" ? createPortal(
     <div
       ref={popRef}
-      style={{ position: "fixed", top: coords.top, right: coords.right, zIndex: 100 }}
+      style={{ position: "fixed", top: coords.top, left: coords.left, zIndex: 100 }}
       className="popover-pop w-80 bg-white rounded-xl shadow-2xl border border-gray-200 p-3.5 text-xs"
       onMouseDown={(e) => e.stopPropagation()}
     >

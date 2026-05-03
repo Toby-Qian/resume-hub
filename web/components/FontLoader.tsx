@@ -1,21 +1,32 @@
 "use client";
 import { useEffect } from "react";
+import { useStore } from "@/lib/store";
 
 /** Inject webfont stylesheets via JS on mount, AFTER first paint.
  *
  *  Why: Loading 14 Google-Fonts families and the LXGW WenKai CJK font as
  *  blocking `<link rel="stylesheet">` in `<head>` adds 1–3 s of TTFB-blocking
- *  CSS download (especially LXGW WenKai, ~5 MB CSS that references multi-MB
- *  font shards). Most users only ever look at one or two of these — the rest
- *  are picked optionally from the Style panel. Deferring all of them to a
- *  post-mount script lets the page paint immediately; fonts swap in when
- *  ready thanks to `font-display: swap` in the Google Fonts CSS itself.     */
+ *  CSS download. Most users only ever look at one or two of these — picking
+ *  is optional in the Style panel. Deferring all of them to a post-mount
+ *  script lets the page paint immediately; fonts swap in when ready thanks
+ *  to `font-display: swap` in the Google Fonts CSS itself.                  */
 export function FontLoader() {
+  // Subscribe to the two font fields that can opt the resume into LXGW
+  // WenKai. The CSS for it is huge (~5 MB across font shards) so we only
+  // append the stylesheet when the user actually picks the family. Use
+  // primitive selectors so we don't re-render on unrelated state changes.
+  const fontSans  = useStore((s) => s.theme.fontSans);
+  const fontSerif = useStore((s) => s.theme.fontSerif);
+
+  // Mount-once: bulk Google Fonts.
   useEffect(() => {
     if (typeof document === "undefined") return;
-    if (document.getElementById("rh-fonts-google")) return; // already injected
+    if (document.getElementById("rh-fonts-google")) return;
 
-    const googleFontsHref =
+    const link = document.createElement("link");
+    link.id = "rh-fonts-google";
+    link.rel = "stylesheet";
+    link.href =
       "https://fonts.googleapis.com/css2" +
       "?family=Inter:wght@400;500;600;700" +
       "&family=EB+Garamond:wght@400;500;600" +
@@ -27,30 +38,26 @@ export function FontLoader() {
       "&family=ZCOOL+XiaoWei&family=ZCOOL+KuaiLe&family=ZCOOL+QingKe+HuangYou" +
       "&family=Ma+Shan+Zheng&family=Long+Cang&family=Liu+Jian+Mao+Cao" +
       "&display=swap";
-
-    const link = document.createElement("link");
-    link.id = "rh-fonts-google";
-    link.rel = "stylesheet";
-    link.href = googleFontsHref;
     document.head.appendChild(link);
-
-    // LXGW WenKai is huge (~5MB CSS+font shards) — only load it when the user
-    // actually selects it in the Style panel. Lazily inject by watching the
-    // computed body font for the LXGW family name.
-    const observer = new MutationObserver(() => {
-      const usingLxgw = document.body && getComputedStyle(document.body).fontFamily.includes("LXGW");
-      const paperHasLxgw = !!document.querySelector('.paper [style*="LXGW"]');
-      if ((usingLxgw || paperHasLxgw) && !document.getElementById("rh-fonts-lxgw")) {
-        const lx = document.createElement("link");
-        lx.id = "rh-fonts-lxgw";
-        lx.rel = "stylesheet";
-        lx.href = "https://cdn.jsdelivr.net/npm/lxgw-wenkai-webfont@1.7.0/style.css";
-        document.head.appendChild(lx);
-      }
-    });
-    observer.observe(document.body, { attributes: true, subtree: true, attributeFilter: ["style", "class"] });
-    return () => observer.disconnect();
   }, []);
+
+  // Lazy: append LXGW WenKai stylesheet only when the active theme picks it.
+  // Driven by zustand state, not a MutationObserver — the previous version
+  // observed every body/.paper attribute change and could fire continuously
+  // during print preview, which crashed Chromium on some machines.
+  useEffect(() => {
+    if (typeof document === "undefined") return;
+    const wantsLxgw =
+      (fontSans && fontSans.includes("LXGW")) ||
+      (fontSerif && fontSerif.includes("LXGW"));
+    if (!wantsLxgw) return;
+    if (document.getElementById("rh-fonts-lxgw")) return;
+    const lx = document.createElement("link");
+    lx.id = "rh-fonts-lxgw";
+    lx.rel = "stylesheet";
+    lx.href = "https://cdn.jsdelivr.net/npm/lxgw-wenkai-webfont@1.7.0/style.css";
+    document.head.appendChild(lx);
+  }, [fontSans, fontSerif]);
 
   return null;
 }
