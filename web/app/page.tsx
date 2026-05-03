@@ -1,11 +1,18 @@
 "use client";
 import { useState, useEffect } from "react";
+import dynamic from "next/dynamic";
 import { useStore } from "@/lib/store";
 import { t } from "@/lib/i18n";
 import { Editor } from "@/components/Editor";
 import { Preview } from "@/components/Preview";
 import { StylePanel } from "@/components/StylePanel";
-import { Gallery } from "@/components/Gallery";
+// Gallery ships ~350KB of template metadata and is only seen after the user
+// clicks the "Gallery" tab. Defer the chunk until then so the editor's
+// initial paint doesn't carry the cost.
+const Gallery = dynamic(() => import("@/components/Gallery").then((m) => ({ default: m.Gallery })), {
+  ssr: false,
+  loading: () => <div className="text-center text-sm text-gray-400 py-12">Loading gallery…</div>,
+});
 import { Toolbar } from "@/components/Toolbar";
 import { EmptyState } from "@/components/EmptyState";
 import { FileDropZone } from "@/components/FileDropZone";
